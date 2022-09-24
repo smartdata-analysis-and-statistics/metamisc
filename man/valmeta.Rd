@@ -36,7 +36,8 @@ valmeta(
 )
 }
 \arguments{
-\item{measure}{A character string indicating which summary performance measure should be calculated. Options are
+\item{measure}{A character string indicating which summary performance 
+measure should be calculated. Options are
 \code{"cstat"} (meta-analysis of the concordance statistic) and \code{"OE"} 
 (meta-analysis of the total observed-expected ratio). See `Details' for more information.}
 
@@ -122,26 +123,38 @@ of the c-statistic. See \code{\link{ccalc}} for more information),
 \value{
 An object of class \code{valmeta} with the following elements:
 \describe{
- \item{"data"}{array with (transformed) data used for meta-analysis, and method(s) used for restoring missing information. }
- \item{"measure"}{character string specifying the performance measure that has been meta-analysed.}
+ \item{"data"}{array with (transformed) data used for meta-analysis, 
+ and method(s) used for restoring missing information. }
+ \item{"measure"}{character string specifying the performance measure that 
+ has been meta-analysed.}
  \item{"method"}{character string specifying the meta-analysis method.}
- \item{"model"}{character string specifying the meta-analysis model (link function).}
- \item{"est"}{summary estimate for the performance statistic. For Bayesian meta-analysis, the posterior median is returned.}
- \item{"ci.lb"}{lower bound of the confidence (or credibility) interval of the summary performance estimate.}
- \item{"ci.ub"}{upper bound of the confidence (or credibility) interval of the summary performance estimate.}
- \item{"pi.lb"}{lower bound of the (approximate) prediction interval of the summary performance estimate.}
- \item{"pi.ub"}{upper bound of the (approximate) prediction interval of the summary performance estimate.}
+ \item{"model"}{character string specifying the meta-analysis model 
+ (link function).}
+ \item{"est"}{summary estimate for the performance statistic. For Bayesian 
+ meta-analysis, the posterior median is returned.}
+ \item{"ci.lb"}{lower bound of the confidence (or credibility) interval of 
+ the summary performance estimate.}
+ \item{"ci.ub"}{upper bound of the confidence (or credibility) interval of 
+ the summary performance estimate.}
+ \item{"pi.lb"}{lower bound of the (approximate) prediction interval of the 
+ summary performance estimate.}
+ \item{"pi.ub"}{upper bound of the (approximate) prediction interval of the 
+ summary performance estimate.}
  \item{"fit"}{the full results from the fitted model. }
  \item{"slab"}{vector specifying the label of each study.}
 }
 }
 \description{
-This function provides summary estimates for the concordance statistic, the total observed-expected ratio 
-or the calibration slope. Where appropriate, data transformations are applied and missing information 
-is derived from available quantities. Unless specified otherwise, all meta-analysis models assume random effects 
-and are fitted using restricted maximum likelihood estimation with the \pkg{metafor} package (Viechtbauer 2010).  
-Further, confidence intervals for the average performance are based on the Hartung-Knapp-Sidik-Jonkman method. 
-When conducting a Bayesian meta-analysis, the R packages \pkg{runjags} and \pkg{rjags} must be installed.
+This function provides summary estimates for the concordance statistic, 
+the total observed-expected ratio or the calibration slope. Where 
+appropriate, data transformations are applied and missing information 
+is derived from available quantities. Unless specified otherwise, all 
+meta-analysis models assume random effects and are fitted using restricted 
+maximum likelihood estimation with the \pkg{metafor} package 
+(Viechtbauer 2010). Further, confidence intervals for the average 
+performance are based on the Hartung-Knapp-Sidik-Jonkman method. 
+When conducting a Bayesian meta-analysis, the R packages \pkg{runjags} and 
+\pkg{rjags} must be installed.
 }
 \details{
 \subsection{Meta-analysis of the concordance statistic}{
@@ -158,38 +171,53 @@ is Normally distributed across studies \code{pars$model.cstat = "normal/identity
 } 
 
 \subsection{Meta-analysis of the total observed versus expected ratio}{
-A summary estimate for the total observed versus expected (O:E) ratio can be obtained by specifying
-\code{measure="OE"}. The total O:E ratio provides a rough indication of the overall model calibration (across the 
-entire range of predicted risks). When missing, the total O:E ratio and/or its standard error are derived from other 
-reported information. See \code{\link{oecalc}} for more information.
+A summary estimate for the total observed versus expected (O:E) ratio can be 
+obtained by specifying \code{measure="OE"}. The total O:E ratio provides a 
+rough indication of the overall model calibration (across the entire range 
+of predicted risks). When missing, the total O:E ratio and/or its standard 
+error are derived from other reported information. See \code{\link{oecalc}} 
+for more information.
 
-For frequentist meta-analysis, within-study variation can either be modeled using a Normal (\code{model.oe = "normal/log"} 
-or \code{model.oe = "normal/identity"}) or a Poisson distribution (\code{model.oe = "poisson/log"}). 
+For frequentist meta-analysis, within-study variation can either be modeled 
+using a Normal (\code{model.oe = "normal/log"} or 
+\code{model.oe = "normal/identity"}) or a Poisson distribution 
+(\code{model.oe = "poisson/log"}). 
 
-When performing a Bayesian meta-analysis, all data are modeled using a one-stage random effects (hierarchical related regression) model.
-In particular, a binomial distribution (if \code{O}, \code{E} and \code{N} is known), a Poisson distribution 
-(if only \code{O} and \code{E} are known) or a Normal distribution (if \code{OE} and \code{OE.se} or \code{OE.95CI} are known) is selected separately for each study.
+When performing a Bayesian meta-analysis, all data are modeled using a 
+one-stage random effects (hierarchical related regression) model.
+In particular, a binomial distribution (if \code{O}, \code{E} and 
+\code{N} is known), a Poisson distribution (if only \code{O} and 
+\code{E} are known) or a Normal distribution (if \code{OE} and 
+\code{OE.se} or \code{OE.95CI} are known) is selected separately for 
+each study.
 
 }
 
 \subsection{Bayesian meta-analysis}{
-All Bayesian meta-analysis models assume the presence of random effects. Summary estimates are based on the posterior mean. 
-Credibility and prediction intervals are directly obtained from the corresponding posterior quantiles.
+All Bayesian meta-analysis models assume the presence of random effects. 
+Summary estimates are based on the posterior mean. Credibility and 
+prediction intervals are directly obtained from the corresponding posterior 
+quantiles.
 
-The prior distribution for the (transformed) performance estimate is modeled using a Normal distribution, 
-with mean \code{hp.mu.mean} (defaults to 0) and variance \code{hp.mu.var} (defaults to 1000). 
-For meta-analysis of the total O:E ratio, the maximum value for \code{hp.mu.var} is 100.
+The prior distribution for the (transformed) performance estimate is modeled 
+using a Normal distribution, with mean \code{hp.mu.mean} (defaults to 0) 
+and variance \code{hp.mu.var} (defaults to 1000). 
+For meta-analysis of the total O:E ratio, the maximum value for 
+\code{hp.mu.var} is 100.
 
-By default, the prior distribution for the between-study standard deviation is modeled using a uniform distribution 
-(\code{hp.tau.dist="dunif"}), with boundaries \code{hp.tau.min} and \code{hp.tau.max}. Alternative choices are a 
-truncated Student-t distribution (\code{hp.tau.dist="dhalft"}) with a mean of \code{hp.tau.mean}, 
-a standard deviation of \code{hp.tau.sigma} and \code{hp.tau.df} degrees of freedom. This distribution is again 
-restricted to the range \code{hp.tau.min} to \code{hp.tau.max}.
+By default, the prior distribution for the between-study standard deviation 
+is modeled using a uniform distribution (\code{hp.tau.dist="dunif"}), 
+with boundaries \code{hp.tau.min} and \code{hp.tau.max}. Alternative choices 
+are a truncated Student-t distribution (\code{hp.tau.dist="dhalft"}) with a 
+mean of \code{hp.tau.mean}, a standard deviation of \code{hp.tau.sigma} and 
+\code{hp.tau.df} degrees of freedom. This distribution is again restricted 
+to the range \code{hp.tau.min} to \code{hp.tau.max}.
 }
 }
 \note{
-The width of calculated confidence, credibility and prediction intervals can be specified 
-using \code{level} in the \code{pars} argument (defaults to 0.95).
+The width of calculated confidence, credibility and prediction 
+intervals can be specified using \code{level} in the \code{pars} argument 
+(defaults to 0.95).
 }
 \examples{
 ######### Validation of prediction models with a binary outcome #########
@@ -245,24 +273,32 @@ valmeta(measure="OE", Po=Po, Pe=Pe, N=n, data=Framingham)
 
 }
 \references{
-Debray TPA, Damen JAAG, Snell KIE, Ensor J, Hooft L, Reitsma JB, et al. A guide to systematic review and meta-analysis 
-of prediction model performance. \emph{BMJ}. 2017;\bold{356}:i6460. \doi{10.1136/bmj.i6460}
+Debray TPA, Damen JAAG, Snell KIE, Ensor J, Hooft L, Reitsma JB, et al. 
+A guide to systematic review and meta-analysis of prediction model 
+performance. \emph{BMJ}. 2017;\bold{356}:i6460. \doi{10.1136/bmj.i6460}
 
-Debray TPA, Damen JAAG, Riley R, Snell KIE, Reitsma JB, Hooft L, et al. A framework for meta-analysis of prediction model 
-studies with binary and time-to-event outcomes. \emph{Stat Methods Med Res}. 2019;\bold{28}:2768--86. \doi{10.1177/0962280218785504}
+Debray TPA, Damen JAAG, Riley R, Snell KIE, Reitsma JB, Hooft L, et al. 
+A framework for meta-analysis of prediction model studies with binary and 
+time-to-event outcomes. \emph{Stat Methods Med Res}. 2019;\bold{28}:2768--86. 
+\doi{10.1177/0962280218785504}
 
-Riley RD, Tierney JF, Stewart LA. Individual participant data meta-analysis: a handbook for healthcare research. Hoboken, NJ: Wiley; 2021. 
+Riley RD, Tierney JF, Stewart LA. Individual participant data meta-analysis: 
+a handbook for healthcare research. Hoboken, NJ: Wiley; 2021. 
 ISBN: 978-1-119-33372-2.
 
-Steyerberg EW, Nieboer D, Debray TPA, van Houwelingen HC. Assessment of heterogeneity in an individual participant
-data meta-analysis of prediction models: An overview and illustration. \emph{Stat Med}. 2019;\bold{38}:4290--309. \doi{10.1002/sim.8296}
+Steyerberg EW, Nieboer D, Debray TPA, van Houwelingen HC. Assessment of 
+heterogeneity in an individual participant data meta-analysis of prediction 
+models: An overview and illustration. \emph{Stat Med}. 2019;
+\bold{38}:4290--309. \doi{10.1002/sim.8296}
 
-Viechtbauer W. Conducting Meta-Analyses in R with the metafor Package. \emph{Journal of Statistical Software}. 
-2010; \bold{36}. \doi{10.18637/jss.v036.i03}
+Viechtbauer W. Conducting Meta-Analyses in R with the metafor Package. 
+\emph{Journal of Statistical Software}. 2010; \bold{36}. 
+\doi{10.18637/jss.v036.i03}
 }
 \seealso{
-\code{\link{ccalc}} to calculate concordance statistics and corresponding standard errors, \code{\link{oecalc}} to 
-calculate the total O:E ratio and corresponding standard errors, 
+\code{\link{ccalc}} to calculate concordance statistics 
+and corresponding standard errors, \code{\link{oecalc}} to calculate the 
+total O:E ratio and corresponding standard errors, 
 \code{\link{plot.valmeta}} to generate forest plots
 }
 \keyword{calibration}

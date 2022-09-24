@@ -72,7 +72,8 @@ An object of class c("mm_perf","data.frame") with the following columns:
 }
 }
 \description{
-The function calculates (transformed versions of) the concordance (c-) statistic with the corresponding sampling variance.
+The function calculates (transformed versions of) the concordance (c-)
+statistic with the corresponding sampling variance.
 }
 \details{
 The c-statistic is a measure of discrimination, and indicates the ability of a prediction model to 
