@@ -1,0 +1,21 @@
+model {
+	for (i in 1:k) {
+		w[i] <- 1/vars[i]
+		r[i] ~ dnorm(mu,w[i])
+	}
+
+	#Calculate Cochran Q
+	Q <- sum(w*(r-mu)**2)
+
+	#Calculate I2
+	dfr <- k-1
+	Isq <- max(0,(Q-dfr)/Q)
+
+
+	#prior distributions
+	mu ~ dnorm(hp.mu.mean,hp.mu.prec)
+
+ # predictive distribution
+ theta.new <- mu
+
+}

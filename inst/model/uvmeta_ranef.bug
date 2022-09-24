@@ -1,0 +1,19 @@
+model {
+	for (i in 1:k) {
+		w[i] <- 1/vars[i]
+		r[i] ~ dnorm(theta[i],w[i])
+		theta[i] ~ dnorm(mu,prec)
+	}
+
+	#prior distributions
+	mu ~ dnorm(hp.mu.mean, hp.mu.prec)
+	prior_mu ~ dnorm(hp.mu.mean, hp.mu.prec)
+	tau ~ dunif(hp.tau.min, hp.tau.max)
+	prior_tau ~ dunif(hp.tau.min, hp.tau.max)
+	tausq <- tau*tau
+	prec <- 1/(tausq)
+
+ # predictive distribution
+ theta.new ~ dnorm(mu,prec)
+
+}
