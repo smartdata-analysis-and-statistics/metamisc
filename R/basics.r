@@ -150,14 +150,14 @@ generateOEdata <- function(O, E, Po, Po.se, Pe, OE, OE.se, OE.95CI, citl, citl.s
     theta.var <- ifelse(is.na(theta.var), (((O/N)**2)+1)*((exp(citl))**2)*(citl.se**2), theta.var)
     
     #Extrapolate theta 
-    if (t.extrapolate & !is.na(t.ma) & class(t.val)=="numeric") {
+    if (t.extrapolate & !is.na(t.ma) & inherits(t.val, "numeric")) {
       if(verbose) message("Extrapolating estimates of the total O:E ratio ...")
       ep <- which(t.val!=t.ma)
       thetaE <- extrapolateOE(Po=Po, Pe=Pe, var.Po=(Po.se**2), t.val=t.val, t.ma=t.ma, N=N, model=pars$model.oe)
       theta[ep] <- thetaE[ep,"theta"]
       theta.var[ep] <- thetaE[ep,"theta.var"]
       t.val[ep] <- t.ma
-    } else if (!t.extrapolate & !is.na(t.ma) & class(t.val)=="numeric") {
+    } else if (!t.extrapolate & !is.na(t.ma) & inherits(t.val, "numeric")) {
       if(verbose) message("Omitting studies with improper follow-up times ...")
       theta[t.val!=t.ma] <- NA
       theta.var[t.val!=t.ma] <- NA
@@ -196,14 +196,14 @@ generateOEdata <- function(O, E, Po, Po.se, Pe, OE, OE.se, OE.95CI, citl, citl.s
     theta.var <- ifelse(is.na(theta.var),  restore.oe.var(citl=citl, citl.se=citl.se, Po=Po), theta.var) #CITL
     
     #Extrapolate theta 
-    if (t.extrapolate & !is.na(t.ma) & class(t.val)=="numeric") {
+    if (t.extrapolate & !is.na(t.ma) & inherits(t.val, "numeric")) {
       if(verbose) message("Extrapolating estimates of the total O:E ratio ...")
       ep <- which(t.val!=t.ma)
       thetaE <- extrapolateOE(Po=Po, Pe=Pe, var.Po=(Po.se**2), t.val=t.val, t.ma=t.ma, N=N, model=pars$model.oe)
       theta[ep] <- thetaE[ep,"theta"]
       theta.var[ep] <- thetaE[ep,"theta.var"]
       t.val[ep] <- t.ma
-    } else if (!t.extrapolate & !is.na(t.ma) & class(t.val)=="numeric") {
+    } else if (!t.extrapolate & !is.na(t.ma) & inherits(t.val, "numeric")) {
       if(verbose)message("Omitting studies with improper follow-up times ...")
       theta[t.val!=t.ma] <- NA
       theta.var[t.val!=t.ma] <- NA
