@@ -377,7 +377,7 @@ mrma <- function(coefficients, vcov, variances,  ...) {
   meta.method <- "REML" # Method for meta-analysis
   
   # Test if we are dealing with multivariate data
-  if (class(coefficients) == "numeric") {
+  if (inherits(coefficients, "numeric")) {
     coefficients <- data.frame(y=coefficients)
   }
   if (ncol(coefficients)==1) {

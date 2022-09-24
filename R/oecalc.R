@@ -192,7 +192,7 @@ oecalc <- function(OE, OE.se, OE.cilb, OE.ciub, OE.cilv, EO, EO.se, citl, citl.s
     if (anyNA(slab))
       stop("NAs in study labels.")
     
-    if (class(slab)=="factor") {
+    if (inherits(slab, "factor")) {
       slab <- as.character(slab)
     }
     

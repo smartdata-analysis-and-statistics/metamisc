@@ -190,7 +190,7 @@ ccalc <- function(cstat, cstat.se, cstat.cilb, cstat.ciub, cstat.cilv, sd.LP, N,
     if (anyNA(slab))
       stop("NAs in study labels.")
     
-    if (class(slab)=="factor") {
+    if (inherits(slab, "factor")) {
       slab <- as.character(slab)
     }
     
