@@ -1,4 +1,3 @@
-# metamisc 0.4.0
+# metamisc 0.4.0.9000
 
-* Omitted equations from the documentation
-* Changed main repository from R-forge to GitHub
+* Added a `NEWS.md` file to track changes to the package.
