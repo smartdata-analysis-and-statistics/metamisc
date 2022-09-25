@@ -2,7 +2,7 @@ Package: metamisc
 Type: Package
 Title: Meta-Analysis of Diagnosis and Prognosis Research Studies
 Version: 0.4.0
-Date: 2022-12-24
+Date: 2022-12-25
 Authors@R: c(person(given = "Thomas", family = "Debray", role = c("aut", "cre"), 
                     email = "thomas.debray@gmail.com", comment="https://orcid.org/0000-0002-1790-2719"), 
             person(given = "Valentijn", family = "de Jong", role = "aut", 
@@ -11,7 +11,7 @@ Description: Facilitate frequentist and Bayesian meta-analysis of diagnosis and 
 Imports: metafor (>= 2.0.0), mvtnorm,  lme4, dplyr, plyr, methods, pROC, ggplot2
 Depends: R (>= 3.5.0), stats, graphics
 Suggests: coda, runjags, rjags, ggmcmc, logistf (>=	1.23), testthat (>= 1.0.2)
-License: GPL-3 + file LICENSE
+License: GPL-3
 Encoding: UTF-8
 URL: https://github.com/smartdata-analysis-and-statistics/metamisc
 RoxygenNote: 7.2.1
