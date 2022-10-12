@@ -1,4 +1,4 @@
-# metamisc
+# metamisc: an R package for meta-analysis of prognosis studies
 
 <!-- badges: start -->
 
