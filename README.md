@@ -10,9 +10,9 @@ downloads](https://cranlogs.r-pkg.org/badges/last-month/precmed)](https://cran.r
 
 This is the official repository of the R package **metamisc**, which was developed to facilitate meta-analysis of diagnosis and prognosis research studies. The package includes functions for the following tasks:
 
-* To develop and validate multivariable prediction models from datasets with clustering (de Jong et al., 2021) <doi:10.1002/sim.8981>
-* To summarize multiple estimates of prediction model discrimination and calibration performance (Debray et al., 2019) <doi:10.1177/0962280218785504>. *
-* To evaluate funnel plot asymmetry (Debray et al., 2018) <doi:10.1002/jrsm.1266>
+* To develop and validate multivariable prediction models from datasets with clustering (de Jong et al., 2021)
+* To summarize multiple estimates of prediction model discrimination and calibration performance (Debray et al., 2019)
+* To evaluate funnel plot asymmetry (Debray et al., 2018)
 
 ## Installation
 
@@ -31,3 +31,11 @@ devtools::install_github(repo = "smartdata-analysis-and-statistics/metamisc")
 
 ## JASP
 A visual interface to the software has been implemented by JASP <https://jasp-stats.org/>
+
+## References
+de Jong VMT, Moons KGM, Eijkemans MJC, Riley RD, Debray TPA. Developing more generalizable prediction models from pooled studies and large clustered data sets. \emph{Stat Med}. 2021 May 5;40(15):3533–59. 
+
+Debray TPA, Moons KGM, Riley RD. Detecting small-study effects and funnel plot asymmetry in meta-analysis of survival data: a comparison of new and existing tests. Res Syn Meth. 2018;9(1):41–50. 
+
+Debray TPA, Damen JAAG, Riley R, Snell KIE, Reitsma JB, Hooft L, et al. A framework for meta-analysis of prediction model studies with binary and time-to-event outcomes. Stat Methods Med Res. 2019 Sep;28(9):2768–86. 
+
