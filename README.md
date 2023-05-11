@@ -5,6 +5,7 @@
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/metamisc)](https://cran.r-project.org/package=metamisc)
 [![metacran
 downloads](https://cranlogs.r-pkg.org/badges/last-month/precmed)](https://cran.r-project.org/package=metamisc)
+[![R-CMD-check](https://github.com/smartdata-analysis-and-statistics/metamisc/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/smartdata-analysis-and-statistics/metamisc/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 This is the official repository of the R package **metamisc**, which was developed to facilitate meta-analysis of diagnosis and prognosis research studies. The package includes functions for the following tasks:
