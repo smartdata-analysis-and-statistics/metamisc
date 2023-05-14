@@ -5,3 +5,6 @@ cran-comments.md
 ^CRAN-SUBMISSION$
 ^\.github$
 ^README\.Rmd$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

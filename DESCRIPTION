@@ -10,9 +10,19 @@ Authors@R: c(person(given = "Thomas", family = "Debray", role = c("aut", "cre"),
 Description: Facilitate frequentist and Bayesian meta-analysis of diagnosis and prognosis research studies. It includes functions to  summarize multiple estimates of prediction model discrimination and calibration performance (Debray et al., 2019) <doi:10.1177/0962280218785504>. It also includes functions to evaluate funnel plot asymmetry (Debray et al., 2018) <doi:10.1002/jrsm.1266>. Finally, the package provides functions for developing multivariable prediction models from datasets with clustering (de Jong et al., 2021) <doi:10.1002/sim.8981>. 
 Imports: metafor (>= 2.0.0), mvtnorm,  lme4, dplyr, plyr, methods, pROC, ggplot2
 Depends: R (>= 3.5.0), stats, graphics
-Suggests: coda, runjags, rjags, ggmcmc, logistf (>=	1.23), testthat (>= 1.0.2)
+Suggests: 
+    coda,
+    runjags,
+    rjags,
+    ggmcmc,
+    logistf (>= 1.23),
+    testthat (>= 1.0.2),
+    knitr,
+    rmarkdown
 License: GPL-3
 Encoding: UTF-8
-URL: https://github.com/smartdata-analysis-and-statistics/metamisc
+URL: https://github.com/smartdata-analysis-and-statistics/metamisc,
+    https://smartdata-analysis-and-statistics.github.io/metamisc/
 RoxygenNote: 7.2.3
 NeedsCompilation: no
+VignetteBuilder: knitr
