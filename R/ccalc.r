@@ -242,8 +242,8 @@ ccalc <- function(cstat, cstat.se, cstat.cilb, cstat.ciub, cstat.cilv, sd.LP, N,
   
   # Restore c-statistic
   te.method <- c("c-statistic", "std.dev(LP)")
-  te.orig   <- calculate.cstat.theta(cstat=cstat, g=g)
-  te.white  <- calculate.cstat.sdPI(sdPI=sd.LP, g=g)
+  te.orig   <- calculate.cstat.theta(cstat = cstat, g = g)
+  te.white  <- calculate.cstat.sdPI(sdPI = sd.LP, g = g)
   
   te.dat <- cbind(te.orig, te.white)
   

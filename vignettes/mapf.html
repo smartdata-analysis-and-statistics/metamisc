@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.2.269">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="author" content="Thomas Debray">
+
+<title>Meta-analysis of prognostic factor studies</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1.6em;
+  vertical-align: middle;
+}
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { color: #008000; } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { color: #008000; font-weight: bold; } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}
+</style>
+
+
+<script src="mapf_files/libs/clipboard/clipboard.min.js"></script>
+<script src="mapf_files/libs/quarto-html/quarto.js"></script>
+<script src="mapf_files/libs/quarto-html/popper.min.js"></script>
+<script src="mapf_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="mapf_files/libs/quarto-html/anchor.min.js"></script>
+<link href="mapf_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="mapf_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="mapf_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="mapf_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="mapf_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction"><span class="toc-section-number">1</span>  Introduction</a></li>
+  <li><a href="#meta-analysis-of-prognostic-effect-estimates" id="toc-meta-analysis-of-prognostic-effect-estimates" class="nav-link" data-scroll-target="#meta-analysis-of-prognostic-effect-estimates"><span class="toc-section-number">2</span>  Meta-analysis of prognostic effect estimates</a>
+  <ul class="collapse">
+  <li><a href="#background-information" id="toc-background-information" class="nav-link" data-scroll-target="#background-information"><span class="toc-section-number">2.1</span>  Background information</a></li>
+  <li><a href="#exploratory-analyses" id="toc-exploratory-analyses" class="nav-link" data-scroll-target="#exploratory-analyses"><span class="toc-section-number">2.2</span>  Exploratory analyses</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link" data-scroll-target="#data-preparation"><span class="toc-section-number">2.3</span>  Data preparation</a></li>
+  <li><a href="#assessment-of-publication-bias" id="toc-assessment-of-publication-bias" class="nav-link" data-scroll-target="#assessment-of-publication-bias"><span class="toc-section-number">2.4</span>  Assessment of publication bias</a></li>
+  <li><a href="#meta-analysis-of-the-prognostic-value-of-her2" id="toc-meta-analysis-of-the-prognostic-value-of-her2" class="nav-link" data-scroll-target="#meta-analysis-of-the-prognostic-value-of-her2"><span class="toc-section-number">2.5</span>  Meta-analysis of the prognostic value of HER2</a></li>
+  <li><a href="#multivariate-meta-analysis" id="toc-multivariate-meta-analysis" class="nav-link" data-scroll-target="#multivariate-meta-analysis"><span class="toc-section-number">2.6</span>  Multivariate meta-analysis</a></li>
+  </ul></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span class="toc-section-number">3</span>  References</a></li>
+  </ul>
+</nav>
+</div>
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Meta-analysis of prognostic factor studies</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    <div>
+    <div class="quarto-title-meta-heading">Author</div>
+    <div class="quarto-title-meta-contents">
+             <p>Thomas Debray <a href="https://orcid.org/0000-0002-1790-2719" class="quarto-title-author-orcid"> <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAA2ZpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wTU09Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9tbS8iIHhtbG5zOnN0UmVmPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvc1R5cGUvUmVzb3VyY2VSZWYjIiB4bWxuczp4bXA9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC8iIHhtcE1NOk9yaWdpbmFsRG9jdW1lbnRJRD0ieG1wLmRpZDo1N0NEMjA4MDI1MjA2ODExOTk0QzkzNTEzRjZEQTg1NyIgeG1wTU06RG9jdW1lbnRJRD0ieG1wLmRpZDozM0NDOEJGNEZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wTU06SW5zdGFuY2VJRD0ieG1wLmlpZDozM0NDOEJGM0ZGNTcxMUUxODdBOEVCODg2RjdCQ0QwOSIgeG1wOkNyZWF0b3JUb29sPSJBZG9iZSBQaG90b3Nob3AgQ1M1IE1hY2ludG9zaCI+IDx4bXBNTTpEZXJpdmVkRnJvbSBzdFJlZjppbnN0YW5jZUlEPSJ4bXAuaWlkOkZDN0YxMTc0MDcyMDY4MTE5NUZFRDc5MUM2MUUwNEREIiBzdFJlZjpkb2N1bWVudElEPSJ4bXAuZGlkOjU3Q0QyMDgwMjUyMDY4MTE5OTRDOTM1MTNGNkRBODU3Ii8+IDwvcmRmOkRlc2NyaXB0aW9uPiA8L3JkZjpSREY+IDwveDp4bXBtZXRhPiA8P3hwYWNrZXQgZW5kPSJyIj8+84NovQAAAR1JREFUeNpiZEADy85ZJgCpeCB2QJM6AMQLo4yOL0AWZETSqACk1gOxAQN+cAGIA4EGPQBxmJA0nwdpjjQ8xqArmczw5tMHXAaALDgP1QMxAGqzAAPxQACqh4ER6uf5MBlkm0X4EGayMfMw/Pr7Bd2gRBZogMFBrv01hisv5jLsv9nLAPIOMnjy8RDDyYctyAbFM2EJbRQw+aAWw/LzVgx7b+cwCHKqMhjJFCBLOzAR6+lXX84xnHjYyqAo5IUizkRCwIENQQckGSDGY4TVgAPEaraQr2a4/24bSuoExcJCfAEJihXkWDj3ZAKy9EJGaEo8T0QSxkjSwORsCAuDQCD+QILmD1A9kECEZgxDaEZhICIzGcIyEyOl2RkgwAAhkmC+eAm0TAAAAABJRU5ErkJggg=="></a></p>
+          </div>
+  </div>
+    
+    <div>
+    <div class="quarto-title-meta-heading">Published</div>
+    <div class="quarto-title-meta-contents">
+      <p class="date">Last Updated on 14 May, 2023</p>
+    </div>
+  </div>
+  
+    
+  </div>
+  
+
+</header>
+
+<div class="cell">
+
+</div>
+<section id="introduction" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> Introduction</h1>
+<p>An important task in medical research is the identification and assessment of prognostic factors. A prognostic factor is any measure that, among people with a given health condition (that is, a startpoint), is associated with a subsequent clinical outcome (an endpoint) <span class="citation" data-cites="riley_prognosis_2013">(<a href="#ref-riley_prognosis_2013" role="doc-biblioref">Riley 2013</a>)</span>. Commonly investigated prognostic factors include simple measures such as age, sex, and size of tumor, but they can also include more complex factors such as abnormal levels of proteins or catecholamines and unusual genetic mutations <span class="citation" data-cites="sauerbrei_evidence-based_2006">(<a href="#ref-sauerbrei_evidence-based_2006" role="doc-biblioref">Sauerbrei and Altman 2006</a>)</span>. They can be useful as modifiable targets for interventions to improve outcomes, building blocks for prognostic models, or predictors of differential treatment response.</p>
+<p>Over the past few decades, numerous prognostic factor studies have been published in the medical literature. For example, <span class="citation" data-cites="riley_reporting_2003">Riley and Burchill (<a href="#ref-riley_reporting_2003" role="doc-biblioref">2003</a>)</span> identified 260 studies reporting associations for 130 different tumour markers for neuroblastoma. More recently, <span class="citation" data-cites="tzoulaki_assessment_2009">Tzoulaki and Ioannidis (<a href="#ref-tzoulaki_assessment_2009" role="doc-biblioref">2009</a>)</span> identified 79 studies reporting the added value of 86 different markers when added to the Framingham risk score. Despite this huge research effort, the prognostic value of most traditional factors under discussion is uncertain and the usefulness of many specific markers, prognostic indices, and classification schemes is still unproven <span class="citation" data-cites="sauerbrei_evidence-based_2006">(<a href="#ref-sauerbrei_evidence-based_2006" role="doc-biblioref">Sauerbrei and Altman 2006</a>)</span>.</p>
+<p>The aim of this introduction is to illustrate how to summarize the results from multiple prognostic factor studies and how to investigate sources of between-study heterogeneity.</p>
+<p>In this practical we will make use of the R packages <code>metamisc</code> and <code>metafor</code>. The <a href="metafor">https://cran.r-project.org/package=metafor</a> package provides a comprehensive collection of functions for conducting meta-analyses in R. The <a href="metamisc">https://cran.r-project.org/package=metamisc</a> package provides additional functions to facilitate meta-analysis of prognosis studies. We can load these packages as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metafor)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metamisc)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>show.text <span class="ot">=</span> <span class="cn">TRUE</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="meta-analysis-of-prognostic-effect-estimates" class="level1" data-number="2">
+<h1 data-number="2"><span class="header-section-number">2</span> Meta-analysis of prognostic effect estimates</h1>
+<section id="background-information" class="level2" data-number="2.1">
+<h2 data-number="2.1" class="anchored" data-anchor-id="background-information"><span class="header-section-number">2.1</span> Background information</h2>
+<p>Endometrial cancer (EC) is the fourth most common malignancy in women and the most common gynecologic cancer. Overall, the 5-year survival rates for EC are approximately 78–90% for stage I, 74% for stage II, 36–57% for stage III, and 20% for stage IV. Such poor outcomes raise an urgent requirement that more accurate prognosis and predictive markers should be applied for EC to guide the therapy and monitor the disease progress for individual patients.</p>
+<p>Several biological molecules have been proposed as prognostic biomarkers in EC. Among them, hormone receptors such as estrogen receptors (ER), progesterone receptors (PR), and human epidermal growth factor receptor 2 (HER2) are attractive because of their physiological functions. Recently, Zhang conducted a systematic review to evaluate the overall risk of these hormone receptors for endometrial cancer survival <span class="citation" data-cites="zhang_prognostic_2015">(<a href="#ref-zhang_prognostic_2015" role="doc-biblioref">Zhang and Sun 2015</a>)</span>. This review included 16 studies recruiting 1764 patients for HER2. We can load the data from all 16 studies in R as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">data</span>(Zhang)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This creates an object <code>Zhang</code> that contains the summary data from 14 studies reporting on overall survival (OS) and from 6 studies reporting on progression-free survival (PFS). As a result, a total of 20 estimates are available for the hazard ratio of HER2:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>Zhang</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   Study    PrimaryAuthor year     Country Disease   N    HR
+1  Gonzalez-Rodilla 2013 Gonzalez-Rodilla 2013       Spain      EC 126  1.14
+2            Togami 2012           Togami 2012       Japan    UPSC  71  3.00
+3              Mori 2010             Mori 2010       Japan     EEC  63  2.58
+4          Jongen 2009-2           Jongen 2009 Netherlands     EEC 315  0.66
+5           Konecny 2009          Konecny 2009         USA      EC 273  2.13
+6           Odicino 2008          Odicino 2008       Italy    UPSC  10  1.60
+7          Santin 2005-2           Santin 2005         USA    UPSC  30  5.19
+8          Santin 2005-1           Santin 2005         USA    UPSC  27 12.43
+9             Backe 1997            Backe 1997     Germany      EC 222  1.17
+10       Kohlberger 1996       Kohlberger 1996   Australia      EC 100  3.95
+11          Saffari 2995          Saffari 1995         USA      EC  75  5.25
+12            Peiro 2004            Peiro 2004     Germany      EC  10  1.64
+13       Cianciulli 2003       Cianciulli 2003       Italy      EC  73  1.90
+14            Gates 2006            Gates 2006         USA      EC  99  4.00
+15           Togami 2012           Togami 2012       Japan    UPSC  71  3.43
+16             Mori 2010             Mori 2010       Japan     EEC  63  3.80
+17         Jongen 2009-2           Jongen 2009 Netherlands     EEC 315  1.75
+18         Coronado 2001         Coronado 2001       Spain      EC 114  2.69
+19            Backe 1997            Backe 1997     Germany      EC 222  1.36
+20             Voss 2011              Vos 2011     England      EC 156  1.41
+   HR.025 HR.975 outcome
+1    0.52   2.52      OS
+2    1.15   7.01      OS
+3    1.03   7.92      OS
+4    0.10   4.28      OS
+5    1.65   2.73      OS
+6    0.89   2.89      OS
+7    1.52  17.64      OS
+8    1.57  98.28      OS
+9    0.93   1.49      OS
+10   1.07  14.69      OS
+11   1.33  20.74      OS
+12   1.04   2.57      OS
+13   0.83   4.36      OS
+14   0.77  20.80      OS
+15   1.50   7.23     PFS
+16   1.29  12.35     PFS
+17   0.23  13.08     PFS
+18   1.35   5.37     PFS
+19   0.65   2.85     PFS
+20   0.51   3.88     PFS</code></pre>
+</div>
+</div>
+<p>For each study, estimates of effect were retrieved as follows. The simplest method consisted in the direct collection of HR, odds ratio or risk ratio, and their 95% CI from the original article, with an HR of less than 1 being associated with a better outcome. If not available, the total numbers of observed deaths/cancer recurrences and the numbers of patients in each group were extracted to calculate HR. When data were only available as Kaplan-Meier curves, data were extracted from the graphical survival plots, and estimation of the HR was then performed using the described method.</p>
+<p>A total of 14 studies assessed the relation between HER2 and overall survival. The corresponding hazard ratios (HR) are given below:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>Zhang</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                   Study    PrimaryAuthor year     Country Disease   N    HR
+1  Gonzalez-Rodilla 2013 Gonzalez-Rodilla 2013       Spain      EC 126  1.14
+2            Togami 2012           Togami 2012       Japan    UPSC  71  3.00
+3              Mori 2010             Mori 2010       Japan     EEC  63  2.58
+4          Jongen 2009-2           Jongen 2009 Netherlands     EEC 315  0.66
+5           Konecny 2009          Konecny 2009         USA      EC 273  2.13
+6           Odicino 2008          Odicino 2008       Italy    UPSC  10  1.60
+7          Santin 2005-2           Santin 2005         USA    UPSC  30  5.19
+8          Santin 2005-1           Santin 2005         USA    UPSC  27 12.43
+9             Backe 1997            Backe 1997     Germany      EC 222  1.17
+10       Kohlberger 1996       Kohlberger 1996   Australia      EC 100  3.95
+11          Saffari 2995          Saffari 1995         USA      EC  75  5.25
+12            Peiro 2004            Peiro 2004     Germany      EC  10  1.64
+13       Cianciulli 2003       Cianciulli 2003       Italy      EC  73  1.90
+14            Gates 2006            Gates 2006         USA      EC  99  4.00
+15           Togami 2012           Togami 2012       Japan    UPSC  71  3.43
+16             Mori 2010             Mori 2010       Japan     EEC  63  3.80
+17         Jongen 2009-2           Jongen 2009 Netherlands     EEC 315  1.75
+18         Coronado 2001         Coronado 2001       Spain      EC 114  2.69
+19            Backe 1997            Backe 1997     Germany      EC 222  1.36
+20             Voss 2011              Vos 2011     England      EC 156  1.41
+   HR.025 HR.975 outcome
+1    0.52   2.52      OS
+2    1.15   7.01      OS
+3    1.03   7.92      OS
+4    0.10   4.28      OS
+5    1.65   2.73      OS
+6    0.89   2.89      OS
+7    1.52  17.64      OS
+8    1.57  98.28      OS
+9    0.93   1.49      OS
+10   1.07  14.69      OS
+11   1.33  20.74      OS
+12   1.04   2.57      OS
+13   0.83   4.36      OS
+14   0.77  20.80      OS
+15   1.50   7.23     PFS
+16   1.29  12.35     PFS
+17   0.23  13.08     PFS
+18   1.35   5.37     PFS
+19   0.65   2.85     PFS
+20   0.51   3.88     PFS</code></pre>
+</div>
+</div>
+<p>EC endometrial cancer, EEC endometrioid endometrial cancer, UPSC uterine papillary serous carcinoma</p>
+<p>The hormone receptor HER2 has prognostic value for survival but is prone to substantial between-study heterogeneity. Hazard ratios appear much larger for studies conducted in the USA</p>
+<p>The heterogeneity of the population was probably due to the difference in the baseline characteristics of patients (age, tumor stage, race, methodology for assessing HRs expression, or country), the cutoff value of markers, the undergoing treatment, the duration of follow-up, and others. Also, HRs are unadjusted, and therefore highly prone to heterogeneity in patient spectrum.</p>
+<p>Note that the total number of studies is indeed 16:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(Zhang<span class="sc">$</span>Study))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 16</code></pre>
+</div>
+</div>
+</section>
+<section id="exploratory-analyses" class="level2" data-number="2.2">
+<h2 data-number="2.2" class="anchored" data-anchor-id="exploratory-analyses"><span class="header-section-number">2.2</span> Exploratory analyses</h2>
+<p>It is often helpful to display the effect sizes of all studies in a forest plot. The forest plot for overall survival can then be generated as follows. Briefly, we here provide information on the estimated hazard ratios (via the argument <code>theta</code>), as well as the bounds of their 95% confidence interval (via <code>theta.ci.lb</code> and <code>theta.ci.ub</code>). Further, we only include the 14 estimates for overall survival.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">subset</span>(Zhang, outcome<span class="sc">==</span><span class="st">"OS"</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">with</span>(ds, <span class="fu">forest</span>(<span class="at">theta =</span> HR, <span class="at">theta.ci.lb =</span> HR<span class="fl">.025</span>, <span class="at">theta.ci.ub =</span> HR<span class="fl">.975</span>, </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">theta.slab =</span> Study, <span class="at">xlab =</span> <span class="st">"Hazard ratio of HER2 versus OS"</span>, <span class="at">refline =</span> <span class="dv">1</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can also generate the same plot using <code>metafor</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>metafor<span class="sc">::</span><span class="fu">forest</span>(<span class="at">x =</span> Zhang<span class="sc">$</span>HR, <span class="at">ci.lb =</span> Zhang<span class="sc">$</span>HR<span class="fl">.025</span>, <span class="at">ci.ub =</span> Zhang<span class="sc">$</span>HR<span class="fl">.975</span>, <span class="at">slab =</span> </span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                  Zhang<span class="sc">$</span>Study, <span class="at">subset =</span> (Zhang<span class="sc">$</span>outcome<span class="sc">==</span><span class="st">"OS"</span>),  <span class="at">xlab =</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                  <span class="st">"Hazard ratio of HER2 versus OS"</span>, <span class="at">refline =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="mapf_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>It is easier to assess the summary effect and the presence of statistical heterogeneity.</p>
+</section>
+<section id="data-preparation" class="level2" data-number="2.3">
+<h2 data-number="2.3" class="anchored" data-anchor-id="data-preparation"><span class="header-section-number">2.3</span> Data preparation</h2>
+<p>To facilitate any further analysis, information on the standard error of the different study effect sizes is needed. Estimates for the standard error can be obtained from the reported 95% confidence intervals <span class="citation" data-cites="altman_how_2011">(<a href="#ref-altman_how_2011" role="doc-biblioref">Altman Douglas G. and Bland 2011</a>)</span>. However, rather than estimating the standard error of the HR, we will calculate the log HR and estimate its corresponding standard error. The main reason is that the HR is a ratio measure, for which the (within-study) sampling variation can be approximated with a Normal distribution if the log scale is used.</p>
+<p>The standard error (SE) of the log hazard ratio is simply given as:</p>
+<p><span class="math inline">\(\mathrm{SE}=(\log(u)-\log(l))/(2*1.96)\)</span></p>
+<p>where the upper and lower limits of the 95% CI are <span class="math inline">\(u\)</span> and <span class="math inline">\(l\)</span> respectively. In <code>R</code>, we have:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>Zhang<span class="sc">$</span>logHR <span class="ot">&lt;-</span> <span class="fu">log</span>(Zhang<span class="sc">$</span>HR)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>Zhang<span class="sc">$</span>se.logHR <span class="ot">&lt;-</span> (<span class="fu">log</span>(Zhang<span class="sc">$</span>HR<span class="fl">.975</span>)<span class="sc">-</span><span class="fu">log</span>(Zhang<span class="sc">$</span>HR<span class="fl">.025</span>))<span class="sc">/</span>(<span class="dv">2</span><span class="sc">*</span><span class="fu">qnorm</span>((<span class="dv">1</span><span class="fl">-0.05</span><span class="sc">/</span><span class="dv">2</span>)))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Zhang)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>                  Study    PrimaryAuthor year     Country Disease   N   HR
+1 Gonzalez-Rodilla 2013 Gonzalez-Rodilla 2013       Spain      EC 126 1.14
+2           Togami 2012           Togami 2012       Japan    UPSC  71 3.00
+3             Mori 2010             Mori 2010       Japan     EEC  63 2.58
+4         Jongen 2009-2           Jongen 2009 Netherlands     EEC 315 0.66
+5          Konecny 2009          Konecny 2009         USA      EC 273 2.13
+6          Odicino 2008          Odicino 2008       Italy    UPSC  10 1.60
+  HR.025 HR.975 outcome      logHR  se.logHR
+1   0.52   2.52      OS  0.1310283 0.4026057
+2   1.15   7.01      OS  1.0986123 0.4611247
+3   1.03   7.92      OS  0.9477894 0.5203750
+4   0.10   4.28      OS -0.4155154 0.9583181
+5   1.65   2.73      OS  0.7561220 0.1284530
+6   0.89   2.89      OS  0.4700036 0.3004622</code></pre>
+</div>
+</div>
+</section>
+<section id="assessment-of-publication-bias" class="level2" data-number="2.4">
+<h2 data-number="2.4" class="anchored" data-anchor-id="assessment-of-publication-bias"><span class="header-section-number">2.4</span> Assessment of publication bias</h2>
+<p>The presence of small-study effects is a common threat to systematic reviews and meta-analyses. Small-study effects is a generic term for the phenomenon that sometimes smaller studies show different, often stronger, effects than the large ones <span class="citation" data-cites="debray_detecting_2018">(<a href="#ref-debray_detecting_2018" role="doc-biblioref">Debray and Riley 2018</a>)</span>. One possible reason is publication bias. Previously, <span class="citation" data-cites="altman_systematic_2001">D. G. Altman (<a href="#ref-altman_systematic_2001" role="doc-biblioref">2001</a>)</span> argued that it is probable that studies showing a strong (often statistically significant) prognostic ability are more likely to be published. For this reason, it is important to evaluate the potential presence of small-study effects, which can be verified by visual inspection of the funnel plot. In this plot, the estimate of the reported effect size is plotted against a measure of precision or sample size for each included study of the meta-analysis. The premise is that the scatter of plots should reflect a funnel shape, if small-study effects do not exist (provided that effect sizes are not substantially affected by the presence of between-study heterogeneity). However, when small studies are predominately in one direction (usually the direction of larger effect sizes), asymmetry will ensue.</p>
+<p>A common approach to construct the funnel plot is to display the individual observed effect sizes on the x-axis against the corresponding standard errors on the y-axis, and to use the fixed effect summary estimate as reference value. In the absence of publication bias and heterogeneity, one would then expect to see the points forming a funnel shape, with the majority of the points falling inside of the pseudo-confidence region of the summary estimate.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">rma</span>(<span class="at">yi =</span> logHR, <span class="at">sei =</span> se.logHR, <span class="at">subset =</span> (outcome<span class="sc">==</span><span class="st">"OS"</span>), <span class="at">method =</span> <span class="st">"FE"</span>, <span class="at">data =</span> Zhang)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">funnel</span>(res, <span class="at">xlab=</span><span class="st">"Log Hazard Ratio"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="mapf_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Most study estimates fall within the pseudo-confidence region, hence there appears limited evidence for publication bias.</p>
+<p>We can formally test the presence of asymmetry in the funnel plot by evaluating whether there is an association between the estimated standard error and the estimated effect size.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">regtest</span>(<span class="at">x =</span> Zhang<span class="sc">$</span>logHR, <span class="at">sei =</span> Zhang<span class="sc">$</span>se.logHR, <span class="at">subset =</span> (Zhang<span class="sc">$</span>outcome<span class="sc">==</span><span class="st">"OS"</span>), </span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">model =</span> <span class="st">"lm"</span>, <span class="at">predictor =</span> <span class="st">"sei"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Regression Test for Funnel Plot Asymmetry
+
+Model:     weighted regression with multiplicative dispersion
+Predictor: standard error
+
+Test for Funnel Plot Asymmetry: t = 2.1622, df = 12, p = 0.0515
+Limit Estimate (as sei -&gt; 0):   b = 0.2590 (CI: -0.0760, 0.5939)</code></pre>
+</div>
+</div>
+<div class="cell">
+
+</div>
+<p>The P-value for funnel plot asymmetry is given as 0.052. Note that it is common to use a 10% level of significance because the number of studies in a meta-analysis is usually low and also there is evidence for funnel plot asymmetry, as the P-value is below 0.10.</p>
+<p>Funnel plot asymmetry tests can also be performed using <a href="https://cran.r-project.org/package=metamisc">metamisc</a></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ds <span class="ot">&lt;-</span> <span class="fu">subset</span>(Zhang, outcome<span class="sc">==</span><span class="st">"OS"</span>)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>regfit <span class="ot">&lt;-</span> <span class="fu">with</span>(ds, <span class="fu">fat</span>(<span class="at">b=</span>logHR, <span class="at">b.se=</span>se.logHR, <span class="at">method=</span><span class="st">"E-FIV"</span>))</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>regfit</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Call: fat(b = logHR, b.se = se.logHR, method = "E-FIV")
+
+Fixed effect summary estimate:  0.5193  
+
+test for funnel plot asymmetry: t =2.1622, df = 12, p = 0.0515</code></pre>
+</div>
+</div>
+<p>Again, we can construct a funnel plot:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(regfit)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="mapf_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Some caution is warranted when interpreting the results for funnel plot asymmetry tests <span class="citation" data-cites="debray_detecting_2018">(<a href="#ref-debray_detecting_2018" role="doc-biblioref">Debray and Riley 2018</a>)</span>. First, the power to detect asymmetry is often limited because meta-analyses usually do not include many studies. Second, many tests are known to yield inadequate type-I error rates or to suffer from low power. For instance, it has been demonstrated that aforementioned test to evaluate the association between the estimated standard error and effect size tends to yield type-I error rates that are too high. Finally, funnel plot asymmetry may rather be caused by heterogeneity than by publication bias.</p>
+<p>Adjust aformentioned regression test to use inverse of the total sample size (rather than the standard error) as predictor.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">regtest</span>(<span class="at">x =</span> Zhang<span class="sc">$</span>logHR, <span class="at">sei =</span> Zhang<span class="sc">$</span>se.logHR, <span class="at">ni =</span> Zhang<span class="sc">$</span>N, </span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>        <span class="at">subset =</span> (Zhang<span class="sc">$</span>outcome<span class="sc">==</span><span class="st">"OS"</span>), <span class="at">model =</span> <span class="st">"lm"</span>, </span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>        <span class="at">predictor =</span> <span class="st">"ninv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Regression Test for Funnel Plot Asymmetry
+
+Model:     weighted regression with multiplicative dispersion
+Predictor: inverse of the sample size
+
+Test for Funnel Plot Asymmetry: t = 0.1552, df = 12, p = 0.8793
+Limit Estimate (as ni -&gt; inf):  b = 0.5088 (CI: 0.2226, 0.7950)</code></pre>
+</div>
+</div>
+<p>From here onwards, we will assume that the potential for publication bias is neglegible, and proceed with standard meta-analysis methods.</p>
+</section>
+<section id="meta-analysis-of-the-prognostic-value-of-her2" class="level2" data-number="2.5">
+<h2 data-number="2.5" class="anchored" data-anchor-id="meta-analysis-of-the-prognostic-value-of-her2"><span class="header-section-number">2.5</span> Meta-analysis of the prognostic value of HER2</h2>
+<p>Meta-analysis is an option when the identified studies are considered sufficiently robust and comparable, and requires there are at least two estimates of the same statistic across studies. A random effects approach is often essential to allow for unexplained heterogeneity across studies due to differences in their methods, time-scale, populations, cut-points, adjustment factors, and treatments.</p>
+<p>A standard random effects meta-analysis combines the study estimates of the statistic of interest (here given as the log HR of HER2) in order to estimate the average effect (denoted by <span class="math inline">\(\mu\)</span>) and its standard deviation (denoted by <span class="math inline">\(\tau\)</span>) across studies. If <span class="math inline">\(\hat b_i\)</span> and <span class="math inline">\(\mathrm{var}(\hat b_i)\)</span> denote the estimate and its variance in study <span class="math inline">\(i\)</span>, then a general random effects meta-analysis model can be specified as:</p>
+<p><span class="math inline">\(\hat b_i \sim N(\mu, \mathrm{var}(\hat b_i) + \tau^2)\)</span></p>
+<p>It is common to first estimate the heterogeneity parameter <span class="math inline">\(\tau\)</span> and to use the resulting value to estimate <span class="math inline">\(\mu\)</span>. However, such approach does not adequately reflect the error associated with parameter estimation, especially when the number of studies is small. For this reason, alternative estimators have been proposed that simultaneously estimate <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\tau\)</span>. Here, we will focus on Restricted Maximum Likelihood Estimation (REML), which is implemented as default in <code>metafor</code>.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>resREML <span class="ot">&lt;-</span> <span class="fu">rma</span>(<span class="at">yi =</span> logHR, <span class="at">sei =</span> se.logHR, <span class="at">subset =</span> (outcome<span class="sc">==</span><span class="st">"OS"</span>), </span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>               <span class="at">method =</span> <span class="st">"REML"</span>, <span class="at">slab =</span> Study, <span class="at">data =</span> Zhang)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>resREML</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Random-Effects Model (k = 14; tau^2 estimator: REML)
+
+tau^2 (estimated amount of total heterogeneity): 0.0883 (SE = 0.0854)
+tau (square root of estimated tau^2 value):      0.2972
+I^2 (total heterogeneity / total variability):   49.17%
+H^2 (total variability / sampling variability):  1.97
+
+Test for Heterogeneity:
+Q(df = 13) = 28.9214, p-val = 0.0067
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub      
+  0.6669  0.1354  4.9251  &lt;.0001  0.4015  0.9324  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The following approach yields the same results</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="co"># rma(yi=logHR, sei=se.logHR, subset=(outcome=="OS"), data=Zhang)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The summary effect size is 0.667 and the between-study standard deviation is 0.297</p>
+<p>The standard error of the summary effect size is 0.135 and the standard error of the between-study variance is 0.085</p>
+<p>We can calculate the summary HR and the corresponding 95% CI by back-transforming the estimate for <span class="math inline">\(\mu\)</span> and its confidence bounds:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(resREML<span class="sc">$</span>b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>            [,1]
+intrcpt 1.948268</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">exp</span>(<span class="fu">c</span>(resREML<span class="sc">$</span>ci.lb, resREML<span class="sc">$</span>ci.ub))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 1.494104 2.540483</code></pre>
+</div>
+</div>
+<p>Note that the confidence interval for <span class="math inline">\(\hat \mu\)</span> is usually based on a Student T distribution to account for estimation error in <span class="math inline">\(\hat \tau\)</span>.</p>
+<p>The summary HR of HER2 is statistically significant, so the hormone receptor appears to be predictive on average. In particular, an increased level of HER2 was associated with poorer survival, on average.</p>
+<p>We can also obtain the summary estimate and 95% CI for the HR of HER2 by simply using the <code>predict</code> function:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="fu">predict</span>(resREML, <span class="at">transf =</span> exp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+   pred  ci.lb  ci.ub  pi.lb  pi.ub 
+ 1.9483 1.4941 2.5405 1.0272 3.6954 </code></pre>
+</div>
+</div>
+<p>Although the summary result (<span class="math inline">\(\hat \mu\)</span>) is usually the main focus of a meta-analysis, this reflects some average across studies and it may be hard to translate to clinical practice when there is large between-study heterogeneity. We can quantify the impact of between-study heterogeneity by constructing a <span class="math inline">\(100(1-\alpha/2)\)</span>% prediction interval, which gives the potential true prognostic effect in a new population conditional on the meta-analysis results <span class="citation" data-cites="riley_interpretation_2011">(<a href="#ref-riley_interpretation_2011" role="doc-biblioref">Riley and Deeks 2011</a>)</span>. An approximate prediction interval (PI) is given as follows:</p>
+<p><span class="math inline">\(\hat \mu \pm t_{\alpha, N-2} \sqrt{\hat \tau^2 + \hat \sigma^2}\)</span></p>
+<p>where <span class="math inline">\(t_{\alpha, N-2}\)</span> is the <span class="math inline">\(100(1-\alpha/2)\)</span>% percentile of the t-distribution for <span class="math inline">\(N-2\)</span> degrees of freedom, <span class="math inline">\(N\)</span> is the number of studies, <span class="math inline">\(\hat \sigma\)</span> is the estimated standard error of <span class="math inline">\(\hat \mu\)</span>, and <span class="math inline">\(\hat \tau\)</span> is the estimated between-study standard deviation. In <code>R</code>, can calculate the approximate 95% PI for <span class="math inline">\(\hat \mu\)</span> as follows:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>level <span class="ot">&lt;-</span> <span class="fl">0.05</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>crit <span class="ot">&lt;-</span> <span class="fu">qt</span>(<span class="fu">c</span>(level<span class="sc">/</span><span class="dv">2</span>, <span class="dv">1</span><span class="sc">-</span>(level<span class="sc">/</span><span class="dv">2</span>)), <span class="at">df =</span> (resREML<span class="sc">$</span>k<span class="dv">-2</span>))</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>mu <span class="ot">&lt;-</span> resREML<span class="sc">$</span>b</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>tau2 <span class="ot">&lt;-</span> resREML<span class="sc">$</span>tau2</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>sigma2 <span class="ot">&lt;-</span> <span class="fu">vcov</span>(resREML)</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>mu <span class="sc">+</span> crit <span class="sc">*</span> <span class="fu">c</span>(<span class="fu">sqrt</span>(tau2 <span class="sc">+</span> sigma2))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] -0.04467483  1.37855606</code></pre>
+</div>
+</div>
+<p>The boundaries of the approximate 95% PI are given as 0.956 to 3.969 .</p>
+<p>There is substantial heterogeneity in the prognostic value of HER 2 and its usefulness may be very limited in certain populations.</p>
+<p>A possible approach to enhance the interpretation of meta-analysis results is to calculate the probability that the prognostic effect of HER 2 will be above some useful value (e.g.&nbsp;a HR &gt; 1.5 for a binary factor, which indicates risk is increased by at least 50%). We can calculate this probability as follows:</p>
+<p><span class="math inline">\(Pr(\mathrm{HR} &gt; 1.5) = Pr(\hat \mu &gt; \log(1.5)) = 1 - Pr(\hat \mu \leq \log(1.5))\)</span></p>
+<p>where <span class="math inline">\(Pr(\hat \mu \leq \log(1.5))\)</span> is approximated using a scaled Student-<span class="math inline">\(t\)</span> distribution (similar to the calculation of our prediction interval):</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>((<span class="fu">log</span>(<span class="fl">1.5</span>) <span class="sc">-</span> mu)<span class="sc">/</span><span class="fu">sqrt</span>(tau2<span class="sc">+</span>sigma2), <span class="at">df=</span>(resREML<span class="sc">$</span>k<span class="dv">-2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>             [,1]
+intrcpt 0.7805314</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>probOS <span class="ot">&lt;-</span> <span class="dv">1</span><span class="sc">-</span><span class="fu">pt</span>((<span class="fu">log</span>(<span class="fl">1.5</span>) <span class="sc">-</span> mu)<span class="sc">/</span><span class="fu">sqrt</span>(tau2<span class="sc">+</span>sigma2), <span class="at">df=</span>(resREML<span class="sc">$</span>k<span class="dv">-2</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can also estimate this probability by means of simulation:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simulate 100000 new studies</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>Nsim <span class="ot">&lt;-</span> <span class="dv">1000000</span> </span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>HRsim <span class="ot">&lt;-</span> <span class="fu">exp</span>(mu <span class="sc">+</span> <span class="fu">rt</span>(Nsim, <span class="at">df=</span>(resREML<span class="sc">$</span>k<span class="dv">-2</span>))<span class="sc">*</span><span class="fu">sqrt</span>(tau2<span class="sc">+</span>sigma2))</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(HRsim<span class="sc">&gt;</span><span class="fl">1.5</span>)<span class="sc">/</span>Nsim</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 0.779933</code></pre>
+</div>
+</div>
+<p>The probability is 78% , suggesting that using HER2 will often provide adequate discrimination.</p>
+</section>
+<section id="multivariate-meta-analysis" class="level2" data-number="2.6">
+<h2 data-number="2.6" class="anchored" data-anchor-id="multivariate-meta-analysis"><span class="header-section-number">2.6</span> Multivariate meta-analysis</h2>
+<p>In previous section, we used 14 of the 16 identified studies to evaluate the prognostic effect of HER2 on overall survival. Two studies were excluded from the meta-analysis because they did not provide direct evidence about overall survival. This is unwelcome, especially if the participants are otherwise representative of the population, clinical settings, and condition of interest <span class="citation" data-cites="riley_multivariate_2017">(<a href="#ref-riley_multivariate_2017" role="doc-biblioref">Riley and White 2017</a>)</span>. For this reason, we here discuss how multivariate meta-analysis methods can be used to include studies that do not necessarliy provide direct evidence on the outcome of interest. Briefly, multivariate meta-analysis methods simultaneously analyse multiple outcomes, which allows more studies to contribute towards each outcome.</p>
+<p>For instance, 6 studies in the review of <span class="citation" data-cites="zhang_prognostic_2015">Zhang and Sun (<a href="#ref-zhang_prognostic_2015" role="doc-biblioref">2015</a>)</span> assessed the relation between HER2 and PFS. The corresponding hazard ratios are given below:</p>
+<div class="cell">
+
+</div>
+<p>We can therefore combine this evidence with the HRs on overall survival to obtain more accurate estimates for the prognostic value of the hormone receptor HER2 with respect to PFS <em>and</em> OS.</p>
+<p>The hormone receptor HER2 also has prognostic value for progression-free survival. Furthermore, the reported HRs appear to be much more homogeneous across studies.</p>
+<p>Perform a random-effects meta-analysis and construct a forest plot.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>resPFS <span class="ot">&lt;-</span> <span class="fu">rma</span>(<span class="at">yi =</span> Zhang<span class="sc">$</span>logHR, <span class="at">sei =</span> Zhang<span class="sc">$</span>se.logHR, <span class="at">subset =</span> (Zhang<span class="sc">$</span>outcome<span class="sc">==</span><span class="st">"PFS"</span>), </span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a>              <span class="at">method =</span> <span class="st">"REML"</span>, <span class="at">slab =</span> Zhang<span class="sc">$</span>Study)</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>resPFS</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Random-Effects Model (k = 6; tau^2 estimator: REML)
+
+tau^2 (estimated amount of total heterogeneity): 0.0282 (SE = 0.1450)
+tau (square root of estimated tau^2 value):      0.1679
+I^2 (total heterogeneity / total variability):   11.43%
+H^2 (total variability / sampling variability):  1.13
+
+Test for Heterogeneity:
+Q(df = 5) = 4.8450, p-val = 0.4351
+
+Model Results:
+
+estimate      se    zval    pval   ci.lb   ci.ub      
+  0.8147  0.2008  4.0565  &lt;.0001  0.4211  1.2083  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a>metafor<span class="sc">::</span><span class="fu">forest</span>(resPFS, <span class="at">transf =</span> exp, <span class="at">xlab =</span> <span class="st">"Hazard Ratio"</span>, <span class="at">refline =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="mapf_files/figure-html/unnamed-chunk-22-1.png" class="img-fluid" width="672"></p>
+</div>
+</div>
+<p>Note that the univariate meta-analysis for PFS is based on merely 6 studies, and that the univariate meta-analysis for OS was based on 14 studies. We can now employ multivariate meta-analysis to ‘’borrow information’’ from the 4 studies that report prognostic effects for both PFS and OS (Togami 2012, Mori 2010, Jongen 2009-2 and Backe 1997). This, in turn, allows all studies to contribute on the summary effect for HER2 in both outcomes.</p>
+<p>Before we can proceed with the model fitting, we need to construct the full (block-diagonal) variance-covariance for all studies from the two outcomes. We can do this using the <code>diag()</code> function in one line of code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">diag</span>(Zhang<span class="sc">$</span>se.logHR<span class="sc">**</span><span class="dv">2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>A multivariate random-effects model can now be used to meta-analyze the two outcomes simultaneously.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>res.MV <span class="ot">&lt;-</span> <span class="fu">rma.mv</span>(<span class="at">yi =</span> logHR, V, <span class="at">mods =</span> <span class="sc">~</span> outcome <span class="sc">-</span> <span class="dv">1</span>, <span class="at">random =</span> <span class="sc">~</span> outcome <span class="sc">|</span> Study, </span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">struct =</span> <span class="st">"UN"</span>, <span class="at">data =</span> Zhang, <span class="at">method =</span> <span class="st">"REML"</span>)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>res.MV</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Multivariate Meta-Analysis Model (k = 20; method: REML)
+
+Variance Components:
+
+outer factor: Study   (nlvls = 16)
+inner factor: outcome (nlvls = 2)
+
+            estim    sqrt  k.lvl  fixed  level 
+tau^2.1    0.0865  0.2942     14     no     OS 
+tau^2.2    0.0770  0.2775      6     no    PFS 
+
+     rho.OS  rho.PFS    OS  PFS 
+OS        1              -    4 
+PFS  1.0000        1    no    - 
+
+Test for Residual Heterogeneity:
+QE(df = 18) = 33.7664, p-val = 0.0135
+
+Test of Moderators (coefficients 1:2):
+QM(df = 2) = 35.6315, p-val &lt; .0001
+
+Model Results:
+
+            estimate      se    zval    pval   ci.lb   ci.ub      
+outcomeOS     0.6704  0.1318  5.0868  &lt;.0001  0.4121  0.9287  *** 
+outcomePFS    0.8734  0.2151  4.0606  &lt;.0001  0.4518  1.2950  *** 
+
+---
+Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</code></pre>
+</div>
+</div>
+<p>The new summary estimate is 0.670 (versus 0.667 ) with an SE of 0.132 (versus 0.135 ). Hence, we have gained some precision.</p>
+<p>The new summary estimate is 0.873 (versus 0.815 ) with an SE of 0.215 (versus 0.201 ). We have lost precision, possibly because the presence of between-study heterogeneity is now more apparent, thereby complicating estimation of the summary effect.</p>
+<p>Note that estimation of between-study heterogeneity was difficult for progression-free survival due to the limited number of studies. In particular, we found <span class="math inline">\(\tau^2\)</span>= 0.028 with an SE of 0.145. In the multivariate meta-analysis, the estimated between-study variance for PFS was much larger (<span class="math inline">\(\tau^2\)</span>=0.077), and based on all 16 rather than merely 6 studies.</p>
+<p>In summary, the multivariate meta-analysis approach is often helpful as it reduces the need to exclude relevant studies from a meta-analysis, thereby decreasing the risk of bias (e.g.&nbsp;due to selective outcome reporting) and potentially improving precision. As indicated by <span class="citation" data-cites="riley_multivariate_2017">Riley and White (<a href="#ref-riley_multivariate_2017" role="doc-biblioref">2017</a>)</span>, a multivariate meta-analysis of multiple outcomes is most beneficial when the outcomes are highly correlated and the percentage of studies with missing outcomes is large.</p>
+</section>
+</section>
+<section id="references" class="level1 unnumbered" data-number="3">
+
+
+</section>
+
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography"><h2 class="anchored quarto-appendix-heading">3 References</h2><div id="refs" class="references csl-bib-body hanging-indent" role="doc-bibliography">
+<div id="ref-altman_systematic_2001" class="csl-entry" role="doc-biblioentry">
+Altman, D. G. 2001. <em>Systematic Reviews of Evaluations of Prognostic Variables</em>. BMJ 323 (7306): 224–28.
+</div>
+<div id="ref-altman_how_2011" class="csl-entry" role="doc-biblioentry">
+Altman, Douglas G., and J. Martin Bland. 2011. <em>How to Obtain the p Value from a Confidence Interval</em>. BMJ 343: d2304.
+</div>
+<div id="ref-debray_detecting_2018" class="csl-entry" role="doc-biblioentry">
+Debray, and Richard D. Riley. 2018. <em>Detecting Small-Study Effects and Funnel Plot Asymmetry in Meta-Analysis of Survival Data: A Comparison of New and Existing Tests</em>. Res. Syn. Meth. 9 (1): 41–50. doi:10.1002/jrsm.1266.
+</div>
+<div id="ref-riley_prognosis_2013" class="csl-entry" role="doc-biblioentry">
+Riley. 2013. <em>Prognosis Research Strategy (PROGRESS) 2: Prognostic Factor Research</em>. PLoS Medicine 10 (2): e1001380. doi:10.1371/journal.pmed.1001380.
+</div>
+<div id="ref-riley_reporting_2003" class="csl-entry" role="doc-biblioentry">
+Riley, and S. A. Burchill. 2003. <em>Reporting of Prognostic Markers: Current Problems and Development of Guidelines for Evidence-Based Practice in the Future</em>. Br. J. Cancer 88 (8): 1191–8. doi:10.1038/sj.bjc.6600886.
+</div>
+<div id="ref-riley_interpretation_2011" class="csl-entry" role="doc-biblioentry">
+Riley, and J. J. Deeks. 2011. <em>Interpretation of Random Effects Meta-Analyses</em>. BMJ 342 (feb10 2): d549–d549. doi:10.1136/bmj.d549.
+</div>
+<div id="ref-riley_multivariate_2017" class="csl-entry" role="doc-biblioentry">
+Riley, and Ian R. White. 2017. <em>Multivariate and Network Meta-Analysis of Multiple Outcomes and Multiple Treatments: Rationale, Concepts, and Examples</em>. BMJ 358 (September): j3932.
+</div>
+<div id="ref-sauerbrei_evidence-based_2006" class="csl-entry" role="doc-biblioentry">
+Sauerbrei, and Douglas G. Altman. 2006. <em>Evidence-Based Assessment and Application of Prognostic Markers: The Long Way from Single Studies to Meta-Analysis</em>. Communications in Statistics - Theory; Methods 35 (7): 1333–42. doi:10.1080/03610920600629666.
+</div>
+<div id="ref-tzoulaki_assessment_2009" class="csl-entry" role="doc-biblioentry">
+Tzoulaki, and John P. A. Ioannidis. 2009. <em>Assessment of Claims of Improved Prediction Beyond the Framingham Risk Score</em>. JAMA 302 (21): 2345–52. doi:10.1001/jama.2009.1757.
+</div>
+<div id="ref-zhang_prognostic_2015" class="csl-entry" role="doc-biblioentry">
+Zhang, and Jing Sun. 2015. <em>Prognostic Role of Hormone Receptors in Endometrial Cancer: A Systematic Review and Meta-Analysis</em>. World J Surg Oncol 13 (June): 208. doi:10.1186/s12957-015-0619-1.
+</div>
+</div></section></div></main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    target: function(trigger) {
+      return trigger.previousElementSibling;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+  function tippyHover(el, contentFn) {
+    const config = {
+      allowHTML: true,
+      content: contentFn,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start'
+    };
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      return note.innerHTML;
+    });
+  }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+</body></html>

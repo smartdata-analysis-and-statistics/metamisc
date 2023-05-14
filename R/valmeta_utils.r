@@ -1,7 +1,7 @@
 
 
 # Adapted from R package 'car' to avoid package loading issues in R-forge
-deltaMethod <- function (object, g, vcov., func = g, constants, level = 0.95, ...) {
+deltaMethod <- function(object, g, vcov., func = g, constants, level = 0.95, ...) {
   if (!is.character(g)) 
     stop("The argument 'g' must be a character string")
   
@@ -11,7 +11,7 @@ deltaMethod <- function (object, g, vcov., func = g, constants, level = 0.95, ..
   for (i in 1:q) {
     assign(names(para)[i], para[i])
   }
-  if(!missing(constants)){
+  if (!missing(constants)) {
     for (i in seq_along(constants)) assign(names(constants[i]), constants[[i]])}
   est <- eval(g)
   names(est) <- NULL
@@ -177,23 +177,23 @@ restore.c.var.se <- function(cstat, c.se, g=NULL) {
 }
 
 restore.c.var.ci <- function(cil, ciu, level, g=NULL) {
-  if(!is.null(g)) {
-    lower <- eval(parse(text=g), list(cstat = cil))
-    upper <- eval(parse(text=g), list(cstat = ciu))
+  if (!is.null(g)) {
+    lower <- eval(parse(text = g), list(cstat = cil))
+    upper <- eval(parse(text = g), list(cstat = ciu))
   } else {
     lower <- cil
     upper <- ciu
   }
-  if(missing(level)) level <- rep(0.95, length(cil))
+  if (missing(level)) level <- rep(0.95, length(cil))
   
-  return(((upper - lower)/(2*qnorm((1-level)/2)))**2)
+  return(((upper - lower)/(2*qnorm((1 - level)/2)))**2)
 }
 
-calculate.cstat.theta <- function(cstat, g=NULL) {
-  if(is.null(g)) {
+calculate.cstat.theta <- function(cstat, g = NULL) {
+  if (is.null(g)) {
     return(cstat)
   }
-  return(eval(parse(text=g), list(cstat = cstat)))
+  return(eval(parse(text = g), list(cstat = cstat)))
 }
 
 calculate.cstat.sdPI <- function (sdPI, g=NULL) {
