@@ -18,6 +18,7 @@ knitr::opts_chunk$set(
 
 ```{r, echo = F, message = F, warning = F}
 library(knitr)
+library(dplyr)
 
 # Use GitHub actions to automatically build and publish the site every time you make a change. The easiest way to set this up is to run usethis::use_pkgdown_github_pages().
 
@@ -45,56 +46,60 @@ library(metamisc)
 
 Endometrial cancer (EC) is the fourth most common malignancy in women and the most common gynecologic cancer. Overall, the 5-year survival rates for EC are approximately 78--90% for stage I, 74% for stage II, 36--57% for stage III, and 20% for stage IV. Such poor outcomes raise an urgent requirement that more accurate prognosis and predictive markers should be applied for EC to guide the therapy and monitor the disease progress for individual patients.
 
-Several biological molecules have been proposed as prognostic biomarkers in EC. Among them, hormone receptors such as estrogen receptors (ER), progesterone receptors (PR), and human epidermal growth factor receptor 2 (HER2) are attractive because of their physiological functions. Recently, Zhang \emph{et al.} conducted a systematic review to evaluate the overall risk of these hormone receptors for endometrial cancer survival [@zhang_prognostic_2015]. This review included 16 studies recruiting 1764 patients for HER2. We can load the data from all 16 studies in R as follows:
+Several biological molecules have been proposed as prognostic biomarkers in EC. Among them, hormone receptors such as estrogen receptors (ER), progesterone receptors (PR), and human epidermal growth factor receptor 2 (HER2) are attractive because of their physiological functions. Recently, Zhang \emph{et al.} conducted a systematic review to evaluate the overall risk of these hormone receptors for endometrial cancer survival [@zhang_prognostic_2015]. This review included 16 studies recruiting 1764 patients for HER2. For each study, estimates of effect were retrieved as follows. The simplest method consisted in the direct collection of HR, odds ratio or risk ratio, and their 95% CI from the original article, with an HR of less than 1 being associated with a better outcome. If not available, the total numbers of observed deaths/cancer recurrences and the numbers of patients in each group were extracted to calculate HR. When data were only available as Kaplan-Meier curves, data were extracted from the graphical survival plots, and estimation of the HR was then performed using the described method.
+
+We can load the data from all 16 studies in R as follows:
 
 ```{r}
 data(Zhang)
 ```
 
-This creates an object `Zhang` that contains the summary data from 14 studies reporting on overall survival (OS) and from 6 studies reporting on progression-free survival (PFS). As a result, a total of 20 estimates are available for the hazard ratio of HER2:
+This creates an object `Zhang` that contains the summary data from 14 studies reporting on overall survival (OS) and from 6 studies reporting on progression-free survival (PFS). A total of 14 studies assessed the relation between HER2 and overall survival. The corresponding hazard
+ratios (HR) are given below:
 
-```{r}
-Zhang
+```{r tableBaselineOS, echo = F}
+out <- Zhang %>% filter(outcome == "OS") %>%
+  mutate(slabel = paste0(PrimaryAuthor, ", ", year),
+                        result = paste0(HR, " (",HR.025, "; ", HR.975, ")")) %>% 
+  select("slabel", "Country", "Disease", "N","result")
+kable(out, col.names = c("Study", "Country", "Disease", "N", "Prognostic effect"),
+      align = "lccrc")
 ```
 
-For each study, estimates of effect were retrieved as follows. The simplest method consisted in the direct collection of HR, odds ratio or risk ratio, and their 95% CI from the original article, with an HR of less than 1 being associated with a better outcome. If not available, the total numbers of observed deaths/cancer recurrences and the numbers of patients in each group were extracted to calculate HR. When data were only available as Kaplan-Meier curves, data were extracted from the graphical survival plots, and estimation of the HR was then performed using the described method.
-
-A total of 14 studies assessed the relation between HER2 and overall survival. The corresponding hazard ratios (HR) are given below:
-
-```{r kableOS}
-Zhang
-```
-
-The hormone receptor HER2 has prognostic value for survival but is prone to substantial between-study heterogeneity. Hazard ratios appear much larger for studies conducted in the USA
-
-The heterogeneity of the population was probably due to the difference in the baseline characteristics of patients (age, tumor stage, race, methodology for assessing HRs expression, or country), the cutoff value of markers, the undergoing treatment, the duration of follow-up, and others. Also, HRs are unadjusted, and therefore highly prone to heterogeneity in patient spectrum.
+Results suggest that the hormone receptor HER2 has prognostic value for survival but is prone to substantial between-study heterogeneity. For example, hazard ratios appear much larger for studies that were conducted in the USA. Possibly, the variation in treatment effect estimates is caused by differences in the baseline characteristics of patients (age, tumor stage, race), differences in the cutoff value of HER2, differences in received treatments, or differences in the duration of follow-up. Importantly, because estimated hazard ratios have not been adjusted for any patient-level covariates, they are particularly prone to heterogeneity in patient spectrum.
 
 
-Note that the total number of studies is indeed 16:
-
-```{r}
-length(unique(Zhang$Study))
-```
 
 ## Exploratory analyses
 
-It is often helpful to display the effect sizes of all studies in a forest plot. The forest plot for overall survival can then be generated as follows. Briefly, we here provide information on the estimated hazard ratios (via the argument `theta`), as well as the bounds of their 95% confidence interval (via `theta.ci.lb` and `theta.ci.ub`). Further, we only include the 14 estimates for overall survival.
+It is often helpful to display the effect sizes of all studies in a forest plot. The forest plot for overall survival can then be generated using the `forest` function in **metamisc**. This requires to provide information on the estimated hazard ratios (via the argument `theta`), as well as the bounds of their 95% confidence interval (via `theta.ci.lb` and `theta.ci.ub`). 
+```{r,message=F,warning=F,echo=T,eval=T, fig.width=8, fig.height=4}
+library(dplyr)
 
-```{r,message=F,warning=F,echo=T,eval=F}
-ds <- subset(Zhang, outcome=="OS")
-with(ds, forest(theta = HR, theta.ci.lb = HR.025, theta.ci.ub = HR.975, 
-                theta.slab = Study, xlab = "Hazard ratio of HER2 versus OS", refline = 1))
+# Select the 14 studies investigating overall survival
+ds <- Zhang %>% filter(outcome == "OS")
+
+# Generate a forest plot of the log hazard ratio
+metamisc::forest(theta = ds$HR, 
+                 theta.ci.lb = ds$HR.025, 
+                 theta.ci.ub = ds$HR.975, 
+                 theta.slab = ds$Study, 
+                 xlab = "Hazard ratio of HER2 versus OS", 
+                 refline = 1)
 ```
 
-We can also generate the same plot using `metafor`:
+We can also generate a forest plot using **metafor**:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-metafor::forest(x = Zhang$HR, ci.lb = Zhang$HR.025, ci.ub = Zhang$HR.975, slab = 
-                  Zhang$Study, subset = (Zhang$outcome=="OS"),  xlab = 
-                  "Hazard ratio of HER2 versus OS", refline = 1)
+metafor::forest(x = ds$HR, 
+                ci.lb = ds$HR.025, 
+                ci.ub = ds$HR.975, 
+                slab = ds$Study,
+                xlab = "Hazard ratio of HER2 versus OS", 
+                refline = 1)
 ```
 
-It is easier to assess the summary effect and the presence of statistical heterogeneity.
+An advantage of the forest plot is that allows a visual inspection of the available evidence and facilitates the identification of potential between-study heterogeneity.
 
 ## Data preparation
 
@@ -281,12 +286,15 @@ V <- diag(Zhang$se.logHR**2)
 A multivariate random-effects model can now be used to meta-analyze the two outcomes simultaneously.
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-res.MV <- rma.mv(yi = logHR, V, mods = ~ outcome - 1, random = ~ outcome | Study, 
-                 struct = "UN", data = Zhang, method = "REML")
+res.MV <- rma.mv(yi = logHR, V, mods = ~ outcome - 1, 
+                 random = ~ outcome | Study, 
+                 struct = "UN", 
+                 data = Zhang, 
+                 method = "REML")
 res.MV
 ```
 
-`r if(show.text){paste("The new summary estimate is ", sprintf("%.3f", (res.MV$beta["outcomeOS",])), " (versus ", sprintf("%.3f", resREML$b), ") with an SE of ", sprintf("%.3f", sqrt(vcov(res.MV)["outcomeOS","outcomeOS"])), "(versus ", sprintf("%.3f", sqrt(vcov(resREML))), "). Hence, we have gained some precision. ")}`
+The new summary estimate is `r sprintf("%.3f", (res.MV$beta["outcomeOS",]))` versus `r sprintf("%.3f", resREML$b)` with an SE of ", sprintf("%.3f", sqrt(vcov(res.MV)["outcomeOS","outcomeOS"])), "(versus ", sprintf("%.3f", sqrt(vcov(resREML))), "). Hence, we have gained some precision. ")}`
 
 `r if(show.text){paste("The new summary estimate is ", sprintf("%.3f", (res.MV$beta["outcomePFS",])), " (versus ", sprintf("%.3f", resPFS$b), ") with an SE of ", sprintf("%.3f", sqrt(vcov(res.MV)["outcomePFS","outcomePFS"])), "(versus ", sprintf("%.3f", sqrt(vcov(resPFS))), "). We have lost precision, possibly because the presence of between-study heterogeneity is now more apparent, thereby complicating estimation of the summary effect.")}`
 
