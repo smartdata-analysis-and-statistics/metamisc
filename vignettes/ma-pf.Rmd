@@ -1,25 +1,22 @@
 ---
-title: "Meta-analysis of prognostic factor studies"
-author:
-  - name: Thomas Debray
-    orcid: 0000-0002-1790-2719
-date: last-modified
-date-format: "[Last Updated on] DD MMMM, YYYY"
-params:
-  dir_data: "data"
-  dir_r: "R_TD"
-format:
-  html:
-    toc: true
-    number-sections: true
-    css: styles.css
+title: "ma-pf"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Meta-analysis of prognostic factors}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 bibliography: "https://api.citedrive.com/bib/093a08ac-0337-479e-a147-17929fa7f7b0/references.bib?x=eyJpZCI6ICIwOTNhMDhhYy0wMzM3LTQ3OWUtYTE0Ny0xNzkyOWZhN2Y3YjAiLCAidXNlciI6ICI0MDA5IiwgInNpZ25hdHVyZSI6ICIwOWJiZjg2ZDJiNjk1NmQ1ODVhZTMxZmZiODI0OTgyNWYxYTEzNTQ5MzdiZjBiNzJiZjY3MTlhMTE2NGJhNzQ3In0=/bibliography.bib"
 ---
 
-```{r}
-#| echo: false
-#| message: false
-#| warning: false
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+
+```{r, echo = F, message = F, warning = F}
 library(knitr)
 
 # Use GitHub actions to automatically build and publish the site every time you make a change. The easiest way to set this up is to run usethis::use_pkgdown_github_pages().
@@ -37,9 +34,7 @@ The aim of this introduction is to illustrate how to summarize the results from 
 
 In this practical we will make use of the R packages `metamisc` and `metafor`. The [https://cran.r-project.org/package=metafor](metafor) package provides a comprehensive collection of functions for conducting meta-analyses in R. The [https://cran.r-project.org/package=metamisc](metamisc) package provides additional functions to facilitate meta-analysis of prognosis studies. We can load these packages as follows:
 
-```{r}
-#| message: false
-#| warning: false
+```{r, message = F, warning = F}
 library(metafor)
 library(metamisc)
 ```
@@ -69,7 +64,6 @@ A total of 14 studies assessed the relation between HER2 and overall survival. T
 ```{r kableOS}
 Zhang
 ```
- EEC endometrioid endometrial cancer, UPSC uterine papillary serous carcinoma
 
 The hormone receptor HER2 has prognostic value for survival but is prone to substantial between-study heterogeneity. Hazard ratios appear much larger for studies conducted in the USA
 
