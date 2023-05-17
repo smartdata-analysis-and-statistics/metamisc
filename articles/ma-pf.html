@@ -282,15 +282,17 @@ adjusted for any patient-level covariates, they are particularly prone
 to heterogeneity in patient spectrum.</p>
 </div>
 <div class="section level2">
-<h2 id="exploratory-analyses">Exploratory analyses<a class="anchor" aria-label="anchor" href="#exploratory-analyses"></a>
+<h2 id="first-steps">First steps<a class="anchor" aria-label="anchor" href="#first-steps"></a>
 </h2>
 <p>It is often helpful to display the effect sizes of all studies in a
-forest plot. The forest plot for overall survival can then be generated
-using the <code>forest</code> function in <strong>metamisc</strong>.
-This requires to provide information on the estimated hazard ratios (via
-the argument <code>theta</code>), as well as the bounds of their 95%
-confidence interval (via <code>theta.ci.lb</code> and
-<code>theta.ci.ub</code>).</p>
+forest plot. An advantage of the forest plot is that allows a visual
+inspection of the available evidence and facilitates the identification
+of potential between-study heterogeneity. The forest plot for overall
+survival can then be generated using the <code>forest</code> function in
+<strong>metamisc</strong>. This requires to provide information on the
+estimated hazard ratios (via the argument <code>theta</code>), as well
+as the bounds of their 95% confidence interval (via
+<code>theta.ci.lb</code> and <code>theta.ci.ub</code>).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://dplyr.tidyverse.org" class="external-link">dplyr</a></span><span class="op">)</span></span>
 <span></span>
@@ -315,13 +317,6 @@ confidence interval (via <code>theta.ci.lb</code> and
 <span>                xlab <span class="op">=</span> <span class="st">"Hazard ratio of HER2 versus OS"</span>, </span>
 <span>                refline <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ma-pf_files/figure-html/unnamed-chunk-6-1.png" width="700"></p>
-<p>An advantage of the forest plot is that allows a visual inspection of
-the available evidence and facilitates the identification of potential
-between-study heterogeneity.</p>
-</div>
-<div class="section level2">
-<h2 id="data-preparation">Data preparation<a class="anchor" aria-label="anchor" href="#data-preparation"></a>
-</h2>
 <p>To facilitate any further analysis, information on the standard error
 of the different study effect sizes is needed. Estimates for the
 standard error can be obtained from the reported 95% confidence
@@ -368,8 +363,9 @@ pseudo-confidence region of the summary estimate.</p>
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma</a></span><span class="op">(</span>yi <span class="op">=</span> <span class="va">logHR</span>, sei <span class="op">=</span> <span class="va">se.logHR</span>, method <span class="op">=</span> <span class="st">"FE"</span>, data <span class="op">=</span> <span class="va">ds</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://wviechtb.github.io/metafor/reference/funnel.html" class="external-link">funnel</a></span><span class="op">(</span><span class="va">res</span>, xlab <span class="op">=</span> <span class="st">"Log Hazard Ratio"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ma-pf_files/figure-html/unnamed-chunk-8-1.png" width="700"></p>
-<p>Most study estimates fall within the pseudo-confidence region, hence
-there appears limited evidence for publication bias.</p>
+<p>In the case study, most study estimates fall within the
+pseudo-confidence region, hence there appears limited evidence for
+publication bias.</p>
 <p>We can formally test the presence of asymmetry in the funnel plot by
 evaluating whether there is an association between the estimated
 standard error and the estimated effect size.</p>
@@ -409,9 +405,9 @@ low power. For instance, it has been demonstrated that aforementioned
 test to evaluate the association between the estimated standard error
 and effect size tends to yield type-I error rates that are too high.
 Finally, funnel plot asymmetry may rather be caused by heterogeneity
-than by publication bias.</p>
-<p>Adjust aformentioned regression test to use inverse of the total
-sample size (rather than the standard error) as predictor.</p>
+than by publication bias. We therefore adjust aforementioned regression
+test to use inverse of the total sample size (rather than the standard
+error) as predictor.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://wviechtb.github.io/metafor/reference/regtest.html" class="external-link">regtest</a></span><span class="op">(</span>x <span class="op">=</span> <span class="va">ds</span><span class="op">$</span><span class="va">logHR</span>, sei <span class="op">=</span> <span class="va">ds</span><span class="op">$</span><span class="va">se.logHR</span>, ni <span class="op">=</span> <span class="va">ds</span><span class="op">$</span><span class="va">N</span>, </span>
 <span>        model <span class="op">=</span> <span class="st">"lm"</span>, </span>
@@ -425,7 +421,7 @@ sample size (rather than the standard error) as predictor.</p>
 <span><span class="co">#&gt; Test for Funnel Plot Asymmetry: t = 0.1552, df = 12, p = 0.8793</span></span>
 <span><span class="co">#&gt; Limit Estimate (as ni -&gt; inf):  b = 0.5088 (CI: 0.2226, 0.7950)</span></span></code></pre></div>
 <p>From here onwards, we will assume that the potential for publication
-bias is neglegible, and proceed with standard meta-analysis methods.</p>
+bias is negligible, and proceed with standard meta-analysis methods.</p>
 </div>
 <div class="section level2">
 <h2 id="meta-analysis-of-the-prognostic-value-of-her2">Meta-analysis of the prognostic value of HER2<a class="anchor" aria-label="anchor" href="#meta-analysis-of-the-prognostic-value-of-her2"></a>
@@ -556,7 +552,7 @@ calculation of our prediction interval):</p>
 <span><span class="va">Nsim</span> <span class="op">&lt;-</span> <span class="fl">1000000</span> </span>
 <span><span class="va">HRsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">rt</a></span><span class="op">(</span><span class="va">Nsim</span>, df<span class="op">=</span><span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">k</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">HRsim</span><span class="op">&gt;</span><span class="fl">1.5</span><span class="op">)</span><span class="op">/</span><span class="va">Nsim</span></span>
-<span><span class="co">#&gt; [1] 0.781295</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.780266</span></span></code></pre></div>
 <p>The probability is 78% , suggesting that using HER2 will often
 provide adequate discrimination.</p>
 </div>
