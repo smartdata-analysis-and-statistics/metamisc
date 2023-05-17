@@ -61,7 +61,7 @@ out <- Zhang %>% filter(outcome == "OS") %>%
   mutate(slabel = paste0(PrimaryAuthor, ", ", year),
                         result = paste0(HR, " (",HR.025, "; ", HR.975, ")")) %>% 
   select("slabel", "Country", "Disease", "N","result")
-kable(out, col.names = c("Study", "Country", "Disease", "N", "Prognostic effect"),
+kable(out, col.names = c("Study", "Country", "Disease", "N", "Hazard Ratio (95% CI)"),
       align = "lccrc")
 ```
 
@@ -138,10 +138,10 @@ regfit = regtest(x = ds$logHR,
 
 The P-value for funnel plot asymmetry is given as `r sprintf("%.3f", regfit$pval)`. Note that it is common to use a 10% level of significance because the number of studies in a meta-analysis is usually low and also there is evidence for funnel plot asymmetry, as the P-value is below 0.10.
 
-Funnel plot asymmetry tests can also be performed using [metamisc](https://cran.r-project.org/package=metamisc)
+Funnel plot asymmetry tests can also be performed using **metamisc**
 
 ```{r}
-regfit <- with(ds, fat(b=logHR, b.se=se.logHR, method="E-FIV"))
+regfit <- fat(b = ds$logHR, b.se = ds$se.logHR, method = "E-FIV")
 regfit
 ```
 
@@ -175,30 +175,22 @@ It is common to first estimate the heterogeneity parameter $\tau$ and to use the
 resREML <- rma(yi = logHR, sei = se.logHR, method = "REML", 
                slab = Study, data = ds)
 resREML
-# The following approach yields the same results
-# rma(yi=logHR, sei=se.logHR, subset=(outcome=="OS"), data=Zhang)
 ```
 
-`r if(show.text){paste("The summary effect size is ", sprintf("%.3f", resREML$b), " and the between-study standard deviation is ", sprintf("%.3f", sqrt(resREML$tau2)), "")}`
-
-`r if(show.text){paste("The standard error of the summary effect size is ", sprintf("%.3f", sqrt(vcov(resREML))), " and the standard error of the between-study variance is ", sprintf("%.3f", resREML$se.tau2), "")}`
-
-We can calculate the summary HR and the corresponding 95% CI by back-transforming the estimate for $\mu$ and its confidence bounds:
+The pooled estimate for the log hazard ratio is `r sprintf("%.3f", resREML$b)` with a standard error of `r sprintf("%.3f", sqrt(vcov(resREML)))`. The between-study standard deviation of the log hazard ratio is `r sprintf("%.3f", sqrt(resREML$tau2))`. We can calculate the summary estimate for the hazard ratio and its corresponding 95% CI by back-transforming the estimate for $\mu$ and its confidence bounds:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 exp(resREML$b)
 exp(c(resREML$ci.lb, resREML$ci.ub))
 ```
 
-Note that the confidence interval for $\hat \mu$ is usually based on a Student T distribution to account for estimation error in $\hat \tau$.
-
-The summary HR of HER2 is statistically significant, so the hormone receptor appears to be predictive on average. In particular, an increased level of HER2 was associated with poorer survival, on average.
-
 We can also obtain the summary estimate and 95% CI for the HR of HER2 by simply using the `predict` function:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 predict(resREML, transf = exp)
 ```
+
+The summary HR of HER2 is statistically significant, indicating that increased levels of HER2 are associated with poorer survival.
 
 Although the summary result ($\hat \mu$) is usually the main focus of a meta-analysis, this reflects some average across studies and it may be hard to translate to clinical practice when there is large between-study heterogeneity. We can quantify the impact of between-study heterogeneity by constructing a $100(1-\alpha/2)$% prediction interval, which gives the potential true prognostic effect in a new population conditional on the meta-analysis results [@riley_interpretation_2011]. An approximate prediction interval (PI) is given as follows:
 
@@ -208,32 +200,35 @@ where $t_{\alpha, N-2}$ is the $100(1-\alpha/2)$% percentile of the t-distributi
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 level <- 0.05
-crit <- qt(c(level/2, 1-(level/2)), df = (resREML$k-2))
+crit <- qt(c(level/2, 1-(level/2)), df = (resREML$k - 2))
 mu <- resREML$b
 tau2 <- resREML$tau2
 sigma2 <- vcov(resREML)
-mu + crit * c(sqrt(tau2 + sigma2))
+exp(mu + crit * c(sqrt(tau2 + sigma2)))
 ```
 
-`r if(show.text){paste("The boundaries of the approximate 95% PI are given as ", sprintf("%.3f", exp(resREML$b + qt(level/2, df=(resREML$k-2)) * sqrt(tau2 + sigma2))), " to ", sprintf("%.3f", exp(resREML$b + qt(1-level/2, df=(resREML$k-2)) * sqrt(tau2 + sigma2))), ".")}`
+```{r echo = F}
+pi_lower <- exp(resREML$b + qt(level/2, df=(resREML$k-2)) * sqrt(tau2 + sigma2))
+pi_upper <- exp(resREML$b + qt(1-level/2, df=(resREML$k-2)) * sqrt(tau2 + sigma2))
+```
 
-There is substantial heterogeneity in the prognostic value of HER 2 and its usefulness may be very limited in certain populations.
+The 95% prediction interval ranges from `r sprintf("%.3f", pi_lower)` to `r sprintf("%.3f", pi_upper)`, and suggests there is substantial heterogeneity in the prognostic value of HER2. In particular, although increased levels of HER2 are generally associated with poorer survival, they may also lead to improved survival (HR < 1) in certain settings. 
 
-A possible approach to enhance the interpretation of meta-analysis results is to calculate the probability that the prognostic effect of HER 2 will be above some useful value (e.g. a HR \> 1.5 for a binary factor, which indicates risk is increased by at least 50%). We can calculate this probability as follows:
+A possible approach to enhance the interpretation of meta-analysis results is to calculate the probability that the prognostic effect of HER2 will be above some useful value (e.g. a HR \> 1.5 for a binary factor, which indicates risk is increased by at least 50%) in a new setting. We can calculate this probability as follows:
 
 $Pr(\mathrm{HR} > 1.5) = Pr(\hat \mu > \log(1.5)) = 1 - Pr(\hat \mu \leq \log(1.5))$
 
 where $Pr(\hat \mu \leq \log(1.5))$ is approximated using a scaled Student-$t$ distribution (similar to the calculation of our prediction interval):
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-1-pt((log(1.5) - mu)/sqrt(tau2+sigma2), df=(resREML$k-2))
+1 - pt((log(1.5) - mu)/sqrt(tau2 + sigma2), df = (resREML$k - 2))
 ```
 
-```{r,message=F,warning=F,echo=T,eval=T}
+```{r, echo = F, message=F,warning=F,echo=T,eval=T}
 probOS <- 1-pt((log(1.5) - mu)/sqrt(tau2+sigma2), df=(resREML$k-2))
 ```
 
-We can also estimate this probability by means of simulation:
+The probability that the HR for HER2 will be >1.5 in a new setting is `r sprintf("%.0f%%", probOS*100)`. We can also estimate this probability by means of simulation:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 # Simulate 100000 new studies
@@ -251,7 +246,12 @@ In previous section, we used 14 of the 16 identified studies to evaluate the pro
 For instance, 6 studies in the review of @zhang_prognostic_2015 assessed the relation between HER2 and PFS. The corresponding hazard ratios are given below:
 
 ```{r kablePFS, echo=F}
-#table.zhang.PFS
+out <- Zhang %>% filter(outcome == "PFS") %>%
+  mutate(slabel = paste0(PrimaryAuthor, ", ", year),
+                        result = paste0(HR, " (",HR.025, "; ", HR.975, ")")) %>% 
+  select("slabel", "Country", "Disease", "N","result")
+kable(out, col.names = c("Study", "Country", "Disease", "N", "Hazard Ratio (95% CI)"),
+      align = "lccrc")
 ```
 
 We first derive the log hazard ratio and corresponding standard error:
@@ -260,7 +260,6 @@ We first derive the log hazard ratio and corresponding standard error:
 Zhang <- Zhang %>% mutate(logHR = log(HR), 
                     se.logHR =  (log(HR.975) - log(HR.025))/(2*qnorm((1 - 0.05/2))))
 ```
-
 
 We can therefore combine this evidence with the HRs on overall survival to obtain more accurate estimates for the prognostic value of the hormone receptor HER2 with respect to PFS *and* OS.
 
@@ -293,9 +292,7 @@ res.MV <- rma.mv(yi = logHR, V, mods = ~ outcome - 1,
 res.MV
 ```
 
-The new summary estimate is `r sprintf("%.3f", (res.MV$beta["outcomeOS",]))` versus `r sprintf("%.3f", resREML$b)` with an SE of ", sprintf("%.3f", sqrt(vcov(res.MV)["outcomeOS","outcomeOS"])), "(versus ", sprintf("%.3f", sqrt(vcov(resREML))), "). Hence, we have gained some precision. ")}`
-
-`r if(show.text){paste("The new summary estimate is ", sprintf("%.3f", (res.MV$beta["outcomePFS",])), " (versus ", sprintf("%.3f", resPFS$b), ") with an SE of ", sprintf("%.3f", sqrt(vcov(res.MV)["outcomePFS","outcomePFS"])), "(versus ", sprintf("%.3f", sqrt(vcov(resPFS))), "). We have lost precision, possibly because the presence of between-study heterogeneity is now more apparent, thereby complicating estimation of the summary effect.")}`
+The summary estimate of the log hazard ratio for overall survival is `r sprintf("%.3f", (res.MV$beta["outcomeOS",]))` (multivariate meta-analysis) versus `r sprintf("%.3f", resREML$b)` (univariate meta-analysis) with an SE of `r  sprintf("%.3f", sqrt(vcov(res.MV)["outcomeOS","outcomeOS"]))` and, respectively, `r sprintf("%.3f", sqrt(vcov(resREML)))`. Hence, we gained some precision by including evidence from 2 additional studies that only evaluated progression-free survival.
 
 Note that estimation of between-study heterogeneity was difficult for progression-free survival due to the limited number of studies. In particular, we found $\tau^2$= `r sprintf("%.3f", resPFS$tau2)` with an SE of `r sprintf("%.3f", resPFS$se.tau2)`. In the multivariate meta-analysis, the estimated between-study variance for PFS was much larger ($\tau^2$=`r sprintf("%.3f", res.MV$tau2[2])`), and based on all 16 rather than merely 6 studies.
 
