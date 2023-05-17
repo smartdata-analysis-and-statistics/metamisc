@@ -69,9 +69,10 @@ Results suggest that the hormone receptor HER2 has prognostic value for survival
 
 
 
-# Exploratory analyses
+# First steps
 
-It is often helpful to display the effect sizes of all studies in a forest plot. The forest plot for overall survival can then be generated using the `forest` function in **metamisc**. This requires to provide information on the estimated hazard ratios (via the argument `theta`), as well as the bounds of their 95% confidence interval (via `theta.ci.lb` and `theta.ci.ub`). 
+It is often helpful to display the effect sizes of all studies in a forest plot. An advantage of the forest plot is that allows a visual inspection of the available evidence and facilitates the identification of potential between-study heterogeneity. The forest plot for overall survival can then be generated using the `forest` function in **metamisc**. This requires to provide information on the estimated hazard ratios (via the argument `theta`), as well as the bounds of their 95% confidence interval (via `theta.ci.lb` and `theta.ci.ub`). 
+
 ```{r,message=F,warning=F,echo=T,eval=T, fig.width=8, fig.height=4}
 library(dplyr)
 
@@ -98,10 +99,6 @@ metafor::forest(x = ds$HR,
                 refline = 1)
 ```
 
-An advantage of the forest plot is that allows a visual inspection of the available evidence and facilitates the identification of potential between-study heterogeneity.
-
-# Data preparation
-
 To facilitate any further analysis, information on the standard error of the different study effect sizes is needed. Estimates for the standard error can be obtained from the reported 95% confidence intervals [@altman_how_2011]. It is then commonly assumed that the log hazard ratio follows a Normal distribution, such that he standard error (SE) of the log hazard ratio is given as:
 
 $\mathrm{SE}=(\log(u)-\log(l))/(2*1.96)$
@@ -124,7 +121,7 @@ res <- rma(yi = logHR, sei = se.logHR, method = "FE", data = ds)
 funnel(res, xlab = "Log Hazard Ratio")
 ```
 
-Most study estimates fall within the pseudo-confidence region, hence there appears limited evidence for publication bias.
+In the case study, most study estimates fall within the pseudo-confidence region, hence there appears limited evidence for publication bias.
 
 We can formally test the presence of asymmetry in the funnel plot by evaluating whether there is an association between the estimated standard error and the estimated effect size.
 
@@ -133,7 +130,10 @@ regtest(x = ds$logHR, sei = ds$se.logHR, model = "lm", predictor = "sei")
 ```
 
 ```{r,message=F,warning=F,echo=F,eval=T}
-regfit = regtest(x = ds$logHR, sei = ds$se.logHR, model="lm", predictor="sei")
+regfit = regtest(x = ds$logHR, 
+                 sei = ds$se.logHR, 
+                 model = "lm", 
+                 predictor = "sei")
 ```
 
 The P-value for funnel plot asymmetry is given as `r sprintf("%.3f", regfit$pval)`. Note that it is common to use a 10% level of significance because the number of studies in a meta-analysis is usually low and also there is evidence for funnel plot asymmetry, as the P-value is below 0.10.
@@ -151,9 +151,7 @@ Again, we can construct a funnel plot:
 plot(regfit)
 ```
 
-Some caution is warranted when interpreting the results for funnel plot asymmetry tests [@debray_detecting_2018]. First, the power to detect asymmetry is often limited because meta-analyses usually do not include many studies. Second, many tests are known to yield inadequate type-I error rates or to suffer from low power. For instance, it has been demonstrated that aforementioned test to evaluate the association between the estimated standard error and effect size tends to yield type-I error rates that are too high. Finally, funnel plot asymmetry may rather be caused by heterogeneity than by publication bias.
-
-Adjust aformentioned regression test to use inverse of the total sample size (rather than the standard error) as predictor.
+Some caution is warranted when interpreting the results for funnel plot asymmetry tests [@debray_detecting_2018]. First, the power to detect asymmetry is often limited because meta-analyses usually do not include many studies. Second, many tests are known to yield inadequate type-I error rates or to suffer from low power. For instance, it has been demonstrated that aforementioned test to evaluate the association between the estimated standard error and effect size tends to yield type-I error rates that are too high. Finally, funnel plot asymmetry may rather be caused by heterogeneity than by publication bias. We therefore adjust aforementioned regression test to use inverse of the total sample size (rather than the standard error) as predictor.
 
 ```{r,message=F,warning=F}
 regtest(x = ds$logHR, sei = ds$se.logHR, ni = ds$N, 
@@ -161,7 +159,7 @@ regtest(x = ds$logHR, sei = ds$se.logHR, ni = ds$N,
         predictor = "ninv")
 ```
 
-From here onwards, we will assume that the potential for publication bias is neglegible, and proceed with standard meta-analysis methods.
+From here onwards, we will assume that the potential for publication bias is negligible, and proceed with standard meta-analysis methods.
 
 # Meta-analysis of the prognostic value of HER2
 
