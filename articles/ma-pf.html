@@ -156,18 +156,18 @@ studies assessed the relation between HER2 and overall survival. The
 corresponding hazard ratios (HR) are given below:</p>
 <table class="table">
 <colgroup>
-<col width="32%">
+<col width="31%">
 <col width="18%">
 <col width="12%">
 <col width="5%">
-<col width="30%">
+<col width="31%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Study</th>
 <th align="center">Country</th>
 <th align="center">Disease</th>
 <th align="right">N</th>
-<th align="center">Prognostic effect</th>
+<th align="center">Hazard Ratio (95% CI)</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
@@ -383,11 +383,12 @@ standard error and the estimated effect size.</p>
 is common to use a 10% level of significance because the number of
 studies in a meta-analysis is usually low and also there is evidence for
 funnel plot asymmetry, as the P-value is below 0.10.</p>
-<p>Funnel plot asymmetry tests can also be performed using <a href="https://cran.r-project.org/package=metamisc" class="external-link">metamisc</a></p>
+<p>Funnel plot asymmetry tests can also be performed using
+<strong>metamisc</strong></p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">regfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/with.html" class="external-link">with</a></span><span class="op">(</span><span class="va">ds</span>, <span class="fu"><a href="../reference/fat.html">fat</a></span><span class="op">(</span>b<span class="op">=</span><span class="va">logHR</span>, b.se<span class="op">=</span><span class="va">se.logHR</span>, method<span class="op">=</span><span class="st">"E-FIV"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="va">regfit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fat.html">fat</a></span><span class="op">(</span>b <span class="op">=</span> <span class="va">ds</span><span class="op">$</span><span class="va">logHR</span>, b.se <span class="op">=</span> <span class="va">ds</span><span class="op">$</span><span class="va">se.logHR</span>, method <span class="op">=</span> <span class="st">"E-FIV"</span><span class="op">)</span></span>
 <span><span class="va">regfit</span></span>
-<span><span class="co">#&gt; Call: fat(b = logHR, b.se = se.logHR, method = "E-FIV")</span></span>
+<span><span class="co">#&gt; Call: fat(b = ds$logHR, b.se = ds$se.logHR, method = "E-FIV")</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Fixed effect summary estimate:  0.5193  </span></span>
 <span><span class="co">#&gt; </span></span>
@@ -469,27 +470,18 @@ Maximum Likelihood Estimation (REML), which is implemented as default in
 <span><span class="co">#&gt;   0.6669  0.1354  4.9251  &lt;.0001  0.4015  0.9324  *** </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ---</span></span>
-<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
-<span><span class="co"># The following approach yields the same results</span></span>
-<span><span class="co"># rma(yi=logHR, sei=se.logHR, subset=(outcome=="OS"), data=Zhang)</span></span></code></pre></div>
-<p>The summary effect size is 0.667 and the between-study standard
-deviation is 0.297</p>
-<p>The standard error of the summary effect size is 0.135 and the
-standard error of the between-study variance is 0.085</p>
-<p>We can calculate the summary HR and the corresponding 95% CI by
-back-transforming the estimate for <span class="math inline">\(\mu\)</span> and its confidence bounds:</p>
+<span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre></div>
+<p>The pooled estimate for the log hazard ratio is 0.667 with a standard
+error of 0.135. The between-study standard deviation of the log hazard
+ratio is 0.297. We can calculate the summary estimate for the hazard
+ratio and its corresponding 95% CI by back-transforming the estimate for
+<span class="math inline">\(\mu\)</span> and its confidence bounds:</p>
 <div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">b</span><span class="op">)</span></span>
 <span><span class="co">#&gt;             [,1]</span></span>
 <span><span class="co">#&gt; intrcpt 1.948268</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">ci.lb</span>, <span class="va">resREML</span><span class="op">$</span><span class="va">ci.ub</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 1.494104 2.540483</span></span></code></pre></div>
-<p>Note that the confidence interval for <span class="math inline">\(\hat \mu\)</span> is usually based on a Student T
-distribution to account for estimation error in <span class="math inline">\(\hat \tau\)</span>.</p>
-<p>The summary HR of HER2 is statistically significant, so the hormone
-receptor appears to be predictive on average. In particular, an
-increased level of HER2 was associated with poorer survival, on
-average.</p>
 <p>We can also obtain the summary estimate and 95% CI for the HR of HER2
 by simply using the <code>predict</code> function:</p>
 <div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
@@ -497,6 +489,8 @@ by simply using the <code>predict</code> function:</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt;    pred  ci.lb  ci.ub  pi.lb  pi.ub </span></span>
 <span><span class="co">#&gt;  1.9483 1.4941 2.5405 1.0272 3.6954</span></span></code></pre></div>
+<p>The summary HR of HER2 is statistically significant, indicating that
+increased levels of HER2 are associated with poorer survival.</p>
 <p>Although the summary result (<span class="math inline">\(\hat
 \mu\)</span>) is usually the main focus of a meta-analysis, this
 reflects some average across studies and it may be hard to translate to
@@ -520,39 +514,42 @@ calculate the approximate 95% PI for <span class="math inline">\(\hat
 \mu\)</span> as follows:</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">level</span> <span class="op">&lt;-</span> <span class="fl">0.05</span></span>
-<span><span class="va">crit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">qt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">level</span><span class="op">/</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">level</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>, df <span class="op">=</span> <span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">k</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="va">crit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">qt</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">level</span><span class="op">/</span><span class="fl">2</span>, <span class="fl">1</span><span class="op">-</span><span class="op">(</span><span class="va">level</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span>, df <span class="op">=</span> <span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">k</span> <span class="op">-</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="va">resREML</span><span class="op">$</span><span class="va">b</span></span>
 <span><span class="va">tau2</span> <span class="op">&lt;-</span> <span class="va">resREML</span><span class="op">$</span><span class="va">tau2</span></span>
 <span><span class="va">sigma2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">resREML</span><span class="op">)</span></span>
-<span><span class="va">mu</span> <span class="op">+</span> <span class="va">crit</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span> <span class="op">+</span> <span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] -0.04467483  1.37855606</span></span></code></pre></div>
-<p>The boundaries of the approximate 95% PI are given as 0.956 to 3.969
-.</p>
-<p>There is substantial heterogeneity in the prognostic value of HER 2
-and its usefulness may be very limited in certain populations.</p>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span> <span class="op">+</span> <span class="va">crit</span> <span class="op">*</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span> <span class="op">+</span> <span class="va">sigma2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co">#&gt; [1] 0.9563084 3.9691662</span></span></code></pre></div>
+<p>The 95% prediction interval ranges from 0.956 to 3.969, and suggests
+there is substantial heterogeneity in the prognostic value of HER2. In
+particular, although increased levels of HER2 are generally associated
+with poorer survival, they may also lead to improved survival (HR &lt;
+1) in certain settings.</p>
 <p>A possible approach to enhance the interpretation of meta-analysis
 results is to calculate the probability that the prognostic effect of
-HER 2 will be above some useful value (e.g. a HR &gt; 1.5 for a binary
-factor, which indicates risk is increased by at least 50%). We can
-calculate this probability as follows:</p>
+HER2 will be above some useful value (e.g. a HR &gt; 1.5 for a binary
+factor, which indicates risk is increased by at least 50%) in a new
+setting. We can calculate this probability as follows:</p>
 <p><span class="math inline">\(Pr(\mathrm{HR} &gt; 1.5) = Pr(\hat \mu
 &gt; \log(1.5)) = 1 - Pr(\hat \mu \leq \log(1.5))\)</span></p>
 <p>where <span class="math inline">\(Pr(\hat \mu \leq
 \log(1.5))\)</span> is approximated using a scaled Student-<span class="math inline">\(t\)</span> distribution (similar to the
 calculation of our prediction interval):</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fl">1</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">pt</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">1.5</span><span class="op">)</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span>, df<span class="op">=</span><span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">k</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fl">1</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">pt</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">1.5</span><span class="op">)</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span> <span class="op">+</span> <span class="va">sigma2</span><span class="op">)</span>, df <span class="op">=</span> <span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">k</span> <span class="op">-</span> <span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co">#&gt;              [,1]</span></span>
 <span><span class="co">#&gt; intrcpt 0.7805314</span></span></code></pre></div>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">probOS</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">pt</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">1.5</span><span class="op">)</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span>, df<span class="op">=</span><span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">k</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>We can also estimate this probability by means of simulation:</p>
+<p>The probability that the HR for HER2 will be &gt;1.5 in a new setting
+is 78%. We can also estimate this probability by means of
+simulation:</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Simulate 100000 new studies</span></span>
 <span><span class="va">Nsim</span> <span class="op">&lt;-</span> <span class="fl">1000000</span> </span>
 <span><span class="va">HRsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">rt</a></span><span class="op">(</span><span class="va">Nsim</span>, df<span class="op">=</span><span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">k</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">HRsim</span><span class="op">&gt;</span><span class="fl">1.5</span><span class="op">)</span><span class="op">/</span><span class="va">Nsim</span></span>
-<span><span class="co">#&gt; [1] 0.780266</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.78039</span></span></code></pre></div>
 <p>The probability is 78% , suggesting that using HER2 will often
 provide adequate discrimination.</p>
 </div>
@@ -574,6 +571,59 @@ outcome.</p>
 <p>For instance, 6 studies in the review of <span class="citation">Zhang
 and Sun (2015)</span> assessed the relation between HER2 and PFS. The
 corresponding hazard ratios are given below:</p>
+<table class="table">
+<thead><tr class="header">
+<th align="left">Study</th>
+<th align="center">Country</th>
+<th align="center">Disease</th>
+<th align="right">N</th>
+<th align="center">Hazard Ratio (95% CI)</th>
+</tr></thead>
+<tbody>
+<tr class="odd">
+<td align="left">Togami, 2012</td>
+<td align="center">Japan</td>
+<td align="center">UPSC</td>
+<td align="right">71</td>
+<td align="center">3.43 (1.5; 7.23)</td>
+</tr>
+<tr class="even">
+<td align="left">Mori, 2010</td>
+<td align="center">Japan</td>
+<td align="center">EEC</td>
+<td align="right">63</td>
+<td align="center">3.8 (1.29; 12.35)</td>
+</tr>
+<tr class="odd">
+<td align="left">Jongen, 2009</td>
+<td align="center">Netherlands</td>
+<td align="center">EEC</td>
+<td align="right">315</td>
+<td align="center">1.75 (0.23; 13.08)</td>
+</tr>
+<tr class="even">
+<td align="left">Coronado, 2001</td>
+<td align="center">Spain</td>
+<td align="center">EC</td>
+<td align="right">114</td>
+<td align="center">2.69 (1.35; 5.37)</td>
+</tr>
+<tr class="odd">
+<td align="left">Backe, 1997</td>
+<td align="center">Germany</td>
+<td align="center">EC</td>
+<td align="right">222</td>
+<td align="center">1.36 (0.65; 2.85)</td>
+</tr>
+<tr class="even">
+<td align="left">Vos, 2011</td>
+<td align="center">England</td>
+<td align="center">EC</td>
+<td align="right">156</td>
+<td align="center">1.41 (0.51; 3.88)</td>
+</tr>
+</tbody>
+</table>
 <p>We first derive the log hazard ratio and corresponding standard
 error:</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
@@ -609,7 +659,7 @@ plot.</p>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span>
 <span><span class="fu">metafor</span><span class="fu">::</span><span class="fu"><a href="https://wviechtb.github.io/metafor/reference/forest.html" class="external-link">forest</a></span><span class="op">(</span><span class="va">resPFS</span>, transf <span class="op">=</span> <span class="va">exp</span>, xlab <span class="op">=</span> <span class="st">"Hazard Ratio"</span>, refline <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ma-pf_files/figure-html/unnamed-chunk-22-1.png" width="700"></p>
+<p><img src="ma-pf_files/figure-html/unnamed-chunk-23-1.png" width="700"></p>
 <p>Note that the univariate meta-analysis for PFS is based on merely 6
 studies, and that the univariate meta-analysis for OS was based on 14
 studies. We can now employ multivariate meta-analysis to ‘’borrow
@@ -662,14 +712,11 @@ the two outcomes simultaneously.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ---</span></span>
 <span><span class="co">#&gt; Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre></div>
-<p>The new summary estimate is 0.670 versus 0.667 with an SE of “,
-sprintf(”%.3f”, sqrt(vcov(res.MV)[“outcomeOS”,“outcomeOS”])), “(versus”,
-sprintf(“%.3f”, sqrt(vcov(resREML))), “). Hence, we have gained some
-precision.”)}`</p>
-<p>The new summary estimate is 0.873 (versus 0.700 ) with an SE of 0.215
-(versus 0.114 ). We have lost precision, possibly because the presence
-of between-study heterogeneity is now more apparent, thereby
-complicating estimation of the summary effect.</p>
+<p>The summary estimate of the log hazard ratio for overall survival is
+0.670 (multivariate meta-analysis) versus 0.667 (univariate
+meta-analysis) with an SE of 0.132 and, respectively, 0.135. Hence, we
+gained some precision by including evidence from 2 additional studies
+that only evaluated progression-free survival.</p>
 <p>Note that estimation of between-study heterogeneity was difficult for
 progression-free survival due to the limited number of studies. In
 particular, we found <span class="math inline">\(\tau^2\)</span>= 0.081
