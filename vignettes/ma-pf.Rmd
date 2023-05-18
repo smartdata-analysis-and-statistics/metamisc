@@ -200,7 +200,7 @@ mu.ci <- c(resREML$ci.lb, resREML$ci.ub)
 tau2 <- resREML$tau2
 
 # Error variance of the pooled log hazard ratio
-sigma2 <- vcov(resREML)
+sigma2 <- as.numeric(vcov(resREML))
 
 # Number of studies contributing to the meta-analyis
 numstudies <- resREML$k.all
@@ -259,23 +259,25 @@ $Pr(\mathrm{HR} > 1.5) = Pr(\hat \mu > \log(1.5)) = 1 - Pr(\hat \mu \leq \log(1.
 where $Pr(\hat \mu \leq \log(1.5))$ is approximated using a scaled Student-$t$ distribution (similar to the calculation of our prediction interval):
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-1 - pt((log(1.5) - mu)/sqrt(tau2 + sigma2), df = (numstudies - 2))
+probOS <- 1 - pt((log(1.5) - mu)/sqrt(tau2 + sigma2), df = (numstudies - 2))
+probOS
 ```
 
-```{r, echo = F, message=F,warning=F,echo=T,eval=T}
-probOS <- 1-pt((log(1.5) - mu)/sqrt(tau2+sigma2), df=(numstudies-2))
-```
-
-The probability that HER2 will yield a hazard ratio for overall survival of at least 1.5 in a new setting is `r sprintf("%.0f", probOS*100)`%. This means that despite the presence of between-study heterogeneity, it is very likely that HER2 will provide substantial discriminative ability when used as a single prognostic factor in a new setting. We can also estimate this probability by means of simulation:
+The probability that HER2 will yield a hazard ratio for overall survival of at least 1.5 in a new setting is `r sprintf("%.0f", probOS*100)`%. This means that despite the presence of between-study heterogeneity, it is likely that HER2 will provide substantial discriminative ability when used as a single prognostic factor in a new setting. We can also estimate this probability by means of simulation:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 # Simulate 100000 new studies
-Nsim <- 1000000 
-HRsim <- exp(mu + rt(Nsim, df=(numstudies-2))*sqrt(tau2+sigma2))
-sum(HRsim>1.5)/Nsim
+Nsim <- 1000000
+
+# Random draws from a Student T distribution
+rnd_t <- rt(Nsim, df= (numstudies - 2))
+
+# Generate 1,000,000 hazard ratios
+HRsim <- exp(c(mu) + rnd_t*sqrt(tau2 + sigma2))
+mean(HRsim > 1.5)
 ```
 
-Again, the probability thatHER2 will yield a hazard ratio for overall survival of >1.5 in a new setting is `r sprintf("%.0f", probOS*100)`%.
+Again, the probability that HER2 will yield a hazard ratio for overall survival of >1.5 in a new setting is `r sprintf("%.0f", mean(HRsim>1.5)*100)`%.
 
 # Multivariate meta-analysis
 
