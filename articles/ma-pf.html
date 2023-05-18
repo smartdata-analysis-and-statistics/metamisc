@@ -294,11 +294,12 @@ intervals <span class="citation">(Altman Douglas G. and Bland
 follows a Normal distribution, such that he standard error (SE) of the
 log hazard ratio is given as:</p>
 <p><span class="math inline">\(\mathrm{SE}=(\log(u)-\log(l))/(2*1.96)\)</span></p>
-<p>where the upper and lower limits of the 95% CI are <span class="math inline">\(u\)</span> and <span class="math inline">\(l\)</span> respectively. In <code>R</code>, we
-have:</p>
+<p>where the upper and lower limits of the 95% CI are <span class="math inline">\(u\)</span> and <span class="math inline">\(l\)</span> respectively. We can implement this
+calculation as follows:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Zhang</span> <span class="op">&lt;-</span> <span class="va">Zhang</span> <span class="op">%&gt;%</span> <span class="fu">mutate</span><span class="op">(</span>logHR <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">HR</span><span class="op">)</span>, </span>
-<span>                          se.logHR <span class="op">=</span>  <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">HR.975</span><span class="op">)</span> <span class="op">-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">HR.025</span><span class="op">)</span><span class="op">)</span><span class="op">/</span><span class="op">(</span><span class="fl">2</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span> <span class="op">-</span> <span class="fl">0.05</span><span class="op">/</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<span>                          se.logHR <span class="op">=</span>  <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">HR.975</span><span class="op">/</span><span class="va">HR.025</span><span class="op">)</span> <span class="op">/</span> <span class="op">(</span><span class="fl">2</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">qnorm</a></span><span class="op">(</span><span class="fl">0.975</span><span class="op">)</span><span class="op">)</span></span>
+<span>                          <span class="op">)</span></span></code></pre></div>
 <p>It is often helpful to display the effect sizes of all studies in a
 forest plot. An advantage of the forest plot is that allows a visual
 inspection of the available evidence and facilitates the identification
@@ -596,7 +597,7 @@ probability by means of simulation:</p>
 <span><span class="co"># Generate 1,000,000 hazard ratios</span></span>
 <span><span class="va">HRsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu</span><span class="op">)</span> <span class="op">+</span> <span class="va">rnd_t</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span> <span class="op">+</span> <span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">HRsim</span> <span class="op">&gt;</span> <span class="fl">1.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.780024</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.781405</span></span></code></pre></div>
 <p>Again, the probability that HER2 will yield a hazard ratio for
 overall survival of &gt;1.5 in a new setting is 78%.</p>
 </div>
@@ -678,7 +679,11 @@ below:</p>
 investigating progression-free survival:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">dat_pfs</span> <span class="op">&lt;-</span> <span class="va">Zhang</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">outcome</span> <span class="op">==</span> <span class="st">"PFS"</span><span class="op">)</span></span>
-<span><span class="va">resPFS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma</a></span><span class="op">(</span>yi <span class="op">=</span> <span class="va">logHR</span>, sei <span class="op">=</span> <span class="va">se.logHR</span>, method <span class="op">=</span> <span class="st">"REML"</span>, slab <span class="op">=</span> <span class="va">Study</span>, data <span class="op">=</span> <span class="va">dat_pfs</span><span class="op">)</span></span></code></pre></div>
+<span><span class="va">resPFS</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma</a></span><span class="op">(</span>yi <span class="op">=</span> <span class="va">logHR</span>, </span>
+<span>              sei <span class="op">=</span> <span class="va">se.logHR</span>, </span>
+<span>              method <span class="op">=</span> <span class="st">"REML"</span>, </span>
+<span>              slab <span class="op">=</span> <span class="va">Study</span>, </span>
+<span>              data <span class="op">=</span> <span class="va">dat_pfs</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ma-pf_files/figure-html/unnamed-chunk-24-1.png" width="768"></p>
 <p>Results indicate that the hormone receptor HER2 also has prognostic
 value for progression-free survival. Furthermore, the reported HRs
