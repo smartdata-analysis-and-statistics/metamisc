@@ -307,7 +307,7 @@ metamisc::forest(theta = dat_pfs$HR,
                  theta.summary.ci.ub = exp(resPFS$ci.ub),
                  theta.summary.pi.lb = exp(mu + qt(0.025, df = (resPFS$k.all - 2)) * sqrt(resPFS$tau2 + vcov(resPFS))),
                  theta.summary.pi.ub = exp(mu + qt(0.975, df = (resPFS$k.all - 2)) * sqrt(resPFS$tau2 + vcov(resPFS))),
-                 xlab = "Hazard ratio of HER2 versus OS", 
+                 xlab = "Hazard ratio of HER2 versus PFS", 
                  refline = 1)
 ```
 
@@ -339,6 +339,7 @@ out <- data.frame(outcome = character(),
                   model = character(),
                   logHR = numeric(),
                   logHR.se = numeric(),
+                  logHR.tau = numeric(),
                   HR = numeric(),
                   HR.cilower = numeric(),
                   HR.ciupper = numeric())
@@ -347,6 +348,7 @@ out <- out %>% add_row(data.frame(outcome = "Overall Survival",
                                   model = "Univariate meta-analysis",
                                   logHR = resREML$b,
                                   logHR.se = sqrt(as.numeric(vcov(resREML))),
+                                  logHR.tau = sqrt(resREML$tau2),
                                   HR = exp(resREML$b),
                                   HR.cilower = exp(resREML$ci.lb),
                                   HR.ciupper = exp(resREML$ci.ub)))
@@ -354,6 +356,7 @@ out <- out %>% add_row(data.frame(outcome = "Overall Survival",
                                   model = "Multivariate meta-analysis",
                                   logHR = res.MV$beta["outcomeOS",],
                                   logHR.se =  sqrt(vcov(res.MV)["outcomeOS","outcomeOS"]),
+                                  logHR.tau = sqrt(res.MV$tau2[1]),
                                   HR = exp(res.MV$beta["outcomeOS",]),
                                   HR.cilower = exp(res.MV$ci.lb)[1],
                                   HR.ciupper = exp(res.MV$ci.ub)[1]))
@@ -361,6 +364,7 @@ out <- out %>% add_row(data.frame(outcome = "Progression-free Survival",
                                   model = "Univariate meta-analysis",
                                   logHR = resPFS$b,
                                   logHR.se = sqrt(as.numeric(vcov(resPFS))),
+                                  logHR.tau = sqrt(resPFS$tau2),
                                   HR = exp(resPFS$b),
                                   HR.cilower = exp(resPFS$ci.lb),
                                   HR.ciupper = exp(resPFS$ci.ub)))
@@ -368,16 +372,18 @@ out <- out %>% add_row(data.frame(outcome = "Progression-free Survival",
                                   model = "Multivariate meta-analysis",
                                   logHR = res.MV$beta["outcomePFS",],
                                   logHR.se =  sqrt(vcov(res.MV)["outcomePFS","outcomePFS"]),
+                                  logHR.tau = sqrt(res.MV$tau2[2]),
                                   HR = exp(res.MV$beta["outcomePFS",]),
                                   HR.cilower = exp(res.MV$ci.lb)[2],
                                   HR.ciupper = exp(res.MV$ci.ub)[2]))
 
 kout <- out %>% mutate(logHR =  sprintf("%.3f", logHR),
                        logHR.se =  sprintf("%.3f", logHR.se),
+                       logHR.tau =  sprintf("%.3f", logHR.tau),
                          HR = sprintf("%.2f", HR),
                        HRci = paste0(sprintf("%.2f",HR.cilower), "; ", sprintf("%.2f",HR.ciupper))) %>% 
-  select(outcome, model, logHR, logHR.se, HR, HRci)
-kable(kout, col.names = c("Outcome", "Model", "log HR", "SE", "HR", "95% CI"),
+  select(outcome, model, logHR, logHR.se, logHR.tau, HR, HRci)
+kable(kout, col.names = c("Outcome", "Model", "$\\mu$", "SE($\\mu$)", "$\\tau$", "HR", "95% CI"),
       align = "llccc")
 ```
 
