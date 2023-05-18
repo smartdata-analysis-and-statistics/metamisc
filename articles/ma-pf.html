@@ -587,7 +587,7 @@ simulation:</p>
 <span><span class="va">Nsim</span> <span class="op">&lt;-</span> <span class="fl">1000000</span> </span>
 <span><span class="va">HRsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">rt</a></span><span class="op">(</span><span class="va">Nsim</span>, df<span class="op">=</span><span class="op">(</span><span class="va">numstudies</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">HRsim</span><span class="op">&gt;</span><span class="fl">1.5</span><span class="op">)</span><span class="op">/</span><span class="va">Nsim</span></span>
-<span><span class="co">#&gt; [1] 0.781154</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.780463</span></span></code></pre></div>
 <p>The probability is <code>r</code>sprintf(“%.0f%%”, probOS*100)`%,
 suggesting that using HER2 will often provide adequate
 discrimination.</p>
@@ -739,19 +739,21 @@ gained some precision by including evidence from 2 additional studies
 that only evaluated progression-free survival.</p>
 <table class="table">
 <colgroup>
-<col width="30%">
-<col width="31%">
-<col width="9%">
-<col width="8%">
+<col width="27%">
+<col width="28%">
 <col width="7%">
-<col width="12%">
+<col width="11%">
+<col width="8%">
+<col width="5%">
+<col width="11%">
 </colgroup>
 <thead><tr class="header">
 <th align="left">Outcome</th>
 <th align="left">Model</th>
-<th align="center">log HR</th>
-<th align="center">SE</th>
-<th align="center">HR</th>
+<th align="center"><span class="math inline">\(\mu\)</span></th>
+<th align="center">SE(<span class="math inline">\(\mu\)</span>)</th>
+<th align="center"><span class="math inline">\(\tau\)</span></th>
+<th align="left">HR</th>
 <th align="left">95% CI</th>
 </tr></thead>
 <tbody>
@@ -760,7 +762,8 @@ that only evaluated progression-free survival.</p>
 <td align="left">Univariate meta-analysis</td>
 <td align="center">0.667</td>
 <td align="center">0.135</td>
-<td align="center">1.95</td>
+<td align="center">0.297</td>
+<td align="left">1.95</td>
 <td align="left">1.49; 2.54</td>
 </tr>
 <tr class="even">
@@ -768,7 +771,8 @@ that only evaluated progression-free survival.</p>
 <td align="left">Multivariate meta-analysis</td>
 <td align="center">0.670</td>
 <td align="center">0.132</td>
-<td align="center">1.95</td>
+<td align="center">0.294</td>
+<td align="left">1.95</td>
 <td align="left">1.51; 2.53</td>
 </tr>
 <tr class="odd">
@@ -776,7 +780,8 @@ that only evaluated progression-free survival.</p>
 <td align="left">Univariate meta-analysis</td>
 <td align="center">0.815</td>
 <td align="center">0.201</td>
-<td align="center">2.26</td>
+<td align="center">0.168</td>
+<td align="left">2.26</td>
 <td align="left">1.52; 3.35</td>
 </tr>
 <tr class="even">
@@ -784,7 +789,8 @@ that only evaluated progression-free survival.</p>
 <td align="left">Multivariate meta-analysis</td>
 <td align="center">0.873</td>
 <td align="center">0.215</td>
-<td align="center">2.40</td>
+<td align="center">0.277</td>
+<td align="left">2.40</td>
 <td align="left">1.57; 3.65</td>
 </tr>
 </tbody>
