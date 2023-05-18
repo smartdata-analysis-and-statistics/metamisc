@@ -1,5 +1,8 @@
 ---
 title: "Meta-analysis of prognostic factors"
+author:
+  - name: Thomas Debray
+    orcid: 0000-0002-1790-2719
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Meta-analysis of prognostic factors}

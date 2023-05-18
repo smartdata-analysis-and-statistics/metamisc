@@ -1,5 +1,8 @@
 ---
 title: "Meta-analysis of prediction model performance"
+author:
+  - name: Thomas Debray
+    orcid: 0000-0002-1790-2719
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Meta-analysis of prediction model performance}
