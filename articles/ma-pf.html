@@ -382,10 +382,10 @@ standard error and the estimated effect size.</p>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Test for Funnel Plot Asymmetry: t = 2.1622, df = 12, p = 0.0515</span></span>
 <span><span class="co">#&gt; Limit Estimate (as sei -&gt; 0):   b = 0.2590 (CI: -0.0760, 0.5939)</span></span></code></pre></div>
-<p>The P-value for funnel plot asymmetry is given as 0.052. Note that it
-is common to use a 10% level of significance because the number of
-studies in a meta-analysis is usually low and also there is evidence for
-funnel plot asymmetry, as the P-value is below 0.10.</p>
+<p>It is common to use a 10% level of significance because the number of
+studies in a meta-analysis is usually low. In the case study, the
+P-value is 0.052, which implies there is evidence for funnel plot
+asymmetry .</p>
 <p>Funnel plot asymmetry tests can also be performed using
 <strong>metamisc</strong> as follows:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
@@ -594,7 +594,7 @@ probability by means of simulation:</p>
 <span><span class="co"># Generate 1,000,000 hazard ratios</span></span>
 <span><span class="va">HRsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu</span><span class="op">)</span> <span class="op">+</span> <span class="va">rnd_t</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span> <span class="op">+</span> <span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">HRsim</span> <span class="op">&gt;</span> <span class="fl">1.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.781246</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.780791</span></span></code></pre></div>
 <p>Again, the probability that HER2 will yield a hazard ratio for
 overall survival of &gt;1.5 in a new setting is 78%.</p>
 </div>
