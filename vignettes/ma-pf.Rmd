@@ -76,11 +76,12 @@ To facilitate any quantitative analysis, information on the standard error of th
 
 $\mathrm{SE}=(\log(u)-\log(l))/(2*1.96)$
 
-where the upper and lower limits of the 95% CI are $u$ and $l$ respectively. In `R`, we have:
+where the upper and lower limits of the 95% CI are $u$ and $l$ respectively. We can implement this calculation as follows:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 Zhang <- Zhang %>% mutate(logHR = log(HR), 
-                          se.logHR =  (log(HR.975) - log(HR.025))/(2*qnorm((1 - 0.05/2))))
+                          se.logHR =  log(HR.975/HR.025) / (2*qnorm(0.975))
+                          )
 ```
 
 It is often helpful to display the effect sizes of all studies in a forest plot. An advantage of the forest plot is that allows a visual inspection of the available evidence and facilitates the identification of potential between-study heterogeneity. The forest plot for overall survival can then be generated using the `forest` function in **metamisc**. This requires to provide information on the estimated hazard ratios (via the argument `theta`), as well as the bounds of their 95% confidence interval (via `theta.ci.lb` and `theta.ci.ub`). 
@@ -299,7 +300,11 @@ We first conduct a univariate meta-analysis of the six studies investigating pro
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 dat_pfs <- Zhang %>% filter(outcome == "PFS")
-resPFS <- rma(yi = logHR, sei = se.logHR, method = "REML", slab = Study, data = dat_pfs)
+resPFS <- rma(yi = logHR, 
+              sei = se.logHR, 
+              method = "REML", 
+              slab = Study, 
+              data = dat_pfs)
 ```
 
 ```{r,message=F,warning=F,echo=F,eval=T, fig.width=8, fig.height=4}
