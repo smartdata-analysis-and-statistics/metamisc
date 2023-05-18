@@ -73,7 +73,9 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Meta-analysis of prognostic factors</h1>
-            
+                        <h4 data-toc-skip class="author">Thomas
+Debray</h4>
+                        
       
       <small class="dont-index">Source: <a href="https://github.com/smartdata-analysis-and-statistics/metamisc/blob/HEAD/vignettes/ma-pf.Rmd" class="external-link"><code>vignettes/ma-pf.Rmd</code></a></small>
       <div class="d-none name"><code>ma-pf.Rmd</code></div>
@@ -594,7 +596,7 @@ probability by means of simulation:</p>
 <span><span class="co"># Generate 1,000,000 hazard ratios</span></span>
 <span><span class="va">HRsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu</span><span class="op">)</span> <span class="op">+</span> <span class="va">rnd_t</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span> <span class="op">+</span> <span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">HRsim</span> <span class="op">&gt;</span> <span class="fl">1.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.780787</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.780024</span></span></code></pre></div>
 <p>Again, the probability that HER2 will yield a hazard ratio for
 overall survival of &gt;1.5 in a new setting is 78%.</p>
 </div>
