@@ -42,7 +42,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/ma-pf.html">Meta-analysis of prognostic factors</a>
-    <a class="dropdown-item" href="../articles/ma-pm.html">ma-pm</a>
+    <a class="dropdown-item" href="../articles/ma-pm.html">Meta-analysis of prediction model performance</a>
   </div>
 </li>
 <li class="nav-item">
@@ -594,7 +594,7 @@ probability by means of simulation:</p>
 <span><span class="co"># Generate 1,000,000 hazard ratios</span></span>
 <span><span class="va">HRsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">mu</span><span class="op">)</span> <span class="op">+</span> <span class="va">rnd_t</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span> <span class="op">+</span> <span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="va">HRsim</span> <span class="op">&gt;</span> <span class="fl">1.5</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.780791</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 0.780787</span></span></code></pre></div>
 <p>Again, the probability that HER2 will yield a hazard ratio for
 overall survival of &gt;1.5 in a new setting is 78%.</p>
 </div>
