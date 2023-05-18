@@ -579,18 +579,20 @@ calculation of our prediction interval):</p>
 <span><span class="co">#&gt; intrcpt 0.7805314</span></span></code></pre></div>
 <div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">probOS</span> <span class="op">&lt;-</span> <span class="fl">1</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">pt</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">1.5</span><span class="op">)</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span>, df<span class="op">=</span><span class="op">(</span><span class="va">numstudies</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>The probability that the HR for HER2 will be &gt;1.5 in a new setting
-is 78%. We can also estimate this probability by means of
-simulation:</p>
+<p>The probability that HER2 will yield a hazard ratio for overall
+survival of at least 1.5 in a new setting is 78%. This means that
+despite the presence of between-study heterogeneity, it is very likely
+that HER2 will provide substantial discriminative ability when used as a
+single prognostic factor in a new setting. We can also estimate this
+probability by means of simulation:</p>
 <div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Simulate 100000 new studies</span></span>
 <span><span class="va">Nsim</span> <span class="op">&lt;-</span> <span class="fl">1000000</span> </span>
 <span><span class="va">HRsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">rt</a></span><span class="op">(</span><span class="va">Nsim</span>, df<span class="op">=</span><span class="op">(</span><span class="va">numstudies</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">HRsim</span><span class="op">&gt;</span><span class="fl">1.5</span><span class="op">)</span><span class="op">/</span><span class="va">Nsim</span></span>
-<span><span class="co">#&gt; [1] 0.780463</span></span></code></pre></div>
-<p>The probability is <code>r</code>sprintf(“%.0f%%”, probOS*100)`%,
-suggesting that using HER2 will often provide adequate
-discrimination.</p>
+<span><span class="co">#&gt; [1] 0.780505</span></span></code></pre></div>
+<p>Again, the probability thatHER2 will yield a hazard ratio for overall
+survival of &gt;1.5 in a new setting is 78%.</p>
 </div>
 <div class="section level2">
 <h2 id="multivariate-meta-analysis">Multivariate meta-analysis<a class="anchor" aria-label="anchor" href="#multivariate-meta-analysis"></a>
