@@ -137,7 +137,7 @@ regfit <- regtest(x = dat_os$logHR,
                   predictor = "sei")
 ```
 
-The P-value for funnel plot asymmetry is given as `r sprintf("%.3f", regfit$pval)`. Note that it is common to use a 10% level of significance because the number of studies in a meta-analysis is usually low and also there is evidence for funnel plot asymmetry, as the P-value is below 0.10.
+It is common to use a 10% level of significance because the number of studies in a meta-analysis is usually low. In the case study, the P-value is `r sprintf("%.3f", regfit$pval)`, which implies there is evidence for funnel plot asymmetry . 
 
 Funnel plot asymmetry tests can also be performed using **metamisc** as follows:
 
