@@ -22,8 +22,6 @@ library(dplyr)
 
 # usethis::use_pkgdown_github_pages().
 # pkgdown::build_site()
-
-show.text = TRUE
 ```
 
 # Introduction
@@ -71,19 +69,30 @@ Results suggest that the hormone receptor HER2 has prognostic value for survival
 
 # First steps
 
+To facilitate any quantitative analysis, information on the standard error of the different study effect sizes is needed. Estimates for the standard error can be obtained from the reported 95% confidence intervals [@altman_how_2011]. It is then commonly assumed that the log hazard ratio follows a Normal distribution, such that he standard error (SE) of the log hazard ratio is given as:
+
+$\mathrm{SE}=(\log(u)-\log(l))/(2*1.96)$
+
+where the upper and lower limits of the 95% CI are $u$ and $l$ respectively. In `R`, we have:
+
+```{r,message=F,warning=F,echo=T,eval=T}
+Zhang <- Zhang %>% mutate(logHR = log(HR), 
+                          se.logHR =  (log(HR.975) - log(HR.025))/(2*qnorm((1 - 0.05/2))))
+```
+
 It is often helpful to display the effect sizes of all studies in a forest plot. An advantage of the forest plot is that allows a visual inspection of the available evidence and facilitates the identification of potential between-study heterogeneity. The forest plot for overall survival can then be generated using the `forest` function in **metamisc**. This requires to provide information on the estimated hazard ratios (via the argument `theta`), as well as the bounds of their 95% confidence interval (via `theta.ci.lb` and `theta.ci.ub`). 
 
 ```{r,message=F,warning=F,echo=T,eval=T, fig.width=8, fig.height=4}
 library(dplyr)
 
 # Select the 14 studies investigating overall survival
-ds <- Zhang %>% filter(outcome == "OS")
+dat_os <- Zhang %>% filter(outcome == "OS")
 
 # Generate a forest plot of the log hazard ratio
-metamisc::forest(theta = ds$HR, 
-                 theta.ci.lb = ds$HR.025, 
-                 theta.ci.ub = ds$HR.975, 
-                 theta.slab = ds$Study, 
+metamisc::forest(theta = dat_os$HR, 
+                 theta.ci.lb = dat_os$HR.025, 
+                 theta.ci.ub = dat_os$HR.975, 
+                 theta.slab = dat_os$Study, 
                  xlab = "Hazard ratio of HER2 versus OS", 
                  refline = 1)
 ```
@@ -91,23 +100,12 @@ metamisc::forest(theta = ds$HR,
 We can also generate a forest plot using **metafor**:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-metafor::forest(x = ds$HR, 
-                ci.lb = ds$HR.025, 
-                ci.ub = ds$HR.975, 
-                slab = ds$Study,
+metafor::forest(x = dat_os$HR, 
+                ci.lb = dat_os$HR.025, 
+                ci.ub = dat_os$HR.975, 
+                slab = dat_os$Study,
                 xlab = "Hazard ratio of HER2 versus OS", 
                 refline = 1)
-```
-
-To facilitate any further analysis, information on the standard error of the different study effect sizes is needed. Estimates for the standard error can be obtained from the reported 95% confidence intervals [@altman_how_2011]. It is then commonly assumed that the log hazard ratio follows a Normal distribution, such that he standard error (SE) of the log hazard ratio is given as:
-
-$\mathrm{SE}=(\log(u)-\log(l))/(2*1.96)$
-
-where the upper and lower limits of the 95% CI are $u$ and $l$ respectively. In `R`, we have:
-
-```{r,message=F,warning=F,echo=T,eval=T}
-ds <- ds %>% mutate(logHR = log(HR), 
-                    se.logHR =  (log(HR.975) - log(HR.025))/(2*qnorm((1 - 0.05/2))))
 ```
 
 # Assessment of publication bias
@@ -117,7 +115,7 @@ The presence of small-study effects is a common threat to systematic reviews and
 A common approach to construct the funnel plot is to display the individual observed effect sizes on the x-axis against the corresponding standard errors on the y-axis, and to use the fixed effect summary estimate as reference value. In the absence of publication bias and heterogeneity, one would then expect to see the points forming a funnel shape, with the majority of the points falling inside of the pseudo-confidence region of the summary estimate.
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-res <- rma(yi = logHR, sei = se.logHR, method = "FE", data = ds)
+res <- rma(yi = logHR, sei = se.logHR, method = "FE", data = dat_os)
 funnel(res, xlab = "Log Hazard Ratio")
 ```
 
@@ -126,22 +124,32 @@ In the case study, most study estimates fall within the pseudo-confidence region
 We can formally test the presence of asymmetry in the funnel plot by evaluating whether there is an association between the estimated standard error and the estimated effect size.
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-regtest(x = ds$logHR, sei = ds$se.logHR, model = "lm", predictor = "sei")
+regtest(x = dat_os$logHR, 
+        sei = dat_os$se.logHR, 
+        model = "lm", 
+        predictor = "sei")
 ```
 
 ```{r,message=F,warning=F,echo=F,eval=T}
-regfit = regtest(x = ds$logHR, 
-                 sei = ds$se.logHR, 
-                 model = "lm", 
-                 predictor = "sei")
+regfit <- regtest(x = dat_os$logHR, 
+                  sei = dat_os$se.logHR, 
+                  model = "lm", 
+                  predictor = "sei")
 ```
 
 The P-value for funnel plot asymmetry is given as `r sprintf("%.3f", regfit$pval)`. Note that it is common to use a 10% level of significance because the number of studies in a meta-analysis is usually low and also there is evidence for funnel plot asymmetry, as the P-value is below 0.10.
 
-Funnel plot asymmetry tests can also be performed using **metamisc**
+Funnel plot asymmetry tests can also be performed using **metamisc** as follows:
 
 ```{r}
-regfit <- fat(b = ds$logHR, b.se = ds$se.logHR, method = "E-FIV")
+regfit <- fat(b = dat_os$logHR, 
+              b.se = dat_os$se.logHR, 
+              method = "E-FIV")
+```
+
+which yields
+
+```{r, echo = F}
 regfit
 ```
 
@@ -154,7 +162,9 @@ plot(regfit)
 Some caution is warranted when interpreting the results for funnel plot asymmetry tests [@debray_detecting_2018]. First, the power to detect asymmetry is often limited because meta-analyses usually do not include many studies. Second, many tests are known to yield inadequate type-I error rates or to suffer from low power. For instance, it has been demonstrated that aforementioned test to evaluate the association between the estimated standard error and effect size tends to yield type-I error rates that are too high. Finally, funnel plot asymmetry may rather be caused by heterogeneity than by publication bias. We therefore adjust aforementioned regression test to use inverse of the total sample size (rather than the standard error) as predictor.
 
 ```{r,message=F,warning=F}
-regtest(x = ds$logHR, sei = ds$se.logHR, ni = ds$N, 
+regtest(x = dat_os$logHR, 
+        sei = dat_os$se.logHR, 
+        ni = dat_os$N, 
         model = "lm", 
         predictor = "ninv")
 ```
@@ -173,24 +183,41 @@ It is common to first estimate the heterogeneity parameter $\tau$ and to use the
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 resREML <- rma(yi = logHR, sei = se.logHR, method = "REML", 
-               slab = Study, data = ds)
+               slab = Study, data = dat_os)
 resREML
 ```
 
-The pooled estimate for the log hazard ratio is `r sprintf("%.3f", resREML$b)` with a standard error of `r sprintf("%.3f", sqrt(vcov(resREML)))`. The between-study standard deviation of the log hazard ratio is `r sprintf("%.3f", sqrt(resREML$tau2))`. We can calculate the summary estimate for the hazard ratio and its corresponding 95% CI by back-transforming the estimate for $\mu$ and its confidence bounds:
+The pooled estimate for the log hazard ratio is `r sprintf("%.3f", resREML$b)` with a standard error of `r sprintf("%.3f", sqrt(vcov(resREML)))`. The between-study standard deviation of the log hazard ratio is `r sprintf("%.3f", sqrt(resREML$tau2))`. We can extract the key statistics as follows:
 
-```{r,message=F,warning=F,echo=T,eval=T}
-exp(resREML$b)
-exp(c(resREML$ci.lb, resREML$ci.ub))
+```{r}
+# Summary estimate of the log hazard ratio for HER2
+mu <- resREML$b
+
+# 95% confidence interval of the pooled log hazard ratio
+mu.ci <- c(resREML$ci.lb, resREML$ci.ub)
+
+# Between-study variance of the log hazard ratio
+tau2 <- resREML$tau2
+
+# Error variance of the pooled log hazard ratio
+sigma2 <- vcov(resREML)
+
+# Number of studies contributing to the meta-analyis
+numstudies <- resREML$k.all
 ```
 
-We can also obtain the summary estimate and 95% CI for the HR of HER2 by simply using the `predict` function:
+We can use the information above to derive the summary estimate for the hazard ratio and its corresponding 95% confidence interval:
+
+```{r,message=F,warning=F,echo=T,eval=T}
+exp(mu)
+exp(mu.ci)
+```
+
+The summary HR of HER2 is statistically significant, indicating that increased levels of HER2 are associated with poorer survival. We can also obtain the summary estimate and 95% CI for the HR of HER2 by simply using the `predict` function:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 predict(resREML, transf = exp)
 ```
-
-The summary HR of HER2 is statistically significant, indicating that increased levels of HER2 are associated with poorer survival.
 
 Although the summary result ($\hat \mu$) is usually the main focus of a meta-analysis, this reflects some average across studies and it may be hard to translate to clinical practice when there is large between-study heterogeneity. We can quantify the impact of between-study heterogeneity by constructing a $100(1-\alpha/2)$% prediction interval, which gives the potential true prognostic effect in a new population conditional on the meta-analysis results [@riley_interpretation_2011]. An approximate prediction interval (PI) is given as follows:
 
@@ -200,19 +227,30 @@ where $t_{\alpha, N-2}$ is the $100(1-\alpha/2)$% percentile of the t-distributi
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 level <- 0.05
-crit <- qt(c(level/2, 1-(level/2)), df = (resREML$k - 2))
-mu <- resREML$b
-tau2 <- resREML$tau2
-sigma2 <- vcov(resREML)
-exp(mu + crit * c(sqrt(tau2 + sigma2)))
+crit <- qt(c(level/2, 1-(level/2)), df = (numstudies - 2))
+
+pi_lower <- exp(mu + crit[1] * sqrt(tau2 + sigma2))
+pi_upper <- exp(mu + crit[2] * sqrt(tau2 + sigma2))
+
+c(pi_lower, pi_upper)
 ```
 
-```{r echo = F}
-pi_lower <- exp(resREML$b + qt(level/2, df=(resREML$k-2)) * sqrt(tau2 + sigma2))
-pi_upper <- exp(resREML$b + qt(1-level/2, df=(resREML$k-2)) * sqrt(tau2 + sigma2))
-```
+The 95% prediction interval ranges from `r sprintf("%.3f", pi_lower)` to `r sprintf("%.3f", pi_upper)`, and suggests there is substantial heterogeneity in the prognostic value of HER2. In particular, although increased levels of HER2 are generally associated with poorer survival, they may also lead to improved survival (HR < 1) in certain settings. We can add the summary estimate and prediction interval to the forest plot:
 
-The 95% prediction interval ranges from `r sprintf("%.3f", pi_lower)` to `r sprintf("%.3f", pi_upper)`, and suggests there is substantial heterogeneity in the prognostic value of HER2. In particular, although increased levels of HER2 are generally associated with poorer survival, they may also lead to improved survival (HR < 1) in certain settings. 
+```{r,message=F,warning=F,echo=T,eval=T, fig.width=8, fig.height=4}
+# Generate a forest plot of the log hazard ratio
+metamisc::forest(theta = dat_os$HR, 
+                 theta.ci.lb = dat_os$HR.025, 
+                 theta.ci.ub = dat_os$HR.975, 
+                 theta.slab = dat_os$Study, 
+                 theta.summary = exp(mu),
+                 theta.summary.ci.lb = exp(mu.ci[1]),
+                 theta.summary.ci.ub = exp(mu.ci[2]),
+                 theta.summary.pi.lb = pi_lower,
+                 theta.summary.pi.ub = pi_upper,
+                 xlab = "Hazard ratio of HER2 versus OS", 
+                 refline = 1)
+```
 
 A possible approach to enhance the interpretation of meta-analysis results is to calculate the probability that the prognostic effect of HER2 will be above some useful value (e.g. a HR \> 1.5 for a binary factor, which indicates risk is increased by at least 50%) in a new setting. We can calculate this probability as follows:
 
@@ -221,11 +259,11 @@ $Pr(\mathrm{HR} > 1.5) = Pr(\hat \mu > \log(1.5)) = 1 - Pr(\hat \mu \leq \log(1.
 where $Pr(\hat \mu \leq \log(1.5))$ is approximated using a scaled Student-$t$ distribution (similar to the calculation of our prediction interval):
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-1 - pt((log(1.5) - mu)/sqrt(tau2 + sigma2), df = (resREML$k - 2))
+1 - pt((log(1.5) - mu)/sqrt(tau2 + sigma2), df = (numstudies - 2))
 ```
 
 ```{r, echo = F, message=F,warning=F,echo=T,eval=T}
-probOS <- 1-pt((log(1.5) - mu)/sqrt(tau2+sigma2), df=(resREML$k-2))
+probOS <- 1-pt((log(1.5) - mu)/sqrt(tau2+sigma2), df=(numstudies-2))
 ```
 
 The probability that the HR for HER2 will be >1.5 in a new setting is `r sprintf("%.0f%%", probOS*100)`. We can also estimate this probability by means of simulation:
@@ -233,17 +271,15 @@ The probability that the HR for HER2 will be >1.5 in a new setting is `r sprintf
 ```{r,message=F,warning=F,echo=T,eval=T}
 # Simulate 100000 new studies
 Nsim <- 1000000 
-HRsim <- exp(mu + rt(Nsim, df=(resREML$k-2))*sqrt(tau2+sigma2))
+HRsim <- exp(mu + rt(Nsim, df=(numstudies-2))*sqrt(tau2+sigma2))
 sum(HRsim>1.5)/Nsim
 ```
 
-`r if(show.text){paste("The probability is ", sprintf("%.0f%%", probOS*100), ", suggesting that using HER2 will often provide adequate discrimination.")}`
+The probability is `r `sprintf("%.0f%%", probOS*100)`%, suggesting that using HER2 will often provide adequate discrimination.
 
 # Multivariate meta-analysis
 
-In previous section, we used 14 of the 16 identified studies to evaluate the prognostic effect of HER2 on overall survival. Two studies were excluded from the meta-analysis because they did not provide direct evidence about overall survival. This is unwelcome, especially if the participants are otherwise representative of the population, clinical settings, and condition of interest [@riley_multivariate_2017]. For this reason, we here discuss how multivariate meta-analysis methods can be used to include studies that do not necessarliy provide direct evidence on the outcome of interest. Briefly, multivariate meta-analysis methods simultaneously analyse multiple outcomes, which allows more studies to contribute towards each outcome.
-
-For instance, 6 studies in the review of @zhang_prognostic_2015 assessed the relation between HER2 and PFS. The corresponding hazard ratios are given below:
+In previous section, we used 14 of the 16 identified studies to evaluate the prognostic effect of HER2 on overall survival. Two studies were excluded from the meta-analysis because they did not provide direct evidence about overall survival. This is unwelcome, especially if the participants are otherwise representative of the population, clinical settings, and condition of interest [@riley_multivariate_2017]. For this reason, we here discuss how multivariate meta-analysis methods can be used to borrow strength from studies that do not investigate the primary outcome of interest. Briefly, multivariate meta-analysis methods simultaneously summarize the effect size across multiple outcomes whilst accounting for their correlation. For example, six studies in the review of @zhang_prognostic_2015 assessed the hazard ratio of HER2 for progression-free survival, four of which also assessed overall survival. Hence, by conducting a multivariate meta-analysis we can borrow strength from two additional studies when estimating the hazard ratio for overall survival. The hazard ratios for progression free survival are depicted below:
 
 ```{r kablePFS, echo=F}
 out <- Zhang %>% filter(outcome == "PFS") %>%
@@ -254,37 +290,41 @@ kable(out, col.names = c("Study", "Country", "Disease", "N", "Hazard Ratio (95% 
       align = "lccrc")
 ```
 
-We first derive the log hazard ratio and corresponding standard error:
+We first conduct a univariate meta-analysis of the six studies investigating progression-free survival:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-Zhang <- Zhang %>% mutate(logHR = log(HR), 
-                    se.logHR =  (log(HR.975) - log(HR.025))/(2*qnorm((1 - 0.05/2))))
+dat_pfs <- Zhang %>% filter(outcome == "PFS")
+resPFS <- rma(yi = logHR, sei = se.logHR, method = "REML", slab = Study, data = dat_pfs)
 ```
 
-We can therefore combine this evidence with the HRs on overall survival to obtain more accurate estimates for the prognostic value of the hormone receptor HER2 with respect to PFS *and* OS.
-
-The hormone receptor HER2 also has prognostic value for progression-free survival. Furthermore, the reported HRs appear to be much more homogeneous across studies.
-
-Perform a random-effects meta-analysis and construct a forest plot.
-
-```{r,message=F,warning=F,echo=T,eval=T}
-resPFS <- rma(yi = Zhang$logHR, sei = Zhang$se.logHR, method = "REML", slab = Zhang$Study)
-resPFS
-metafor::forest(resPFS, transf = exp, xlab = "Hazard Ratio", refline = 1)
+```{r,message=F,warning=F,echo=F,eval=T, fig.width=8, fig.height=4}
+metamisc::forest(theta = dat_pfs$HR, 
+                 theta.ci.lb = dat_pfs$HR.025, 
+                 theta.ci.ub = dat_pfs$HR.975, 
+                 theta.slab = dat_pfs$Study, 
+                 theta.summary = exp(resPFS$b),
+                 theta.summary.ci.lb = exp(resPFS$ci.lb),
+                 theta.summary.ci.ub = exp(resPFS$ci.ub),
+                 theta.summary.pi.lb = exp(mu + qt(0.025, df = (resPFS$k.all - 2)) * sqrt(resPFS$tau2 + vcov(resPFS))),
+                 theta.summary.pi.ub = exp(mu + qt(0.975, df = (resPFS$k.all - 2)) * sqrt(resPFS$tau2 + vcov(resPFS))),
+                 xlab = "Hazard ratio of HER2 versus OS", 
+                 refline = 1)
 ```
 
-Note that the univariate meta-analysis for PFS is based on merely 6 studies, and that the univariate meta-analysis for OS was based on 14 studies. We can now employ multivariate meta-analysis to ''borrow information'' from the 4 studies that report prognostic effects for both PFS and OS (Togami 2012, Mori 2010, Jongen 2009-2 and Backe 1997). This, in turn, allows all studies to contribute on the summary effect for HER2 in both outcomes.
+Results indicate that the hormone receptor HER2 also has prognostic value for progression-free survival. Furthermore, the reported HRs appear to be much more homogeneous across studies, since the between-study standard deviation is `r sprintf("%.2f", sqrt(resPFS$tau2))` for progression-free survival whereas it was  `r sprintf("%.2f", sqrt(resREML$tau2))` for overall survival. Note that the univariate meta-analysis for progression-free survival is based on merely 6 studies, and that the univariate meta-analysis for overall survival was based on 14 studies. We can now employ multivariate meta-analysis to borrow information from the 4 studies that report prognostic effects for both endpoints. This, in turn, allows all studies to contribute on the summary effect for HER2 in both outcomes.
 
-Before we can proceed with the model fitting, we need to construct the full (block-diagonal) variance-covariance for all studies from the two outcomes. We can do this using the `diag()` function in one line of code:
+We first need to define the within-study covariance matrix of the estimated log hazard ratios for progression-free survival and overall survival. We here assume that estimates for the hazard ratio are independent within studies and construct a block diagonal matrix that only considers the error variance of each estimate:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 V <- diag(Zhang$se.logHR**2)
 ```
 
-A multivariate random-effects model can now be used to meta-analyze the two outcomes simultaneously.
+A multivariate random-effects model can now be used to simultaneously meta-analyze the hazard ratios for overall and progression-free survival:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
-res.MV <- rma.mv(yi = logHR, V, mods = ~ outcome - 1, 
+res.MV <- rma.mv(yi = logHR, 
+                 V = V, 
+                 mods = ~ outcome - 1, 
                  random = ~ outcome | Study, 
                  struct = "UN", 
                  data = Zhang, 
@@ -293,6 +333,53 @@ res.MV
 ```
 
 The summary estimate of the log hazard ratio for overall survival is `r sprintf("%.3f", (res.MV$beta["outcomeOS",]))` (multivariate meta-analysis) versus `r sprintf("%.3f", resREML$b)` (univariate meta-analysis) with an SE of `r  sprintf("%.3f", sqrt(vcov(res.MV)["outcomeOS","outcomeOS"]))` and, respectively, `r sprintf("%.3f", sqrt(vcov(resREML)))`. Hence, we gained some precision by including evidence from 2 additional studies that only evaluated progression-free survival.
+
+```{r,message=F,warning=F,echo=F,eval=T}
+out <- data.frame(outcome = character(),
+                  model = character(),
+                  logHR = numeric(),
+                  logHR.se = numeric(),
+                  HR = numeric(),
+                  HR.cilower = numeric(),
+                  HR.ciupper = numeric())
+
+out <- out %>% add_row(data.frame(outcome = "Overall Survival",
+                                  model = "Univariate meta-analysis",
+                                  logHR = resREML$b,
+                                  logHR.se = sqrt(as.numeric(vcov(resREML))),
+                                  HR = exp(resREML$b),
+                                  HR.cilower = exp(resREML$ci.lb),
+                                  HR.ciupper = exp(resREML$ci.ub)))
+out <- out %>% add_row(data.frame(outcome = "Overall Survival",
+                                  model = "Multivariate meta-analysis",
+                                  logHR = res.MV$beta["outcomeOS",],
+                                  logHR.se =  sqrt(vcov(res.MV)["outcomeOS","outcomeOS"]),
+                                  HR = exp(res.MV$beta["outcomeOS",]),
+                                  HR.cilower = exp(res.MV$ci.lb)[1],
+                                  HR.ciupper = exp(res.MV$ci.ub)[1]))
+out <- out %>% add_row(data.frame(outcome = "Progression-free Survival",
+                                  model = "Univariate meta-analysis",
+                                  logHR = resPFS$b,
+                                  logHR.se = sqrt(as.numeric(vcov(resPFS))),
+                                  HR = exp(resPFS$b),
+                                  HR.cilower = exp(resPFS$ci.lb),
+                                  HR.ciupper = exp(resPFS$ci.ub)))
+out <- out %>% add_row(data.frame(outcome = "Progression-free Survival",
+                                  model = "Multivariate meta-analysis",
+                                  logHR = res.MV$beta["outcomePFS",],
+                                  logHR.se =  sqrt(vcov(res.MV)["outcomePFS","outcomePFS"]),
+                                  HR = exp(res.MV$beta["outcomePFS",]),
+                                  HR.cilower = exp(res.MV$ci.lb)[2],
+                                  HR.ciupper = exp(res.MV$ci.ub)[2]))
+
+kout <- out %>% mutate(logHR =  sprintf("%.3f", logHR),
+                       logHR.se =  sprintf("%.3f", logHR.se),
+                         HR = sprintf("%.2f", HR),
+                       HRci = paste0(sprintf("%.2f",HR.cilower), "; ", sprintf("%.2f",HR.ciupper))) %>% 
+  select(outcome, model, logHR, logHR.se, HR, HRci)
+kable(kout, col.names = c("Outcome", "Model", "log HR", "SE", "HR", "95% CI"),
+      align = "llccc")
+```
 
 Note that estimation of between-study heterogeneity was difficult for progression-free survival due to the limited number of studies. In particular, we found $\tau^2$= `r sprintf("%.3f", resPFS$tau2)` with an SE of `r sprintf("%.3f", resPFS$se.tau2)`. In the multivariate meta-analysis, the estimated between-study variance for PFS was much larger ($\tau^2$=`r sprintf("%.3f", res.MV$tau2[2])`), and based on all 16 rather than merely 6 studies.
 
