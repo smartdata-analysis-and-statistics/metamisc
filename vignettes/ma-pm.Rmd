@@ -13,21 +13,58 @@ bibliography: "https://api.citedrive.com/bib/0d25b38b-db8f-43c4-b934-f4e2f3bd655
 
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
+  collapse = FALSE,
+  message = FALSE,
+  warning = FALSE,
+  tidy = TRUE
 )
 ```
 
+```{r, echo = F}
+library(knitr)
+library(dplyr)
+
+# usethis::use_pkgdown_github_pages().
+# pkgdown::build_site()
+```
 
 # Case Study
-The [EuroSCORE II](http://www.euroscore.org/calc.html) is a commonly used scoring rule for estimating the risk of  in-hospital mortality in  patients undergoing major cardiac surgery. It was developed using individual participant data from  16,828 adult patients from 154 hospitals across 43 countries. Predictors include patient characteristics (e.g. age, gender), cardiac related factors (e.g. recent MI) and surgery related factors (e.g. Surgery on thoracic aorta). In 2014, a systematic review of published evidence on the performance value of the EuroSCORE II was undertaken by @guida_performance_2014. Twenty-two validations, including 145,592 patients from 21 external validation articles (one study included two validations) and a split-sample validation contained within original development article were included in the review; 23 validation studies in total.
+The [EuroSCORE II](http://www.euroscore.org/calc.html) is a commonly used scoring rule for estimating the risk of in-hospital mortality in  patients undergoing major cardiac surgery. It was developed using data from  16,828 adult patients from 43 countries. Predictors include patient characteristics (e.g. age, gender), cardiac related factors (e.g. recent MI) and surgery related factors (e.g. Surgery on thoracic aorta). In 2014, a systematic review was undertaken by @guida_performance_2014 to search articles assessing the performance of EuroSCORE II on perioperative mortality in cardiac surgery. The systematic review identified 24 eligible validation studies, 22 studies were included in the main analysis. 
 
-In this vignette, we illustrate the R package **metamisc** to summarize the results from aformentioned 23 validation studies. In particular, we will derive summary estimates for the discrimination and calibration performance of EuroSCORE II, evaluate the presence of between-study heterogeneity, and assess to which extent study characteristics influence its performance. 
+In this case study, we summarize the results from these 22 studies, as well as the results from the split-sample validation contained within original development article of EuroSCORE II. We will use the **metamisc** package to derive summary estimates for the discrimination and calibration performance of EuroSCORE II, to evaluate the presence of between-study heterogeneity, and to identify potential sources of between-study heterogeneity. A step-by-step tutorial is provided by @debray_guide_2017. 
 
-The methodology of this package is explained and illustrated by @debray_guide_2017. 
+We can load the data from all 23 validation studies as follows:
 
-```{r setup}
+```{r}
 library(metamisc)
+data(EuroSCORE)
+```
+
+```{r, echo = F}
+out <- EuroSCORE %>% mutate(mortality = sprintf("%.2f", 100*n.events/n)) %>%
+  select(Study, n, mortality, c.index)
+kable(out, col.names = c("Study", "Patients (n)", "Mortality (%)", "c-index"),
+      align = "lrcc")
+```
+
+
+# Meta-analysis of calibration performance
+Calibration refers to a model's accuracy of predicted risk probabilities, and indicates the extent to which expected outcomes (predicted from the model) and observed outcomes agree. Summarising estimates of calibration performance is challenging because calibration plots are most often not presented, and because studies tend to report different types of summary statistics in calibration. For example, in the case study, calibration was assessed using the Hosmer-Lemeshow test, calibration plots or by comparing the observed mortality to the predicted EuroSCORE II (either overall or for groups of patients). Within each validation study, we can compare the total	number	of observed events (O) with the total number of expected (predicted)	events by deriving their ratio O:E. The total O:E ratio provides a rough indication of the overall model calibration (across the entire range of predicted risks). It	describes	whether	more	(O:E	>	1)	or	fewer	(O:E	<	1)	events	occurred		than	expected	 based	on	the	model. Whilst the O:E ratio itself was not explicitly reported in all studies, it can be calculated from other reported information:
+
+```{r}
+EuroSCORE <- EuroSCORE %>% mutate(oe = n.events/e.events)
+```
+
+The O:E ratio can also be derived from the observed and predicted mortality risk `Po` and, respectively, `Pe`:
+
+```{r, eval = F}
+EuroSCORE %>% select(Po, Pe) %>% mutate(oe = Po/Pe)
+```
+
+It is recommended to first transform extracted O:E ratios to	the	log (natural logarithm) scale before applying a meta-analysis.
+
+```{r}
+EuroSCORE <- EuroSCORE %>% mutate(logoe = log(oe))
 ```
 
 # References
