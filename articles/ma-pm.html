@@ -106,7 +106,8 @@ sources of between-study heterogeneity. A step-by-step tutorial is
 provided by <span class="citation">Debray et al. (2017)</span>.</p>
 <p>We can load the data from all 23 validation studies as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartdata-analysis-and-statistics/metamisc" class="external-link">metamisc</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.metafor-project.org" class="external-link">metafor</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartdata-analysis-and-statistics/metamisc" class="external-link">metamisc</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
@@ -344,7 +345,80 @@ combine the aforementioned steps as follows:</p>
 <p>Note that if we want to derive the log O:E ratio instead, we should
 use:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">logoe.ad</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oecalc.html">oecalc</a></span><span class="op">(</span>N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, E <span class="op">=</span> <span class="va">e.events</span>, slab <span class="op">=</span> <span class="va">Study</span>, g <span class="op">=</span> <span class="st">"log(OE)"</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">logoe.ad</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oecalc.html">oecalc</a></span><span class="op">(</span>N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, E <span class="op">=</span> <span class="va">e.events</span>, </span>
+<span>                   slab <span class="op">=</span> <span class="va">Study</span>, g <span class="op">=</span> <span class="st">"log(OE)"</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
+<div class="section level3">
+<h3 id="fixed-effect-meta-analysis">Fixed effect meta-analysis<a class="anchor" aria-label="anchor" href="#fixed-effect-meta-analysis"></a>
+</h3>
+<p>We can now summarize the results from the included validation
+studies. A simple approach is to calculate a weighted average, where the
+estimate of each study is simply weighted by its precision. This
+approach is also known as fixed effect meta-analysis, where the weighted
+average <span class="math inline">\(\mu\)</span> is given by:</p>
+<p><span class="math display">\[\mu = \dfrac{ \sum_{i=1}^{K}\left( \hat
+\theta_i / \left(\mathrm{SE}(\hat \theta_i)\right)^2 \right)}{
+\sum_{i=1}^{K}\left( 1 /  \left(\mathrm{SE}(\hat \theta_i)\right)^2
+\right) }\\\]</span> In this expression, <span class="math inline">\(\hat \theta_i\)</span> represent the study
+specific estimates for the log O:E ratio, and <span class="math inline">\(K\)</span> represents the total number of included
+studies. Aforementioned estimate for <span class="math inline">\(\mu\)</span> corresponds to the maximum likelihood
+of a fixed effect meta-analysis that assumes normality of the log O:E
+ratio within studies:</p>
+<p><span class="math display">\[\hat \theta_i \sim \mathcal{N}\left(\mu,
+\left(\mathrm{SE}(\hat \theta_i)\right)^2\right)\]</span> We can
+directly calculate the pooled log O:E ratio as follows:</p>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">EuroSCORE</span><span class="op">$</span><span class="va">logOE</span><span class="op">/</span><span class="va">EuroSCORE</span><span class="op">$</span><span class="va">se.logOE</span><span class="op">**</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">EuroSCORE</span><span class="op">$</span><span class="va">se.logOE</span><span class="op">**</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<p>Since the meta-analysis is performed using log-transformed estimates,
+the summary estimate for the total O:E ratio is given as <span class="math inline">\(\exp(\hat \mu)\)</span>:</p>
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## [1] 0.9383039</span></span></code></pre>
+<p>The fixed effect meta-analysis of the total O:E ratio can also be
+performed using <strong>metafor</strong>:</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma</a></span><span class="op">(</span>yi <span class="op">=</span> <span class="va">logOE</span>, sei <span class="op">=</span> <span class="va">se.logOE</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span>, method <span class="op">=</span> <span class="st">"FE"</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">beta</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">##              [,1]</span></span>
+<span><span class="co">## intrcpt 0.9383039</span></span></code></pre>
+<p>Alternatively, we can directly implement all of the aforementioned
+data preparation and meta-analysis steps using the
+<code><a href="../reference/valmeta.html">valmeta()</a></code> command. Hereto, we will use information on the
+total number of observed and expected events from each validation study,
+as well as the total sample size. Note that unless specified otherwise,
+<code><a href="../reference/valmeta.html">valmeta()</a></code> will apply the log transformation to summarize
+estimates of the total O:E ratio, and back-transform the results to the
+original scale.</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"OE"</span>, O <span class="op">=</span> <span class="va">n.events</span>, E <span class="op">=</span> <span class="va">e.events</span>,  N <span class="op">=</span> <span class="va">n</span>, method <span class="op">=</span> <span class="st">"FE"</span>, </span>
+<span>        data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Summary Total O:E ratio with 95% confidence interval:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  Estimate       CIl       CIu </span></span>
+<span><span class="co">## 0.9383039 0.9111366 0.9662812 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of studies included:  23</span></span></code></pre>
+<p>The pooled O:E ratio is <code>sprintf("%.2f", exp(mu))</code>, which
+implies that, on average, EuroSCORE II tends to yield predictions of
+peri-operative mortality that are too high.</p>
+<p>Note that to obtain a summary of the total O:E ratio, we provided
+information on the total number of observed and expected events, as well
+as the total sample size. In practice, however, the total sample size
+may not always have been reported, and in such situations approximations
+can be used for estimating the standard error of the total O:E ratio. To
+illustrate this, we can re-run our fixed effect meta-analysis by
+omitting the sample size from the <code><a href="../reference/valmeta.html">valmeta()</a></code> command:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"OE"</span>, O <span class="op">=</span> <span class="va">n.events</span>, E <span class="op">=</span> <span class="va">e.events</span>, method <span class="op">=</span> <span class="st">"FE"</span>, </span>
+<span>        data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
+<pre><code><span><span class="co">## Summary Total O:E ratio with 95% confidence interval:</span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">##  Estimate       CIl       CIu </span></span>
+<span><span class="co">## 0.9353144 0.9077502 0.9637156 </span></span>
+<span><span class="co">## </span></span>
+<span><span class="co">## Number of studies included:  23</span></span></code></pre>
+<p>Results are nearly identical to the analyses where we utilized
+information on the sample size of the validation studies.</p>
+</div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
