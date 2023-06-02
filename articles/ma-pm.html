@@ -89,204 +89,26 @@ Debray</h4>
 <p>The <a href="http://www.euroscore.org/calc.html" class="external-link">EuroSCORE II</a> is
 a commonly used scoring rule for estimating the risk of in-hospital
 mortality in patients undergoing major cardiac surgery. It was developed
-using data from 16,828 adult patients from 43 countries. Predictors
-include patient characteristics (e.g. age, gender), cardiac related
-factors (e.g. recent MI) and surgery related factors (e.g. Surgery on
-thoracic aorta). In 2014, a systematic review was undertaken by <span class="citation">Guida et al. (2014)</span> to search articles assessing
-the performance of EuroSCORE II on perioperative mortality in cardiac
-surgery. The systematic review identified 24 eligible validation
-studies, 22 studies were included in the main analysis.</p>
-<p>In this case study, we summarize the results from these 22 studies,
-as well as the results from the split-sample validation contained within
-original development article of EuroSCORE II. We will use the
-<strong>metamisc</strong> package to derive summary estimates for the
-discrimination and calibration performance of EuroSCORE II, to evaluate
-the presence of between-study heterogeneity, and to identify potential
-sources of between-study heterogeneity. A step-by-step tutorial is
-provided by <span class="citation">Debray et al. (2017)</span>.</p>
-<p>We can load the data from all 23 validation studies as follows:</p>
+using individual participant data from 16,828 adult patients from 154
+hospitals across 43 countries. Predictors include patient
+characteristics (e.g. age, gender), cardiac related factors (e.g. recent
+MI) and surgery related factors (e.g. Surgery on thoracic aorta). In
+2014, a systematic review of published evidence on the performance value
+of the EuroSCORE II was undertaken by <span class="citation">Guida et
+al. (2014)</span>. Twenty-two validations, including 145,592 patients
+from 21 external validation articles (one study included two
+validations) and a split-sample validation contained within original
+development article were included in the review; 23 validation studies
+in total.</p>
+<p>In this vignette, we illustrate the R package
+<strong>metamisc</strong> to summarize the results from aformentioned 23
+validation studies. In particular, we will derive summary estimates for
+the discrimination and calibration performance of EuroSCORE II, evaluate
+the presence of between-study heterogeneity, and assess to which extent
+study characteristics influence its performance.</p>
+<p>The methodology of this package is explained and illustrated by <span class="citation">Debray et al. (2017)</span>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartdata-analysis-and-statistics/metamisc" class="external-link">metamisc</a></span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
-<table class="table">
-<thead><tr class="header">
-<th align="left">Study</th>
-<th align="right">Patients (n)</th>
-<th align="center">Mortality (%)</th>
-<th align="center">c-index</th>
-</tr></thead>
-<tbody>
-<tr class="odd">
-<td align="left">Nashef</td>
-<td align="right">5553</td>
-<td align="center">4.18</td>
-<td align="center">0.8095</td>
-</tr>
-<tr class="even">
-<td align="left">Biancari</td>
-<td align="right">1027</td>
-<td align="center">2.73</td>
-<td align="center">0.8670</td>
-</tr>
-<tr class="odd">
-<td align="left">Di Dedda</td>
-<td align="right">1090</td>
-<td align="center">3.76</td>
-<td align="center">0.8100</td>
-</tr>
-<tr class="even">
-<td align="left">Chalmers</td>
-<td align="right">5576</td>
-<td align="center">3.43</td>
-<td align="center">0.7900</td>
-</tr>
-<tr class="odd">
-<td align="left">Grant</td>
-<td align="right">23740</td>
-<td align="center">3.14</td>
-<td align="center">0.8080</td>
-</tr>
-<tr class="even">
-<td align="left">Carneo</td>
-<td align="right">3798</td>
-<td align="center">5.66</td>
-<td align="center">0.8500</td>
-</tr>
-<tr class="odd">
-<td align="left">Kunt</td>
-<td align="right">428</td>
-<td align="center">7.94</td>
-<td align="center">0.7200</td>
-</tr>
-<tr class="even">
-<td align="left">Kirmani</td>
-<td align="right">15497</td>
-<td align="center">3.53</td>
-<td align="center">0.8180</td>
-</tr>
-<tr class="odd">
-<td align="left">Howell</td>
-<td align="right">933</td>
-<td align="center">9.65</td>
-<td align="center">0.6700</td>
-</tr>
-<tr class="even">
-<td align="left">Wang</td>
-<td align="right">11170</td>
-<td align="center">2.02</td>
-<td align="center">0.7200</td>
-</tr>
-<tr class="odd">
-<td align="left">Borde</td>
-<td align="right">498</td>
-<td align="center">1.61</td>
-<td align="center">0.7200</td>
-</tr>
-<tr class="even">
-<td align="left">Qadir</td>
-<td align="right">2004</td>
-<td align="center">3.79</td>
-<td align="center">0.8400</td>
-</tr>
-<tr class="odd">
-<td align="left">Spiliopoulos</td>
-<td align="right">216</td>
-<td align="center">6.48</td>
-<td align="center">0.7700</td>
-</tr>
-<tr class="even">
-<td align="left">Wendt</td>
-<td align="right">1066</td>
-<td align="center">4.22</td>
-<td align="center">0.7200</td>
-</tr>
-<tr class="odd">
-<td align="left">Laurent</td>
-<td align="right">314</td>
-<td align="center">5.73</td>
-<td align="center">0.7700</td>
-</tr>
-<tr class="even">
-<td align="left">Wang</td>
-<td align="right">818</td>
-<td align="center">1.59</td>
-<td align="center">0.6420</td>
-</tr>
-<tr class="odd">
-<td align="left">Nishida</td>
-<td align="right">461</td>
-<td align="center">7.16</td>
-<td align="center">0.7697</td>
-</tr>
-<tr class="even">
-<td align="left">Barilli</td>
-<td align="right">12201</td>
-<td align="center">1.72</td>
-<td align="center">0.8000</td>
-</tr>
-<tr class="odd">
-<td align="left">Barilli</td>
-<td align="right">1670</td>
-<td align="center">7.49</td>
-<td align="center">0.8200</td>
-</tr>
-<tr class="even">
-<td align="left">Paparella</td>
-<td align="right">6191</td>
-<td align="center">4.85</td>
-<td align="center">0.8300</td>
-</tr>
-<tr class="odd">
-<td align="left">Carosella</td>
-<td align="right">250</td>
-<td align="center">3.60</td>
-<td align="center">0.7600</td>
-</tr>
-<tr class="even">
-<td align="left">Borracci</td>
-<td align="right">503</td>
-<td align="center">4.17</td>
-<td align="center">0.8560</td>
-</tr>
-<tr class="odd">
-<td align="left">Osnabrugge</td>
-<td align="right">50588</td>
-<td align="center">2.12</td>
-<td align="center">0.7700</td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="section level2">
-<h2 id="meta-analysis-of-calibration-performance">Meta-analysis of calibration performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-calibration-performance"></a>
-</h2>
-<p>Calibration refers to a model’s accuracy of predicted risk
-probabilities, and indicates the extent to which expected outcomes
-(predicted from the model) and observed outcomes agree. Summarising
-estimates of calibration performance is challenging because calibration
-plots are most often not presented, and because studies tend to report
-different types of summary statistics in calibration. For example, in
-the case study, calibration was assessed using the Hosmer-Lemeshow test,
-calibration plots or by comparing the observed mortality to the
-predicted EuroSCORE II (either overall or for groups of patients).
-Within each validation study, we can compare the total number of
-observed events (O) with the total number of expected (predicted) events
-by deriving their ratio O:E. The total O:E ratio provides a rough
-indication of the overall model calibration (across the entire range of
-predicted risks). It describes whether more (O:E &gt; 1) or fewer (O:E
-&lt; 1) events occurred than expected based on the model. Whilst the O:E
-ratio itself was not explicitly reported in all studies, it can be
-calculated from other reported information:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>oe <span class="op">=</span> <span class="va">n.events</span><span class="op">/</span><span class="va">e.events</span><span class="op">)</span></span></code></pre></div>
-<p>The O:E ratio can also be derived from the observed and predicted
-mortality risk <code>Po</code> and, respectively, <code>Pe</code>:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Po</span>, <span class="va">Pe</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>oe <span class="op">=</span> <span class="va">Po</span><span class="op">/</span><span class="va">Pe</span><span class="op">)</span></span></code></pre></div>
-<p>It is recommended to first transform extracted O:E ratios to the log
-(natural logarithm) scale before applying a meta-analysis.</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>logoe <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">oe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartdata-analysis-and-statistics/metamisc" class="external-link">metamisc</a></span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
