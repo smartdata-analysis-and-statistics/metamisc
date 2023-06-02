@@ -88,7 +88,7 @@ metafor::forest(x = EuroSCORE$logOE, sei = EuroSCORE$se.logOE, slab = EuroSCORE$
 
 For each validation study, the O:E ratio is provided with its 95% confidence interval. The size of the boxes indicates the	sample size of the corresponding validation study. In this forest plot, O:E	ratios appear to vary	substantially	across the included validation	studies. These results suggest that the calibration of EuroSCORE II is prone to substantial between-study heterogeneity.
 
-In [metamisc](https://CRAN.R-project.org/package=metamisc), we can combine the aforementioned steps as follows:
+In **metamisc**, we can combine the aforementioned steps as follows:
 
 ```{r}
 oe.ad <- oecalc(N = n, O = n.events, E = e.events, slab = Study, 
@@ -137,9 +137,9 @@ valmeta(measure = "OE", O = n.events, E = e.events,  N = n, method = "FE",
         data = EuroSCORE)
 ```
 
-The pooled O:E ratio is `sprintf("%.2f", exp(mu))`, which implies that, on average, EuroSCORE II tends to yield predictions of peri-operative mortality that are too high.
+The pooled O:E ratio is `r sprintf("%.2f", exp(mu))`, which implies that, on average, EuroSCORE II tends to over-estimate the risk of peri-operative mortality.
 
-Note that to obtain a summary of the total O:E ratio, we provided information on the total number of observed and expected events, as well as the total sample size. In practice, however, the total sample size may not always have been reported, and in such situations approximations can be used for estimating the standard error of the total O:E ratio. To illustrate this, we can re-run our fixed effect meta-analysis by omitting the sample size from the `valmeta()` command:
+The previous meta-analysis models derived a summary estimate for the total O:E ratio from information on the total number of observed events, the total number of expected events, and the total sample size. In practice, however, the total sample size may not always be reported, and in such situations approximations can be used for estimating the standard error of the total O:E ratio. To illustrate this, we can re-run our fixed effect meta-analysis by omitting the sample size from the `valmeta()` command:
 
 ```{r,message=F,warning=F,echo=T,eval=T}
 valmeta(measure = "OE", O = n.events, E = e.events, method = "FE", 
@@ -148,6 +148,103 @@ valmeta(measure = "OE", O = n.events, E = e.events, method = "FE",
 
 Results are nearly identical to the analyses where we utilized information on the sample size of the validation studies.
 
+
+## Random effects meta-analysis
+Fixed effect meta-analysis is usually not appropriate for summarizing estimates of prediction model performance. There are several potential causes of heterogeneous model performance across different settings and populations [@riley_external_2016]. A major reason is different case mix variation, which generally occurs when studies differ in the distribution of predictor values, other relevant participant or setting characteristics (such as treatment received), and the outcome prevalence (diagnosis) or incidence (prognosis). Case mix variation across different settings or populations can lead to genuine differences in the performance of a prediction model, even when the true (underlying) predictor effects are consistent (that is, when the effect of a particular predictor on outcome risk is the same regardless of the study population). For this reason, it is generally recommended to adopt a random effects meta-analysis. 
+
+A random effects model generally considers two (rather than one) sources of variability in study results:
+
+* The estimated effect $\hat \theta_i$ for any study (i) may differ from that study's true effect ($\theta_i$) due to estimation error, $\mathrm{SE}(\hat \theta_i)$. 
+* The true effect ($\theta_i$) for each study differs from $\mu$ because of between-study variance ($\tau^2$). 
+
+The weighted average $\mu$ is then given as:
+
+$$\mu = \dfrac{ \sum_{i=1}^{K}\left( \hat \theta_i / \left(\tau^2 + \left(\mathrm{SE}(\hat \theta_i)\right)^2\right) \right)}{ \sum_{i=1}^{K}\left( 1 / \left(\tau^2 + \left(\mathrm{SE}(\hat \theta_i)\right)^2\right) \right) }$$
+
+The heterogeneity parameter $\tau^2$ is often estimated separately and then inserted as known value in the equations above to obtain an estimate for $\mu$. It is, however, often more reliable to simultaneously estimate $\mu$ and $\tau$ and directly account for their respective estimation error. The random effects model can then more generally be described as follows, and requires iterative estimation procedures.
+
+$$
+\begin{aligned} \hat \theta_i &\sim \mathcal{N}\left(\theta_i, \left(\mathrm{SE}(\hat \theta_i)\right)^2\right)  \\ \theta_i  &\sim \mathcal{N}\left(\mu, \tau^2\right) \end{aligned}
+$$
+
+As indicated, the random effects meta-analysis model assumes normality of the performance statistic (log O:E ratio), both at the within-study and between-study levels [@snell_meta-analysis_2017]. Within each study, the estimated performance statistic is assumed to be normally distributed around some *true* performance for that study ($\theta_i$) with *known* standard deviation $\mathrm{SE}(\hat \theta_i)$. Between studies, the *true* performance statistic from each study is also assumed to be drawn from a normal distribution with mean performance $\mu$ and between-study variance $\tau^2$. In contrast to the fixed effect meta-analysis model, we now have an additional parameter $\tau$ that captures the between-study variation of the summary estimate. 
+
+The random effects model can be implemented as follows. In line with previous recommendations [@debray_guide_2017], we will adopt restricted maximum likelihood estimation and use the method by @knapp_improved_2003 for calculating 95\% confidence intervals.
+
+```{r}
+fit.REML1 <- rma(yi = logOE, sei = se.logOE, data = EuroSCORE, 
+                 method = "REML", test = "knha")
+fit.REML1
+```
+
+```{r}
+exp(c(fit.REML1$ci.lb, fit.REML1$beta, fit.REML1$ci.ub))
+```
+
+The random effects summary estimate for the O:E ratio is `r sprintf("%.2f", exp(fit.REML1$beta))`, with a 95% confidence interval ranging from `r sprintf("%.2f", exp(fit.REML1$ci.lb))` to `r sprintf("%.2f", exp(fit.REML1$ci.ub))`. The between-study standard deviation is `r sprintf("%.2f", sqrt(fit.REML1$tau2))`, suggesting the presence of statistical heterogeneity.
+
+In **metamisc**, we can directly obtain the relevant results as follows:
+
+```{r}
+fit.REML2 <- valmeta(measure = "OE", O = n.events, E = e.events,  N = n, 
+                     method = "REML", slab = Study, data = EuroSCORE)
+fit.REML2
+```
+
+Results from the random effects meta-analysis suggest that EuroSCORE II tends to underestimate the risk of mortality. These results clearly differ from the fixed effect meta-analysis, where we found a summary O:E ratio of `r sprintf("%.2f", exp(fit$beta))`. To facilitate the interpretation of the summary estimate, it is often helpful to calculate an (approximate) 95\% prediction interval (PI) depicting the extent of between-study heterogeneity [@riley_interpretation_2011]. This interval provides a range for the predicted model performance in a new validation of the model. A 95\% PI for the summary estimate in a new setting is approximately given as:
+
+$$\hat \mu \pm t_{K-2} \,\sqrt{\hat \tau^2 + \left(\widehat{\mathrm{SE}}(\hat \mu)\right)^2}$$
+
+where the Student-$t$ (rather than the Normal) distribution is used to help account for the uncertainty of $\hat \tau$. We can extract the (approximate) prediction interval for the total O:E ratio as follows:
+
+```{r}
+c(fit.REML2$pi.lb, fit.REML2$pi.ub)
+```
+
+We can also visualize the meta-analysis results in the forest plot:
+
+```{r}
+plot(fit.REML2)
+```
+
+The forest plot indicates that between-study heterogeneity in the total O:E ratio is quite substantial. In some studies, EuroSCORE II is substantially under-estimating the risk of mortality (O:E>>1), whereas in other studies it appears to substantially over-estimate the risk of mortality (O:E<<1).
+
+An alternative approach to assess the influence of between-study heterogeneity is to calculate the probability of *good* performance. We can, for instance, calculate the	probability	that the	total O:E	ratio	of	the	EuroSCORE II model	in	a	new	study	will	be	between	 0.8	and	1.2.	
+
+One approach to estimate this probability is by means of simulation. In particular, we can use the prediction interval to generate new validation study results:
+
+```{r}
+dfr <- fit.REML1$k - 2 #number of included studies minus 2
+tau2 <- as.numeric(fit.REML1$tau2)
+sigma2 <- as.numeric(vcov(fit.REML1))
+
+Nsim <- 1000000  # Simulate 100000 new validation studies
+OEsim <- exp(mu + rt(Nsim, df=dfr)*sqrt(tau2+sigma2))
+sum(OEsim > 0.8 & OEsim < 1.2)/Nsim
+```
+
+Hence, the empirical probability that the	 *true* total O:E	ratio	of	EuroSCORE II in	a	new	study	will	be	between	 0.8	and	1.2 is `r sprintf("%.0f%%", (sum(OEsim > 0.8 & OEsim < 1.2)/Nsim)*100)`. 
+
+A more formal approach to calculate this probability is given below:
+
+$$
+\begin{aligned} 
+\mathrm{Pr}(0.8 \leq \mathrm{O:E} \leq 1.2) &= \mathrm{Pr}(\log(0.8) \leq \log(\mathrm{O:E}) \leq \log(1.2)) \\
+&= \mathrm{Pr}(\log(0.8) \leq \hat \mu \leq \log(1.2))  \\
+&= \mathrm{Pr}(\hat \mu < \log(1.2)) -  \mathrm{Pr}(\hat \mu < \log(0.8)) \\ 
+&\approx  \mathrm{Pr}(\hat \mu \leq \log(1.2)) -  \mathrm{Pr}(\hat \mu \leq \log(0.8))
+\end{aligned}
+$$
+
+Again, we use the Student-$t$ distribution to calculate $\mathrm{Pr}(\hat \mu \leq \log(1.2))$ and $\mathrm{Pr}(\hat \mu \leq \log(0.8))$:
+
+```{r,message=F,warning=F,echo=T,eval=T}
+prob1 <- pt((log(1.2) - mu)/sqrt(tau2+sigma2), df=dfr)
+prob2 <- pt((log(0.8) - mu)/sqrt(tau2+sigma2), df=dfr)
+prob1 - prob2
+```
+
+Due to the substantial miscalibration across studies, updating EuroSCORE II (in particular its intercept term) may be necessary before implementation.
 
 
 # References
