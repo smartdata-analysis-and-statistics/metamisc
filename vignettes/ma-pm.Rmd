@@ -36,6 +36,7 @@ In this case study, we summarize the results from these 22 studies, as well as t
 We can load the data from all 23 validation studies as follows:
 
 ```{r}
+library(metafor)
 library(metamisc)
 data(EuroSCORE)
 ```
@@ -98,9 +99,54 @@ plot(oe.ad, refline = 1, sort = "no")
 Note that if we want to derive the log O:E ratio instead, we should use:
 
 ```{r}
-logoe.ad <- oecalc(N = n, O = n.events, E = e.events, slab = Study, g = "log(OE)", data = EuroSCORE)
+logoe.ad <- oecalc(N = n, O = n.events, E = e.events, 
+                   slab = Study, g = "log(OE)", data = EuroSCORE)
 ```
 
+
+## Fixed effect meta-analysis
+We can now summarize the results from the included validation studies. A simple approach is to calculate a weighted average, where the estimate of each study is simply weighted by its precision. This approach is also known as fixed effect meta-analysis, where the weighted average $\mu$ is given by:
+
+$$\mu = \dfrac{ \sum_{i=1}^{K}\left( \hat \theta_i / \left(\mathrm{SE}(\hat \theta_i)\right)^2 \right)}{ \sum_{i=1}^{K}\left( 1 /  \left(\mathrm{SE}(\hat \theta_i)\right)^2 \right) }\\$$
+In this expression, $\hat \theta_i$ represent the study specific estimates for the log O:E ratio, and $K$ represents the total number of included studies. Aforementioned estimate for $\mu$ corresponds to the maximum likelihood of a fixed effect meta-analysis that assumes normality of the log O:E ratio within studies:
+
+$$\hat \theta_i \sim \mathcal{N}\left(\mu, \left(\mathrm{SE}(\hat \theta_i)\right)^2\right)$$
+We can directly calculate the pooled log O:E ratio as follows:
+
+```{r}
+mu <- sum(EuroSCORE$logOE/EuroSCORE$se.logOE**2)/sum(1/EuroSCORE$se.logOE**2)
+```
+
+Since the meta-analysis is performed using log-transformed estimates, the summary estimate for the total O:E ratio is given as $\exp(\hat \mu)$:
+
+```{r}
+exp(mu)
+```
+
+The	fixed	effect	meta-analysis	of the total O:E ratio can also be performed using **metafor**:
+
+```{r,message=F,warning=F,echo=T,eval=T}
+fit <- rma(yi = logOE, sei = se.logOE, data = EuroSCORE, method = "FE")
+exp(fit$beta)
+```
+
+Alternatively, we can directly implement all of the aforementioned data preparation and meta-analysis steps using the `valmeta()` command. Hereto, we will use information on the total number of observed and expected events from each validation study, as well as the total sample size. Note that unless specified otherwise, `valmeta()` will apply the log transformation to summarize estimates of the total O:E ratio, and back-transform the results to the original scale.
+
+```{r,message=F,warning=F,echo=T,eval=T}
+valmeta(measure = "OE", O = n.events, E = e.events,  N = n, method = "FE", 
+        data = EuroSCORE)
+```
+
+The pooled O:E ratio is `sprintf("%.2f", exp(mu))`, which implies that, on average, EuroSCORE II tends to yield predictions of peri-operative mortality that are too high.
+
+Note that to obtain a summary of the total O:E ratio, we provided information on the total number of observed and expected events, as well as the total sample size. In practice, however, the total sample size may not always have been reported, and in such situations approximations can be used for estimating the standard error of the total O:E ratio. To illustrate this, we can re-run our fixed effect meta-analysis by omitting the sample size from the `valmeta()` command:
+
+```{r,message=F,warning=F,echo=T,eval=T}
+valmeta(measure = "OE", O = n.events, E = e.events, method = "FE", 
+        data = EuroSCORE)
+```
+
+Results are nearly identical to the analyses where we utilized information on the sample size of the validation studies.
 
 
 
