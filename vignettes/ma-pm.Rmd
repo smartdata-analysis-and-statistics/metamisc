@@ -150,7 +150,7 @@ Results are nearly identical to the analyses where we utilized information on th
 
 
 ## Random effects meta-analysis
-The discrimination and calibration of a prediction model are highly likely to vary between validation studies due to differences between the studied populations [@riley_external_2016]. A major reason is different case mix variation, which generally occurs when studies differ in the distribution of predictor values, other relevant participant or setting characteristics (such as treatment received), and the outcome prevalence (diagnosis) or incidence (prognosis). Case mix variation across different settings or populations can lead to genuine differences in the performance of a prediction model, even when the true (underlying) predictor effects are consistent (that is, when the effect of a particular predictor on outcome risk is the same regardless of the study population). For this reason, it is often more appropriate to adopt a random effects meta-analysis for summarizing estimates of prediction model performance. This approach considers two (rather than one) sources of variability in study results:
+The discrimination and calibration of a prediction model are highly likely to vary between validation studies due to differences between the studied populations [@riley_external_2016]. A major reason is different case mix variation, which generally occurs when studies differ in the distribution of predictor values, other relevant participant or setting characteristics (such as treatment received), and the outcome prevalence (diagnosis) or incidence (prognosis). Case mix variation across different settings or populations can lead to genuine differences in the performance of a prediction model, even when the true (underlying) predictor effects are consistent (that is, when the effect of a particular predictor on outcome risk is the same regardless of the study population). For this reason, it is often more appropriate to adopt random effects meta-analysis models when summarizing estimates of prediction model performance. Briefly, this approach considers two sources of variability in study results:
 
 * The estimated effect $\hat \theta_i$ for any study (i) may differ from that study's true effect ($\theta_i$) due to estimation error, $\mathrm{SE}(\hat \theta_i)$. 
 * The true effect ($\theta_i$) for each study differs from $\mu$ because of between-study variance ($\tau^2$). 
@@ -165,59 +165,49 @@ $$
 \begin{aligned} \hat \theta_i &\sim \mathcal{N}\left(\theta_i, \left(\mathrm{SE}(\hat \theta_i)\right)^2\right)  \\ \theta_i  &\sim \mathcal{N}\left(\mu, \tau^2\right) \end{aligned}
 $$
 
-As indicated, the random effects meta-analysis model assumes normality of the performance statistic (log O:E ratio), both at the within-study and between-study levels [@snell_meta-analysis_2017]. Within each study, the estimated performance statistic is assumed to be normally distributed around some *true* performance for that study ($\theta_i$) with *known* standard deviation $\mathrm{SE}(\hat \theta_i)$. Between studies, the *true* performance statistic from each study is also assumed to be drawn from a normal distribution with mean performance $\mu$ and between-study variance $\tau^2$. In contrast to the fixed effect meta-analysis model, we now have an additional parameter $\tau$ that captures the between-study variation of the summary estimate. 
+As indicated, the random effects meta-analysis model assumes normality of the performance statistic (log O:E ratio), both at the within-study and between-study levels [@snell_meta-analysis_2017]. Within each study, the estimated performance statistic is assumed to be normally distributed around some *true* performance for that study ($\theta_i$) with *known* standard deviation $\mathrm{SE}(\hat \theta_i)$. Between studies, the *true* performance statistic from each study is also assumed to be drawn from a normal distribution with mean performance $\mu$ and between-study variance $\tau^2$.
 
 The random effects model can be implemented as follows. In line with previous recommendations [@debray_guide_2017], we will adopt restricted maximum likelihood estimation and use the method by @knapp_improved_2003 for calculating 95\% confidence intervals.
 
 ```{r}
-fit.REML1 <- rma(yi = logOE, sei = se.logOE, data = EuroSCORE, 
-                 method = "REML", test = "knha")
-fit.REML1
+fit.REML <- valmeta(measure = "OE", O = n.events, E = e.events,  N = n, 
+                    method = "REML", slab = Study, data = EuroSCORE)
+fit.REML
 ```
 
-```{r}
-exp(c(fit.REML1$ci.lb, fit.REML1$beta, fit.REML1$ci.ub))
+More detailed information on the meta-analysis model (summarizing estimates of the log O:E ratio) can be explored as follows:
+
+```{r} 
+fit.REML$fit
 ```
 
-The random effects summary estimate for the O:E ratio is `r sprintf("%.2f", exp(fit.REML1$beta))`, with a 95% confidence interval ranging from `r sprintf("%.2f", exp(fit.REML1$ci.lb))` to `r sprintf("%.2f", exp(fit.REML1$ci.ub))`. The between-study standard deviation is `r sprintf("%.2f", sqrt(fit.REML1$tau2))`, suggesting the presence of statistical heterogeneity.
-
-In **metamisc**, we can directly obtain the relevant results as follows:
-
-```{r}
-fit.REML2 <- valmeta(measure = "OE", O = n.events, E = e.events,  N = n, 
-                     method = "REML", slab = Study, data = EuroSCORE)
-fit.REML2
-```
-
-Results from the random effects meta-analysis suggest that EuroSCORE II tends to underestimate the risk of mortality. These results clearly differ from the fixed effect meta-analysis, where we found a summary O:E ratio of `r sprintf("%.2f", exp(fit$beta))`. To facilitate the interpretation of the summary estimate, it is often helpful to calculate an (approximate) 95\% prediction interval (PI) depicting the extent of between-study heterogeneity [@riley_interpretation_2011]. This interval provides a range for the predicted model performance in a new validation of the model. A 95\% PI for the summary estimate in a new setting is approximately given as:
+Results from the random effects meta-analysis suggest that, on average, EuroSCORE II tends to slightly underestimate the risk of mortality. There was a substantial amount of between-study heterogeneity, I2 = `r sprintf("%.0f%%",fit.REML$fit$I2)` ($\hat \tau$ = `r sprintf("%.2f",sqrt(fit.REML$fit$tau2))`). To facilitate the interpretation of the summary estimate, it is often helpful to calculate an (approximate) 95\% prediction interval (PI) [@riley_interpretation_2011]. This interval provides a range for the predicted model performance in a new validation of the model. A 95\% PI for the summary estimate in a new setting is approximately given as:
 
 $$\hat \mu \pm t_{K-2} \,\sqrt{\hat \tau^2 + \left(\widehat{\mathrm{SE}}(\hat \mu)\right)^2}$$
 
 where the Student-$t$ (rather than the Normal) distribution is used to help account for the uncertainty of $\hat \tau$. We can extract the (approximate) prediction interval for the total O:E ratio as follows:
 
 ```{r}
-c(fit.REML2$pi.lb, fit.REML2$pi.ub)
+c(fit.REML$pi.lb, fit.REML$pi.ub)
 ```
 
-We can also visualize the meta-analysis results in the forest plot:
+This wide prediction interval contains values well above and below the value of 1, indicating that EuroSCORE II yields predicted probabilities that are systematically too low in some populations (O:E >> 1), but also yields predicted probabilities that are systematically too high in other populations (O:E << 1). The wide prediction interval illustrates the weakness of focussing solely on average performance, as calibration is good on average but is poor in some populations. This issue is also visible in the forest plot:
 
 ```{r}
-plot(fit.REML2)
+plot(fit.REML)
 ```
-
-The forest plot indicates that between-study heterogeneity in the total O:E ratio is rather substantial. In some studies, EuroSCORE II is  under-estimating the risk of mortality (O:E>>1), whereas in other studies it appears to substantially over-estimate the risk of mortality (O:E<<1).
 
 An alternative approach to assess the influence of between-study heterogeneity is to calculate the probability of *good* performance. We can, for instance, calculate the	probability	that the	total O:E	ratio	of	the	EuroSCORE II model	in	a	new	study	will	be	between	 0.8	and	1.2.	
 
 One approach to estimate this probability is by means of simulation. In particular, we can use the prediction interval to generate new validation study results:
 
 ```{r}
-dfr <- fit.REML1$k - 2 #number of included studies minus 2
-tau2 <- as.numeric(fit.REML1$tau2)
-sigma2 <- as.numeric(vcov(fit.REML1))
+dfr <- fit.REML$numstudies - 2 #number of included studies minus 2
+tau2 <- as.numeric(fit.REML$fit$tau2)
+sigma2 <- as.numeric(vcov(fit.REML$fit))
 
 Nsim <- 1000000  # Simulate 100000 new validation studies
-OEsim <- exp(mu + rt(Nsim, df=dfr)*sqrt(tau2+sigma2))
+OEsim <- exp(mu + rt(Nsim, df = dfr)*sqrt(tau2 + sigma2))
 sum(OEsim > 0.8 & OEsim < 1.2)/Nsim
 ```
 
