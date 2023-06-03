@@ -319,8 +319,11 @@ mortality risk <code>Po</code> and, respectively, <code>Pe</code>:</p>
 (natural logarithm) scale before applying a meta-analysis <span class="citation">(Snell et al. 2017)</span>.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>logOE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">oe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Consequently, we need to derive the standard error of the log O:E
-ratio, which is approximately given as</p>
+<p>Meta-analysis requires a standard error for each extracted estimate
+of model performance. If standard errors cannot be retrieved from
+original articles, they should be calculated using reported information.
+For example, the standard error of the log O:E ratio, which is
+approximately given as</p>
 <p><span class="math display">\[\sqrt{(1/O) - (1/N)} \approx
 \sqrt{1/O}\]</span></p>
 <p>We can implement this as follows:</p>
@@ -423,10 +426,9 @@ information on the sample size of the validation studies.</p>
 <div class="section level3">
 <h3 id="random-effects-meta-analysis">Random effects meta-analysis<a class="anchor" aria-label="anchor" href="#random-effects-meta-analysis"></a>
 </h3>
-<p>Fixed effect meta-analysis is usually not appropriate for summarizing
-estimates of prediction model performance. There are several potential
-causes of heterogeneous model performance across different settings and
-populations <span class="citation">(Richard D. Riley et al.
+<p>The discrimination and calibration of a prediction model are highly
+likely to vary between validation studies due to differences between the
+studied populations <span class="citation">(Richard D. Riley et al.
 2016)</span>. A major reason is different case mix variation, which
 generally occurs when studies differ in the distribution of predictor
 values, other relevant participant or setting characteristics (such as
@@ -436,9 +438,10 @@ can lead to genuine differences in the performance of a prediction
 model, even when the true (underlying) predictor effects are consistent
 (that is, when the effect of a particular predictor on outcome risk is
 the same regardless of the study population). For this reason, it is
-generally recommended to adopt a random effects meta-analysis.</p>
-<p>A random effects model generally considers two (rather than one)
-sources of variability in study results:</p>
+often more appropriate to adopt a random effects meta-analysis for
+summarizing estimates of prediction model performance. This approach
+considers two (rather than one) sources of variability in study
+results:</p>
 <ul>
 <li>The estimated effect <span class="math inline">\(\hat
 \theta_i\)</span> for any study (i) may differ from that study’s true
@@ -551,10 +554,10 @@ plot:</p>
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.REML2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="ma-pm_files/figure-html/unnamed-chunk-21-1.png" width="700"></p>
 <p>The forest plot indicates that between-study heterogeneity in the
-total O:E ratio is quite substantial. In some studies, EuroSCORE II is
-substantially under-estimating the risk of mortality (O:E&gt;&gt;1),
-whereas in other studies it appears to substantially over-estimate the
-risk of mortality (O:E&lt;&lt;1).</p>
+total O:E ratio is rather substantial. In some studies, EuroSCORE II is
+under-estimating the risk of mortality (O:E&gt;&gt;1), whereas in other
+studies it appears to substantially over-estimate the risk of mortality
+(O:E&lt;&lt;1).</p>
 <p>An alternative approach to assess the influence of between-study
 heterogeneity is to calculate the probability of <em>good</em>
 performance. We can, for instance, calculate the probability that the
@@ -571,7 +574,7 @@ validation study results:</p>
 <span><span class="va">Nsim</span> <span class="op">&lt;-</span> <span class="fl">1000000</span>  <span class="co"># Simulate 100000 new validation studies</span></span>
 <span><span class="va">OEsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">rt</a></span><span class="op">(</span><span class="va">Nsim</span>, df<span class="op">=</span><span class="va">dfr</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">OEsim</span> <span class="op">&gt;</span> <span class="fl">0.8</span> <span class="op">&amp;</span> <span class="va">OEsim</span> <span class="op">&lt;</span> <span class="fl">1.2</span><span class="op">)</span><span class="op">/</span><span class="va">Nsim</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.337961</span></span></code></pre>
+<pre><code><span><span class="co">## [1] 0.337335</span></span></code></pre>
 <p>Hence, the empirical probability that the <em>true</em> total O:E
 ratio of EuroSCORE II in a new study will be between 0.8 and 1.2 is
 34%.</p>
