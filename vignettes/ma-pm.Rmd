@@ -69,7 +69,7 @@ It is recommended to first transform extracted O:E ratios to	the	log (natural lo
 EuroSCORE <- EuroSCORE %>% mutate(logOE = log(oe))
 ```
 
-Consequently, we need to derive the standard error of the log O:E ratio, which is approximately given as 
+Meta-analysis requires a standard error for each extracted estimate of model performance. If standard errors cannot be retrieved from original articles, they should be calculated using reported information. For example, the standard error of the log O:E ratio, which is approximately given as 
 
 $$\sqrt{(1/O) - (1/N)} \approx \sqrt{1/O}$$
 
@@ -150,9 +150,7 @@ Results are nearly identical to the analyses where we utilized information on th
 
 
 ## Random effects meta-analysis
-Fixed effect meta-analysis is usually not appropriate for summarizing estimates of prediction model performance. There are several potential causes of heterogeneous model performance across different settings and populations [@riley_external_2016]. A major reason is different case mix variation, which generally occurs when studies differ in the distribution of predictor values, other relevant participant or setting characteristics (such as treatment received), and the outcome prevalence (diagnosis) or incidence (prognosis). Case mix variation across different settings or populations can lead to genuine differences in the performance of a prediction model, even when the true (underlying) predictor effects are consistent (that is, when the effect of a particular predictor on outcome risk is the same regardless of the study population). For this reason, it is generally recommended to adopt a random effects meta-analysis. 
-
-A random effects model generally considers two (rather than one) sources of variability in study results:
+The discrimination and calibration of a prediction model are highly likely to vary between validation studies due to differences between the studied populations [@riley_external_2016]. A major reason is different case mix variation, which generally occurs when studies differ in the distribution of predictor values, other relevant participant or setting characteristics (such as treatment received), and the outcome prevalence (diagnosis) or incidence (prognosis). Case mix variation across different settings or populations can lead to genuine differences in the performance of a prediction model, even when the true (underlying) predictor effects are consistent (that is, when the effect of a particular predictor on outcome risk is the same regardless of the study population). For this reason, it is often more appropriate to adopt a random effects meta-analysis for summarizing estimates of prediction model performance. This approach considers two (rather than one) sources of variability in study results:
 
 * The estimated effect $\hat \theta_i$ for any study (i) may differ from that study's true effect ($\theta_i$) due to estimation error, $\mathrm{SE}(\hat \theta_i)$. 
 * The true effect ($\theta_i$) for each study differs from $\mu$ because of between-study variance ($\tau^2$). 
@@ -207,7 +205,7 @@ We can also visualize the meta-analysis results in the forest plot:
 plot(fit.REML2)
 ```
 
-The forest plot indicates that between-study heterogeneity in the total O:E ratio is quite substantial. In some studies, EuroSCORE II is substantially under-estimating the risk of mortality (O:E>>1), whereas in other studies it appears to substantially over-estimate the risk of mortality (O:E<<1).
+The forest plot indicates that between-study heterogeneity in the total O:E ratio is rather substantial. In some studies, EuroSCORE II is  under-estimating the risk of mortality (O:E>>1), whereas in other studies it appears to substantially over-estimate the risk of mortality (O:E<<1).
 
 An alternative approach to assess the influence of between-study heterogeneity is to calculate the probability of *good* performance. We can, for instance, calculate the	probability	that the	total O:E	ratio	of	the	EuroSCORE II model	in	a	new	study	will	be	between	 0.8	and	1.2.	
 
