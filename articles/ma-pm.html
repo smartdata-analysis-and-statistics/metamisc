@@ -106,185 +106,153 @@ sources of between-study heterogeneity. A step-by-step tutorial is
 provided by <span class="citation">Debray et al. (2017)</span>.</p>
 <p>We can load the data from all 23 validation studies as follows:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://www.metafor-project.org" class="external-link">metafor</a></span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartdata-analysis-and-statistics/metamisc" class="external-link">metamisc</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartdata-analysis-and-statistics/metamisc" class="external-link">metamisc</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
-<colgroup>
-<col width="19%">
-<col width="19%">
-<col width="22%">
-<col width="26%">
-<col width="11%">
-</colgroup>
 <thead><tr class="header">
 <th align="left">Study</th>
 <th align="right">Patients (n)</th>
 <th align="center">Mortality (%)</th>
-<th align="center">euroSCORE II (%)</th>
-<th align="left">c-index</th>
+<th align="center">c-index</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
 <td align="left">Nashef</td>
 <td align="right">5553</td>
 <td align="center">4.18</td>
-<td align="center">3.95</td>
-<td align="left">0.8095</td>
+<td align="center">0.8095</td>
 </tr>
 <tr class="even">
 <td align="left">Biancari</td>
 <td align="right">1027</td>
 <td align="center">2.73</td>
-<td align="center">4.50</td>
-<td align="left">0.8670</td>
+<td align="center">0.8670</td>
 </tr>
 <tr class="odd">
 <td align="left">Di Dedda</td>
 <td align="right">1090</td>
 <td align="center">3.76</td>
-<td align="center">3.10</td>
-<td align="left">0.8100</td>
+<td align="center">0.8100</td>
 </tr>
 <tr class="even">
 <td align="left">Chalmers</td>
 <td align="right">5576</td>
 <td align="center">3.43</td>
-<td align="center">4.68</td>
-<td align="left">0.7900</td>
+<td align="center">0.7900</td>
 </tr>
 <tr class="odd">
 <td align="left">Grant</td>
 <td align="right">23740</td>
 <td align="center">3.14</td>
-<td align="center">3.41</td>
-<td align="left">0.8080</td>
+<td align="center">0.8080</td>
 </tr>
 <tr class="even">
 <td align="left">Carneo</td>
 <td align="right">3798</td>
 <td align="center">5.66</td>
-<td align="center">4.46</td>
-<td align="left">0.8500</td>
+<td align="center">0.8500</td>
 </tr>
 <tr class="odd">
 <td align="left">Kunt</td>
 <td align="right">428</td>
 <td align="center">7.94</td>
-<td align="center">1.70</td>
-<td align="left">0.7200</td>
+<td align="center">0.7200</td>
 </tr>
 <tr class="even">
 <td align="left">Kirmani</td>
 <td align="right">15497</td>
 <td align="center">3.53</td>
-<td align="center">2.53</td>
-<td align="left">0.8180</td>
+<td align="center">0.8180</td>
 </tr>
 <tr class="odd">
 <td align="left">Howell</td>
 <td align="right">933</td>
 <td align="center">9.65</td>
-<td align="center">11.30</td>
-<td align="left">0.6700</td>
+<td align="center">0.6700</td>
 </tr>
 <tr class="even">
 <td align="left">Wang</td>
 <td align="right">11170</td>
 <td align="center">2.02</td>
-<td align="center">2.55</td>
-<td align="left">0.7200</td>
+<td align="center">0.7200</td>
 </tr>
 <tr class="odd">
 <td align="left">Borde</td>
 <td align="right">498</td>
 <td align="center">1.61</td>
-<td align="center">2.01</td>
-<td align="left">0.7200</td>
+<td align="center">0.7200</td>
 </tr>
 <tr class="even">
 <td align="left">Qadir</td>
 <td align="right">2004</td>
 <td align="center">3.79</td>
-<td align="center">3.72</td>
-<td align="left">0.8400</td>
+<td align="center">0.8400</td>
 </tr>
 <tr class="odd">
 <td align="left">Spiliopoulos</td>
 <td align="right">216</td>
 <td align="center">6.48</td>
-<td align="center">3.99</td>
-<td align="left">0.7700</td>
+<td align="center">0.7700</td>
 </tr>
 <tr class="even">
 <td align="left">Wendt</td>
 <td align="right">1066</td>
 <td align="center">4.22</td>
-<td align="center">3.20</td>
-<td align="left">0.7200</td>
+<td align="center">0.7200</td>
 </tr>
 <tr class="odd">
 <td align="left">Laurent</td>
 <td align="right">314</td>
 <td align="center">5.73</td>
-<td align="center">2.30</td>
-<td align="left">0.7700</td>
+<td align="center">0.7700</td>
 </tr>
 <tr class="even">
 <td align="left">Wang</td>
 <td align="right">818</td>
 <td align="center">1.59</td>
-<td align="center">1.60</td>
-<td align="left">0.6420</td>
+<td align="center">0.6420</td>
 </tr>
 <tr class="odd">
 <td align="left">Nishida</td>
 <td align="right">461</td>
 <td align="center">7.16</td>
-<td align="center">7.40</td>
-<td align="left">0.7697</td>
+<td align="center">0.7697</td>
 </tr>
 <tr class="even">
 <td align="left">Barilli</td>
 <td align="right">12201</td>
 <td align="center">1.72</td>
-<td align="center">2.50</td>
-<td align="left">0.8000</td>
+<td align="center">0.8000</td>
 </tr>
 <tr class="odd">
 <td align="left">Barilli</td>
 <td align="right">1670</td>
 <td align="center">7.49</td>
-<td align="center">6.20</td>
-<td align="left">0.8200</td>
+<td align="center">0.8200</td>
 </tr>
 <tr class="even">
 <td align="left">Paparella</td>
 <td align="right">6191</td>
 <td align="center">4.85</td>
-<td align="center">4.40</td>
-<td align="left">0.8300</td>
+<td align="center">0.8300</td>
 </tr>
 <tr class="odd">
 <td align="left">Carosella</td>
 <td align="right">250</td>
 <td align="center">3.60</td>
-<td align="center">1.64</td>
-<td align="left">0.7600</td>
+<td align="center">0.7600</td>
 </tr>
 <tr class="even">
 <td align="left">Borracci</td>
 <td align="right">503</td>
 <td align="center">4.17</td>
-<td align="center">3.18</td>
-<td align="left">0.8560</td>
+<td align="center">0.8560</td>
 </tr>
 <tr class="odd">
 <td align="left">Osnabrugge</td>
 <td align="right">50588</td>
 <td align="center">2.12</td>
-<td align="center">3.10</td>
-<td align="left">0.7700</td>
+<td align="center">0.7700</td>
 </tr>
 </tbody>
 </table>
@@ -294,7 +262,7 @@ provided by <span class="citation">Debray et al. (2017)</span>.</p>
 </h2>
 <p>Calibration refers to a model’s accuracy of predicted risk
 probabilities, and indicates the extent to which expected outcomes
-(predicted from the model) and observed outcomes agree. Summarizing
+(predicted from the model) and observed outcomes agree. Summarising
 estimates of calibration performance is challenging because calibration
 plots are most often not presented, and because studies tend to report
 different types of summary statistics in calibration. For example, in
@@ -316,283 +284,9 @@ mortality risk <code>Po</code> and, respectively, <code>Pe</code>:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Po</span>, <span class="va">Pe</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>oe <span class="op">=</span> <span class="va">Po</span><span class="op">/</span><span class="va">Pe</span><span class="op">)</span></span></code></pre></div>
 <p>It is recommended to first transform extracted O:E ratios to the log
-(natural logarithm) scale before applying a meta-analysis <span class="citation">(Snell et al. 2017)</span>.</p>
+(natural logarithm) scale before applying a meta-analysis.</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>logOE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">oe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>Meta-analysis requires a standard error for each extracted estimate
-of model performance. If standard errors cannot be retrieved from
-original articles, they should be calculated using reported information.
-For example, the standard error of the log O:E ratio, which is
-approximately given as</p>
-<p><span class="math display">\[\sqrt{(1/O) - (1/N)} \approx
-\sqrt{1/O}\]</span></p>
-<p>We can implement this as follows:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>se.logOE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">n.events</span> <span class="op">-</span> <span class="fl">1</span><span class="op">/</span><span class="va">n</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p>We can now visualise the calibration performance of EuroSCORE II
-across the included studies by generating a forest plot:</p>
-<p><img src="ma-pm_files/figure-html/unnamed-chunk-9-1.png" width="700"></p>
-<p>For each validation study, the O:E ratio is provided with its 95%
-confidence interval. The size of the boxes indicates the sample size of
-the corresponding validation study. In this forest plot, O:E ratios
-appear to vary substantially across the included validation studies.
-These results suggest that the calibration of EuroSCORE II is prone to
-substantial between-study heterogeneity.</p>
-<p>In <strong>metamisc</strong>, we can combine the aforementioned steps
-as follows:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">oe.ad</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oecalc.html">oecalc</a></span><span class="op">(</span>N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, E <span class="op">=</span> <span class="va">e.events</span>, slab <span class="op">=</span> <span class="va">Study</span>, </span>
-<span>                data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">oe.ad</span>, refline <span class="op">=</span> <span class="fl">1</span>, sort <span class="op">=</span> <span class="st">"no"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ma-pm_files/figure-html/unnamed-chunk-10-1.png" width="700"></p>
-<p>Note that if we want to derive the log O:E ratio instead, we should
-use:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">logoe.ad</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/oecalc.html">oecalc</a></span><span class="op">(</span>N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, E <span class="op">=</span> <span class="va">e.events</span>, </span>
-<span>                   slab <span class="op">=</span> <span class="va">Study</span>, g <span class="op">=</span> <span class="st">"log(OE)"</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
-<div class="section level3">
-<h3 id="fixed-effect-meta-analysis">Fixed effect meta-analysis<a class="anchor" aria-label="anchor" href="#fixed-effect-meta-analysis"></a>
-</h3>
-<p>We can now summarize the results from the included validation
-studies. A simple approach is to calculate a weighted average, where the
-estimate of each study is simply weighted by its precision. This
-approach is also known as fixed effect meta-analysis, where the weighted
-average <span class="math inline">\(\mu\)</span> is given by:</p>
-<p><span class="math display">\[\mu = \dfrac{ \sum_{i=1}^{K}\left( \hat
-\theta_i / \left(\mathrm{SE}(\hat \theta_i)\right)^2 \right)}{
-\sum_{i=1}^{K}\left( 1 /  \left(\mathrm{SE}(\hat \theta_i)\right)^2
-\right) }\\\]</span> In this expression, <span class="math inline">\(\hat \theta_i\)</span> represent the study
-specific estimates for the log O:E ratio, and <span class="math inline">\(K\)</span> represents the total number of included
-studies. Aforementioned estimate for <span class="math inline">\(\mu\)</span> corresponds to the maximum likelihood
-of a fixed effect meta-analysis that assumes normality of the log O:E
-ratio within studies:</p>
-<p><span class="math display">\[\hat \theta_i \sim \mathcal{N}\left(\mu,
-\left(\mathrm{SE}(\hat \theta_i)\right)^2\right)\]</span> We can
-directly calculate the pooled log O:E ratio as follows:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mu</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">EuroSCORE</span><span class="op">$</span><span class="va">logOE</span><span class="op">/</span><span class="va">EuroSCORE</span><span class="op">$</span><span class="va">se.logOE</span><span class="op">**</span><span class="fl">2</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="fl">1</span><span class="op">/</span><span class="va">EuroSCORE</span><span class="op">$</span><span class="va">se.logOE</span><span class="op">**</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p>Since the meta-analysis is performed using log-transformed estimates,
-the summary estimate for the total O:E ratio is given as <span class="math inline">\(\exp(\hat \mu)\)</span>:</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.9383039</span></span></code></pre>
-<p>The fixed effect meta-analysis of the total O:E ratio can also be
-performed using <strong>metafor</strong>:</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma</a></span><span class="op">(</span>yi <span class="op">=</span> <span class="va">logOE</span>, sei <span class="op">=</span> <span class="va">se.logOE</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span>, method <span class="op">=</span> <span class="st">"FE"</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">fit</span><span class="op">$</span><span class="va">beta</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">##              [,1]</span></span>
-<span><span class="co">## intrcpt 0.9383039</span></span></code></pre>
-<p>Alternatively, we can directly implement all of the aforementioned
-data preparation and meta-analysis steps using the
-<code><a href="../reference/valmeta.html">valmeta()</a></code> command. Hereto, we will use information on the
-total number of observed and expected events from each validation study,
-as well as the total sample size. Note that unless specified otherwise,
-<code><a href="../reference/valmeta.html">valmeta()</a></code> will apply the log transformation to summarize
-estimates of the total O:E ratio, and back-transform the results to the
-original scale.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"OE"</span>, O <span class="op">=</span> <span class="va">n.events</span>, E <span class="op">=</span> <span class="va">e.events</span>,  N <span class="op">=</span> <span class="va">n</span>, method <span class="op">=</span> <span class="st">"FE"</span>, </span>
-<span>        data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Summary Total O:E ratio with 95% confidence interval:</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##  Estimate       CIl       CIu </span></span>
-<span><span class="co">## 0.9383039 0.9111366 0.9662812 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Number of studies included:  23</span></span></code></pre>
-<p>The pooled O:E ratio is 0.94, which implies that, on average,
-EuroSCORE II tends to over-estimate the risk of peri-operative
-mortality.</p>
-<p>The previous meta-analysis models derived a summary estimate for the
-total O:E ratio from information on the total number of observed events,
-the total number of expected events, and the total sample size. In
-practice, however, the total sample size may not always be reported, and
-in such situations approximations can be used for estimating the
-standard error of the total O:E ratio. To illustrate this, we can re-run
-our fixed effect meta-analysis by omitting the sample size from the
-<code><a href="../reference/valmeta.html">valmeta()</a></code> command:</p>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"OE"</span>, O <span class="op">=</span> <span class="va">n.events</span>, E <span class="op">=</span> <span class="va">e.events</span>, method <span class="op">=</span> <span class="st">"FE"</span>, </span>
-<span>        data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Summary Total O:E ratio with 95% confidence interval:</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##  Estimate       CIl       CIu </span></span>
-<span><span class="co">## 0.9353144 0.9077502 0.9637156 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Number of studies included:  23</span></span></code></pre>
-<p>Results are nearly identical to the analyses where we utilized
-information on the sample size of the validation studies.</p>
-</div>
-<div class="section level3">
-<h3 id="random-effects-meta-analysis">Random effects meta-analysis<a class="anchor" aria-label="anchor" href="#random-effects-meta-analysis"></a>
-</h3>
-<p>The discrimination and calibration of a prediction model are highly
-likely to vary between validation studies due to differences between the
-studied populations <span class="citation">(Richard D. Riley et al.
-2016)</span>. A major reason is different case mix variation, which
-generally occurs when studies differ in the distribution of predictor
-values, other relevant participant or setting characteristics (such as
-treatment received), and the outcome prevalence (diagnosis) or incidence
-(prognosis). Case mix variation across different settings or populations
-can lead to genuine differences in the performance of a prediction
-model, even when the true (underlying) predictor effects are consistent
-(that is, when the effect of a particular predictor on outcome risk is
-the same regardless of the study population). For this reason, it is
-often more appropriate to adopt random effects meta-analysis models when
-summarizing estimates of prediction model performance. Briefly, this
-approach considers two sources of variability in study results:</p>
-<ul>
-<li>The estimated effect <span class="math inline">\(\hat
-\theta_i\)</span> for any study (i) may differ from that study’s true
-effect (<span class="math inline">\(\theta_i\)</span>) due to estimation
-error, <span class="math inline">\(\mathrm{SE}(\hat
-\theta_i)\)</span>.</li>
-<li>The true effect (<span class="math inline">\(\theta_i\)</span>) for
-each study differs from <span class="math inline">\(\mu\)</span> because
-of between-study variance (<span class="math inline">\(\tau^2\)</span>).</li>
-</ul>
-<p>The weighted average <span class="math inline">\(\mu\)</span> is then
-given as:</p>
-<p><span class="math display">\[\mu = \dfrac{ \sum_{i=1}^{K}\left( \hat
-\theta_i / \left(\tau^2 + \left(\mathrm{SE}(\hat
-\theta_i)\right)^2\right) \right)}{ \sum_{i=1}^{K}\left( 1 /
-\left(\tau^2 + \left(\mathrm{SE}(\hat \theta_i)\right)^2\right) \right)
-}\]</span></p>
-<p>The heterogeneity parameter <span class="math inline">\(\tau^2\)</span> is often estimated separately and
-then inserted as known value in the equations above to obtain an
-estimate for <span class="math inline">\(\mu\)</span>. It is, however,
-often more reliable to simultaneously estimate <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\tau\)</span> and directly account for their
-respective estimation error. The random effects model can then more
-generally be described as follows, and requires iterative estimation
-procedures.</p>
-<p><span class="math display">\[
-\begin{aligned} \hat \theta_i &amp;\sim \mathcal{N}\left(\theta_i,
-\left(\mathrm{SE}(\hat \theta_i)\right)^2\right)  \\ \theta_i  &amp;\sim
-\mathcal{N}\left(\mu, \tau^2\right) \end{aligned}
-\]</span></p>
-<p>As indicated, the random effects meta-analysis model assumes
-normality of the performance statistic (log O:E ratio), both at the
-within-study and between-study levels <span class="citation">(Snell et
-al. 2017)</span>. Within each study, the estimated performance statistic
-is assumed to be normally distributed around some <em>true</em>
-performance for that study (<span class="math inline">\(\theta_i\)</span>) with <em>known</em> standard
-deviation <span class="math inline">\(\mathrm{SE}(\hat
-\theta_i)\)</span>. Between studies, the <em>true</em> performance
-statistic from each study is also assumed to be drawn from a normal
-distribution with mean performance <span class="math inline">\(\mu\)</span> and between-study variance <span class="math inline">\(\tau^2\)</span>.</p>
-<p>The random effects model can be implemented as follows. In line with
-previous recommendations <span class="citation">(Debray et al.
-2017)</span>, we will adopt restricted maximum likelihood estimation and
-use the method by <span class="citation">Knapp and Hartung (2003)</span>
-for calculating 95% confidence intervals.</p>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit.REML</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>measure <span class="op">=</span> <span class="st">"OE"</span>, O <span class="op">=</span> <span class="va">n.events</span>, E <span class="op">=</span> <span class="va">e.events</span>,  N <span class="op">=</span> <span class="va">n</span>, </span>
-<span>                    method <span class="op">=</span> <span class="st">"REML"</span>, slab <span class="op">=</span> <span class="va">Study</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span>
-<span><span class="va">fit.REML</span></span></code></pre></div>
-<pre><code><span><span class="co">## Summary Total O:E ratio with 95% confidence and (approximate) 95% prediction interval:</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##  Estimate       CIl       CIu       PIl       PIu </span></span>
-<span><span class="co">## 1.1075973 0.8998973 1.3632352 0.4295250 2.8561122 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Number of studies included:  23</span></span></code></pre>
-<p>More detailed information on the meta-analysis model (summarizing
-estimates of the log O:E ratio) can be explored as follows:</p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">fit.REML</span><span class="op">$</span><span class="va">fit</span></span></code></pre></div>
-<pre><code><span><span class="co">## </span></span>
-<span><span class="co">## Random-Effects Model (k = 23; tau^2 estimator: REML)</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## tau^2 (estimated amount of total heterogeneity): 0.1975 (SE = 0.0665)</span></span>
-<span><span class="co">## tau (square root of estimated tau^2 value):      0.4444</span></span>
-<span><span class="co">## I^2 (total heterogeneity / total variability):   97.21%</span></span>
-<span><span class="co">## H^2 (total variability / sampling variability):  35.89</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Test for Heterogeneity:</span></span>
-<span><span class="co">## Q(df = 22) = 435.5487, p-val &lt; .0001</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Model Results:</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## estimate      se    tval  df    pval    ci.lb   ci.ub    </span></span>
-<span><span class="co">##   0.1022  0.1001  1.0206  22  0.3186  -0.1055  0.3099    </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## ---</span></span>
-<span><span class="co">## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1</span></span></code></pre>
-<p>Results from the random effects meta-analysis suggest that, on
-average, EuroSCORE II tends to slightly underestimate the risk of
-mortality. There was a substantial amount of between-study
-heterogeneity, I2 = 97% (<span class="math inline">\(\hat \tau\)</span>
-= 0.44). To facilitate the interpretation of the summary estimate, it is
-often helpful to calculate an (approximate) 95% prediction interval (PI)
-<span class="citation">(R. D. Riley, Higgins, and Deeks 2011)</span>.
-This interval provides a range for the predicted model performance in a
-new validation of the model. A 95% PI for the summary estimate in a new
-setting is approximately given as:</p>
-<p><span class="math display">\[\hat \mu \pm t_{K-2} \,\sqrt{\hat \tau^2
-+ \left(\widehat{\mathrm{SE}}(\hat \mu)\right)^2}\]</span></p>
-<p>where the Student-<span class="math inline">\(t\)</span> (rather than
-the Normal) distribution is used to help account for the uncertainty of
-<span class="math inline">\(\hat \tau\)</span>. We can extract the
-(approximate) prediction interval for the total O:E ratio as
-follows:</p>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">fit.REML</span><span class="op">$</span><span class="va">pi.lb</span>, <span class="va">fit.REML</span><span class="op">$</span><span class="va">pi.ub</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.429525 2.856112</span></span></code></pre>
-<p>This wide prediction interval contains values well above and below
-the value of 1, indicating that EuroSCORE II yields predicted
-probabilities that are systematically too low in some populations (O:E
-&gt;&gt; 1), but also yields predicted probabilities that are
-systematically too high in other populations (O:E &lt;&lt; 1). The wide
-prediction interval illustrates the weakness of focussing solely on
-average performance, as calibration is good on average but is poor in
-some populations. This issue is also visible in the forest plot:</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html" class="external-link">plot</a></span><span class="op">(</span><span class="va">fit.REML</span><span class="op">)</span></span></code></pre></div>
-<p><img src="ma-pm_files/figure-html/unnamed-chunk-20-1.png" width="700"></p>
-<p>An alternative approach to assess the influence of between-study
-heterogeneity is to calculate the probability of <em>good</em>
-performance. We can, for instance, calculate the probability that the
-total O:E ratio of the EuroSCORE II model in a new study will be between
-0.8 and 1.2.</p>
-<p>One approach to estimate this probability is by means of simulation.
-In particular, we can use the prediction interval to generate new
-validation study results:</p>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">dfr</span> <span class="op">&lt;-</span> <span class="va">fit.REML</span><span class="op">$</span><span class="va">numstudies</span> <span class="op">-</span> <span class="fl">2</span> <span class="co">#number of included studies minus 2</span></span>
-<span><span class="va">tau2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="va">fit.REML</span><span class="op">$</span><span class="va">fit</span><span class="op">$</span><span class="va">tau2</span><span class="op">)</span></span>
-<span><span class="va">sigma2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">as.numeric</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/vcov.html" class="external-link">vcov</a></span><span class="op">(</span><span class="va">fit.REML</span><span class="op">$</span><span class="va">fit</span><span class="op">)</span><span class="op">)</span></span>
-<span></span>
-<span><span class="va">Nsim</span> <span class="op">&lt;-</span> <span class="fl">1000000</span>  <span class="co"># Simulate 100000 new validation studies</span></span>
-<span><span class="va">OEsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">rt</a></span><span class="op">(</span><span class="va">Nsim</span>, df <span class="op">=</span> <span class="va">dfr</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span> <span class="op">+</span> <span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">OEsim</span> <span class="op">&gt;</span> <span class="fl">0.8</span> <span class="op">&amp;</span> <span class="va">OEsim</span> <span class="op">&lt;</span> <span class="fl">1.2</span><span class="op">)</span><span class="op">/</span><span class="va">Nsim</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.337749</span></span></code></pre>
-<p>Hence, the empirical probability that the <em>true</em> total O:E
-ratio of EuroSCORE II in a new study will be between 0.8 and 1.2 is
-34%.</p>
-<p>A more formal approach to calculate this probability is given
-below:</p>
-<p><span class="math display">\[
-\begin{aligned}
-\mathrm{Pr}(0.8 \leq \mathrm{O:E} \leq 1.2) &amp;= \mathrm{Pr}(\log(0.8)
-\leq \log(\mathrm{O:E}) \leq \log(1.2)) \\
-&amp;= \mathrm{Pr}(\log(0.8) \leq \hat \mu \leq \log(1.2))  \\
-&amp;= \mathrm{Pr}(\hat \mu &lt; \log(1.2)) -  \mathrm{Pr}(\hat \mu &lt;
-\log(0.8)) \\
-&amp;\approx  \mathrm{Pr}(\hat \mu \leq \log(1.2)) -  \mathrm{Pr}(\hat
-\mu \leq \log(0.8))
-\end{aligned}
-\]</span></p>
-<p>Again, we use the Student-<span class="math inline">\(t\)</span>
-distribution to calculate <span class="math inline">\(\mathrm{Pr}(\hat
-\mu \leq \log(1.2))\)</span> and <span class="math inline">\(\mathrm{Pr}(\hat \mu \leq \log(0.8))\)</span>:</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">prob1</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">pt</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">1.2</span><span class="op">)</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span>, df<span class="op">=</span><span class="va">dfr</span><span class="op">)</span></span>
-<span><span class="va">prob2</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">pt</a></span><span class="op">(</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="fl">0.8</span><span class="op">)</span> <span class="op">-</span> <span class="va">mu</span><span class="op">)</span><span class="op">/</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span>, df<span class="op">=</span><span class="va">dfr</span><span class="op">)</span></span>
-<span><span class="va">prob1</span> <span class="op">-</span> <span class="va">prob2</span></span></code></pre></div>
-<pre><code><span><span class="co">## [1] 0.3377021</span></span></code></pre>
-<p>Due to the substantial miscalibration across studies, updating
-EuroSCORE II (in particular its intercept term) may be necessary before
-implementation.</p>
-</div>
+<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span> <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>logoe <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">oe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
@@ -612,30 +306,6 @@ Cardiac Operative Risk Evaluation <span>II</span>: A Meta-Analysis of 22
 Studies Involving 145,592 Cardiac Surgery Procedures.”</span> <em>The
 Journal of Thoracic and Cardiovascular Surgery</em> 148 (6):
 3049–3057.e1. <a href="https://doi.org/10.1016/j.jtcvs.2014.07.039" class="external-link">https://doi.org/10.1016/j.jtcvs.2014.07.039</a>.
-</div>
-<div id="ref-knapp_improved_2003" class="csl-entry">
-Knapp, Guido, and Joachim Hartung. 2003. <span>“Improved Tests for a
-Random Effects Meta-Regression with a Single Covariate.”</span>
-<em>Statistics in Medicine</em> 22 (17): 2693–2710. <a href="https://doi.org/10.1002/sim.1482" class="external-link">https://doi.org/10.1002/sim.1482</a>.
-</div>
-<div id="ref-riley_interpretation_2011" class="csl-entry">
-Riley, R. D., J. P. T. Higgins, and J. J. Deeks. 2011.
-<span>“Interpretation of Random Effects Meta-Analyses.”</span>
-<em><span>BMJ</span></em> 342 (feb10 2): d549–49. <a href="https://doi.org/10.1136/bmj.d549" class="external-link">https://doi.org/10.1136/bmj.d549</a>.
-</div>
-<div id="ref-riley_external_2016" class="csl-entry">
-Riley, Richard D, Joie Ensor, Kym I E Snell, Thomas P A Debray, Doug G
-Altman, Karel G M Moons, and Gary S Collins. 2016. <span>“External
-Validation of Clinical Prediction Models Using Big Datasets from
-e-Health Records or <span>IPD</span> Meta-Analysis: Opportunities and
-Challenges.”</span> <em><span>BMJ</span></em>, June, i3140. <a href="https://doi.org/10.1136/bmj.i3140" class="external-link">https://doi.org/10.1136/bmj.i3140</a>.
-</div>
-<div id="ref-snell_meta-analysis_2017" class="csl-entry">
-Snell, Kym IE, Joie Ensor, Thomas PA Debray, Karel GM Moons, and Richard
-D Riley. 2017. <span>“Meta-Analysis of Prediction Model Performance
-Across Multiple Studies: Which Scale Helps Ensure Between-Study
-Normality for the c-Statistic and Calibration Measures?”</span>
-<em>Statistical Methods in Medical Research</em> 27 (11): 3505–22. <a href="https://doi.org/10.1177/0962280217705678" class="external-link">https://doi.org/10.1177/0962280217705678</a>.
 </div>
 </div>
 </div>
