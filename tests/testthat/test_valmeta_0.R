@@ -9,7 +9,9 @@ test_that("Transformation of the c-statistic", {
   logitc1 <- log(EuroSCORE$c.index/(1-EuroSCORE$c.index))
   logitc2 <- logit(EuroSCORE$c.index) #built-in function
   logitc3 <- (ccalc(cstat=c.index, cstat.se=se.c.index, data=EuroSCORE, g="log(cstat/(1-cstat))"))$theta
-  expect_equal(logitc1, logitc2, logitc3)
+  expect_equal(logitc1, logitc2)
+  expect_equal(logitc1, logitc3)
+  expect_equal(logitc2, logitc3)
   
   # Back-transformation
   ilogitc1 <- 1/(1+exp(-logitc1))
