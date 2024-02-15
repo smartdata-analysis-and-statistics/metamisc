@@ -449,6 +449,11 @@ get.function <- function(x, ...) {
     return(get(as.character(x), mode = "function"))
 }
 
+# x list of functions or list of names of functions, or a combination of both
+get.functions <- function(x, ...) {
+  lapply(x, get.function, ...)
+}
+
 # Convert factor to binary
 # In case the factor has more than 2 levels, by default the same occurs as in 
 # glm: the first level is assumed to be the failure, and all others successes.
