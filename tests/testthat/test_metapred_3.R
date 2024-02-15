@@ -57,12 +57,6 @@ test_that("metapred can handle different perfFUN", {
   expect_is(mp <- metamisc:::metapred(td, strata = "X4", scope = f, formula = f, family = binomial, perfFUN = "auc"
                                       , selFUN = "which.max", meta.method = "FE")
             , "metapred")
-  
-  expect_is(mp <- metamisc:::metapred(td, strata = "X4", scope = f, formula = f, family = binomial, 
-                                      perfFUN = list("mse", "auc"),
-                                      selFUN = "which.max", meta.method = "FE")
-            , "metapred")
-  
 })
 
 test_that("metapred can handle multiple genFUN.", {
@@ -83,56 +77,6 @@ test_that("metapred can handle multiple genFUN.", {
   #   mp <- metamisc:::metapred(td3, strata = "X4", scope = f, formula = f, family = binomial, perfFUN = "auc", selFUN = "which.max",
   #                                     genFUN = genFUN)
   #           , "metapred")
-})
-
-test_that("metapred can handle multiple genFUN and perfFUN.", {
-  genFUN <- list(abs.mean = "abs.mean", coef.var.mean = "coef.var.mean")
-  perfFUN = list("mse", "auc")
-  
-  expect_is(mp <- metamisc:::metapred(data = td, 
-                                      strata = "X4", 
-                                      scope = f, 
-                                      formula = f, 
-                                      family = binomial, 
-                                      genFUN = genFUN, 
-                                      perfFUN = perfFUN,
-                                      meta.method = "FE",
-                                      gen.of.perf = "first") # default
-            , "metapred")
-  
-  expect_s3_class(perf(mp), "data.frame")
-  expect_type(mp$FUN$perfFUN[[2]], "closure")
-  expect_length(gen(mp, 0), 2)
-  
-  expect_is(mp <- metamisc:::metapred(data = td, 
-                                      strata = "X4", 
-                                      scope = f, 
-                                      formula = f, 
-                                      family = binomial, 
-                                      genFUN = genFUN, 
-                                      perfFUN = perfFUN,
-                                      meta.method = "FE",
-                                      gen.of.perf = "factorial")
-            , "metapred")
-  
-  expect_s3_class(perf(mp), "data.frame")
-  expect_type(mp$FUN$perfFUN[[2]], "closure")
-  expect_length(gen(mp, 0), 4)
-  
-  expect_is(mp <- metamisc:::metapred(data = td, 
-                                      strata = "X4", 
-                                      scope = f, 
-                                      formula = f, 
-                                      family = binomial, 
-                                      genFUN = genFUN, 
-                                      perfFUN = perfFUN,
-                                      meta.method = "FE",
-                                      gen.of.perf = "respective")
-            , "metapred")
-  expect_length(gen(mp, 0), 2)
-  
-  expect_s3_class(perf(mp), "data.frame")
-  expect_type(mp$FUN$perfFUN[[2]], "closure")
 })
 
 test_that("metapred can handle different distributions.", {

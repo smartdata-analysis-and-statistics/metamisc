@@ -5,12 +5,12 @@ test_that("Generating a block diagonal matrix works", {
   m2 <- matrix(c(5,6,7,8), nrow = 2, ncol = 2)
   m3 <- matrix(c(9,10,11,12), nrow = 2, ncol = 2)
   
-  m_block <- metamisc:::blockMatrixDiagonal(m1, m2, m3)
+  m_block <- blockMatrixDiagonal(m1, m2, m3)
   m_eval <- matrix(c(1,2,0,0,0,0,3,4,0,0,0,0,0,0,5,6,0,0,0,0,7,8,0,0,0,0,0,0,9,10,0,0,0,0,11,12), nrow = 6, ncol = 6)
   expect_identical(m_block, m_eval)
   
   m_list <- list(m1, m2, m3)
-  m_block2 <- metamisc:::blockMatrixDiagonal(m_list)
+  m_block2 <- blockMatrixDiagonal(m_list)
   expect_identical(m_block2, m_eval)
 })
 
@@ -32,15 +32,15 @@ test_that("Multivariate meta-analysis works", {
   
   y <- data.frame(PD = c(0.47, 0.20, 0.40, 0.26, 0.56), AL = c(-0.32, -0.60, -0.12, -0.31, -0.39))
   
-  m_block <- metamisc:::blockMatrixDiagonal(m1, m2, m3, m4, m5)
+  m_block <- blockMatrixDiagonal(m1, m2, m3, m4, m5)
   m_dat <- data.frame(y = c(0.47, -0.32, 0.20, -0.60, 0.40, -0.12, 0.26, -0.31, 0.56, -0.39),
                       group = c("PD", "AL", "PD", "AL", "PD", "AL", "PD", "AL", "PD", "AL"),
                       study = c(1, 1, 2, 2, 3, 3, 4, 4, 5, 5))
   
   m_fit <- metafor::rma.mv(yi = y, V = m_block, mods = ~ -1+group, random = ~ group|study, struct = "UN", data = m_dat)
   
-  mrma_fit <- metamisc:::mrma(coefficients = y, vcov = m_full)
-  expect_equal(as.numeric(coefficients(m_fit)["groupAL"]), as.numeric(mrma_fit$coefficients["groupAL"]), tolerance = 1e-7) # Was expect_identical
+  mrma_fit <- mrma(coefficients = y, vcov = m_full)
+  expect_equal(as.numeric(coefficients(m_fit)["groupAL"]), as.numeric(mrma_fit$coefficients["groupAL"])) # Was expect_identical
   expect_equal(as.numeric(coefficients(m_fit)["groupPD"]), as.numeric(mrma_fit$coefficients["groupPD"])) # Was expect_identical
   
   # Compare results with mvmeta
@@ -51,7 +51,7 @@ test_that("Multivariate meta-analysis works", {
   # Test whether mrma works when we only have one dimension
   y_uv <- y[,1]
   vcov_uv <- c(m1[1,1], m2[1,1], m3[1,1], m4[1,1], m5[1,1])
-  mrma_fit_uv <- metamisc:::mrma(coefficients = y_uv, vcov = vcov_uv)
+  mrma_fit_uv <- mrma(coefficients = y_uv, vcov = vcov_uv)
   
 })
 
@@ -172,7 +172,7 @@ y[1:3] <- NA
 # so the behaviour of metapred is the same as that of glm.
 test_that("factor_as_binary does not affect glm", { 
   glm_factor_default <- coef(glm(y ~ x + z, family = binomial))
-  expect_true(is.numeric(y_temp <- metamisc:::factor_as_binary(y)))
+  expect_true(is.numeric(y <- factor_as_binary(y)))
   glm_factor_as_binary <- coef(glm(y ~ x + z, family = binomial))
   expect_identical(glm_factor_default, glm_factor_as_binary)
 })

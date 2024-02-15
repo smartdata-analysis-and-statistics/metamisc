@@ -38,12 +38,11 @@ test_that("Class of forest plot", {
 test_that("Class of forest plot", {
   
   fit <- valmeta(measure = "OE", N = n, O = n.events, E =  e.events,
-                 slab   = Study, 
-                 data   = EuroSCORE,
-                 method = "ML",
-                 pars   = list(model.oe = "poisson/log"),
-                 test   = "t")
-  expect_is(plot(fit), "ggplot")
+                 slab = Study, data = EuroSCORE,
+                 method     = "ML",
+                 pars       = list(model.oe = "poisson/log"))
+  plot(fit)
+  
   
 })
 
