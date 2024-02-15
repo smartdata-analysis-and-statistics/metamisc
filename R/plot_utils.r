@@ -219,7 +219,7 @@ forest.default <- function(theta,
     
     
     # Add confidence interval of the summary estimate
-    p <- p + with(g2, geom_errorbar(data = g2, aes(ymin = ci.lower, ymax = ci.upper, x = order), width = 0.5, size=1.0))
+    p <- p + with(g2, geom_errorbar(data = g2, aes(ymin = ci.lower, ymax = ci.upper, x = order), width = 0.5, linewidth=1.0))
     
     # Add summary estimate
     p <- p + with(g2, geom_point(data = g2, aes(x = order, y = mean), shape=23, size=3, fill = col.diamond))
@@ -237,7 +237,7 @@ forest.default <- function(theta,
       
       p <- p + with(g3, geom_errorbar(data = g3, 
                              aes(ymin = pi.lower, ymax = pi.upper, x = order), 
-                             size = size.predint, 
+                             linewidth = size.predint, 
                              width = 0.5,
                              color = col.predint,
                              linetype = predint.linetype))
