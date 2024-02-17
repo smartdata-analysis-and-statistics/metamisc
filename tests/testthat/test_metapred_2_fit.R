@@ -138,4 +138,3 @@ test_that("factor_as_binary / metapred can handle factors", {
 })
 
 
-

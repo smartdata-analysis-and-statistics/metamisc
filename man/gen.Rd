@@ -18,6 +18,10 @@ returned..}
 \description{
 Obtain generalizability estimates from a model fit.
 }
+\details{
+With named values or indices for parameter \code{genFUN} one or more estimates 
+of generalizability can be selected. Use \code{genFUN = 0} to select all.
+}
 \author{
 Valentijn de Jong
 }

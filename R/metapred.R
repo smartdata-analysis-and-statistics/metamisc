@@ -1155,7 +1155,7 @@ fitted.mp.cv.dev <- function(object, data, folds, st.i, predFUN = NULL, two.stag
 family.mp.cv.dev <- function(object, ...)
   object$family
 
-# Estimate a one-stage or non-stratified model on the develoment (!) strata.
+# Estimate a one-stage or non-stratified model on the development (!) strata.
 mp.1st.fit <- function(formula, data, st.i, st.u, folds, estFUN, ...) {
   out <- list()
   
@@ -1226,6 +1226,13 @@ coef.mp.cv.meta.fit <- function(object, ...)
   t(as.data.frame(lapply(object, `[[`, "coefficients"), check.names = FALSE))
 
 #' @author Valentijn de Jong
+#' @method coef   mp.1st.fit
+#' @export
+coef.mp.1st.fit <- function(object, ...) {
+  coef.mp.cv.meta.fit(object, ...)
+}
+
+#' @author Valentijn de Jong
 #' @method print   mp.cv.meta.fit
 #' @export
 print.mp.cv.meta.fit <- function(x, ...) {
@@ -1238,6 +1245,7 @@ print.mp.cv.meta.fit <- function(x, ...) {
     print(t(as.data.frame(lapply(x, `[[`, "orig coef"), check.names = FALSE) ))
   }
 }
+
 
 # Make new meta model (i.e. model fitted on multiple clusters) for ?? for metapred
 # stratified.fit mp.stratified.fit

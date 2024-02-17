@@ -329,3 +329,4 @@ test_that("metapred estimates models accurately.", {
   expect_equal(as.data.frame(coef(mp.urma.1st.stage)), as.data.frame(t(cff.1st.stage)), check.attributes = FALSE) 
 })
 
+
