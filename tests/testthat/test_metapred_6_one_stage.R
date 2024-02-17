@@ -29,7 +29,6 @@ test_that("calibration of metapred one-stage fixed effect models is ok", {
   expect_lte(gen(mp_fe, 2), 1.1)
 })
 
-
 test_that("metapred can estimate one-stage random effects models", { 
   skip_on_cran()
   
@@ -40,7 +39,7 @@ test_that("metapred can estimate one-stage random effects models", {
   }
   
   mp_ri <- metapred(d, "k", formula = f_ri, scope = f_ri, family = binomial, estFUN = lme4::glmer, two.stage = F, 
-                    perfFUN = list("bin.cal.int", "cal_slope_glmer"),
+                    perfFUN = list("bin.cal.int", cal_slope_glmer),
                     genFUN = list("rema"),
                     gen.of.perf = "factorial")
   expect_is(mp_ri, "metapred")
