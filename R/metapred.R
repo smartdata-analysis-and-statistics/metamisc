@@ -1599,7 +1599,7 @@ gen.mp.cv.val <- function(object, genFUN = 1, ...) {
 #' @param object A model fit object, either a \link{metapred} or \code{subset(metapred)} object.
 #' @param ... By default, the final model is selected. This parameter allows other arguments to be
 #' passed to \link{subset.metapred} such that the performance estimates of other steps/models may be
-#' returned.. 
+#' returned. Use \code{perfFUN = 0} to select all.
 #' 
 #' @export
 perf <- function(object, ...) 
@@ -1613,5 +1613,10 @@ perf.metapred <- function(object, perfFUN = 1, ...)
   perf(subset(object, ...), perfFUN = perfFUN, ...)
 
 #' @export
-perf.mp.cv.val <- function(object, perfFUN = 1, ...)
-  object[["perf.all"]][[perfFUN]]
+perf.mp.cv.val <- function(object, perfFUN = 1, ...) {
+  if (is.numeric(perfFUN) && perfFUN == 0) 
+    return(object[["perf.all"]])
+    object[["perf.all"]][perfFUN]
+}
+
+
