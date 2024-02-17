@@ -1616,7 +1616,7 @@ perf.metapred <- function(object, perfFUN = 1, ...)
 perf.mp.cv.val <- function(object, perfFUN = 1, ...) {
   if (is.numeric(perfFUN) && perfFUN == 0) 
     return(object[["perf.all"]])
-    object[["perf.all"]][perfFUN]
+    object[["perf.all"]][[perfFUN]]
 }
 
 
