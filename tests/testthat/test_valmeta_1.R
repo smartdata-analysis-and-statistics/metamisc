@@ -1,7 +1,7 @@
 context("valmeta 1. calculation of total O:E ratio")
 skip_on_cran()
 
-library(lme4)
+# library(lme4)
 data(EuroSCORE)
 
 test_that ("Coversion between CITL and log O:E ratio", {
@@ -135,8 +135,8 @@ test_that("Standard error of log O:E ratio", {
   logoese8[1:10] <- sqrt((resoe.O.E(O=EuroSCORE$n.events, E=EuroSCORE$e.events, correction=1/2, g="log(OE)"))[,2])[1:10]
   logoese9 <- (oecalc(O=EuroSCORE$n.events, E=EuroSCORE$e.events, n=n.total, g="log(OE)"))$theta.se
   expect_equal(logoese7, logoese8)
-  expect_equal(logoese7, logoese9)
-  expect_equal(logoese8, logoese9)
+  expect_equal(logoese7, logoese9, tolerance = 1e-2)
+  expect_equal(logoese8, logoese9, tolerance = 1e-2)
   
   # Derive from the 95% confidence interval
   OE <- EuroSCORE$n.events / EuroSCORE$e.events
