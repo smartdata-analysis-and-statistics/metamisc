@@ -22,6 +22,7 @@ metapred(
   perfFUN = NULL,
   genFUN = NULL,
   selFUN = "which.min",
+  gen.of.perf = "first",
   ...
 )
 }
@@ -80,6 +81,10 @@ only the first is used for model selection.}
 
 \item{selFUN}{Function for selecting the best method. Default: lowest value for \code{genFUN}. Should be set to
 "which.max" if high values for \code{genFUN} indicate a good model.}
+
+\item{gen.of.perf}{For which performance measures should generalizability measures be computed? \code{"first"} (default) for 
+only the first. \code{"respective"} for matching the generalizability measure to the performance measure on the same location
+in the list. \code{"factorial"} for applying all generalizability measures to all performance estimates.}
 
 \item{...}{To pass arguments to estFUN (e.g. family = "binomial"), or to other FUNctions.}
 }

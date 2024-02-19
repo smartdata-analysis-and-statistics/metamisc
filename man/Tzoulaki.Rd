@@ -30,16 +30,10 @@ Tzoulaki et al. (2009) reviewed studies that evaluated various candidate prognos
     \item{\code{sign.AUCdiff}}{a boolean vector indicating whether the difference between \code{AUC.orig} and \code{AUC.modif} is below 0.05}
   }
 }
-\details{
-%%  ~~ If necessary, more details than the __description__ above ~~
-}
 \source{
 %%  ~~ reference to a publication or URL from which the data were obtained ~~
 Tzoulaki I, Liberopoulos G, Ioannidis JPA. Assessment of claims of improved prediction beyond the Framingham risk score.  \emph{JAMA}. 2009 Dec 2;302(21):2345–52. 
 
-}
-\references{
-%%  ~~ possibly secondary sources and usages ~~
 }
 \examples{
 data(Tzoulaki)

@@ -149,6 +149,9 @@
 #' only the first is used for model selection.
 #' @param selFUN Function for selecting the best method. Default: lowest value for \code{genFUN}. Should be set to
 #' "which.max" if high values for \code{genFUN} indicate a good model.
+#' @param gen.of.perf For which performance measures should generalizability measures be computed? \code{"first"} (default) for 
+#' only the first. \code{"respective"} for matching the generalizability measure to the performance measure on the same location
+#' in the list. \code{"factorial"} for applying all generalizability measures to all performance estimates.
 #' @param ... To pass arguments to estFUN (e.g. family = "binomial"), or to other FUNctions.
 #'
 #' @return A list of class \code{metapred}, containing the final model in \code{global.model}, and the stepwise
@@ -211,7 +214,7 @@
 metapred <- function(data, strata, formula, estFUN = "glm", scope = NULL, retest = FALSE, max.steps = 1000, 
                      center = FALSE, recal.int = FALSE, cvFUN = NULL, cv.k = NULL,  # tol = 0,
                      metaFUN = NULL, meta.method = NULL, predFUN = NULL, perfFUN = NULL, genFUN = NULL,
-                     selFUN = "which.min",
+                     selFUN = "which.min", gen.of.perf = "first",
                      ...) {
   call <- match.call()
   
@@ -259,10 +262,12 @@ metapred <- function(data, strata, formula, estFUN = "glm", scope = NULL, retest
     stop("At least 1 cluster must be used for development.")
   
   # Fitting
-  fit <- mp.fit(formula = formula, data = data, remaining.changes = updates, st.i = strata.i, st.u = strata.u, folds = folds,
+  fit <- mp.fit(formula = formula, data = data, remaining.changes = updates, 
+                st.i = strata.i, st.u = strata.u, folds = folds,
                 recal.int = recal.int, retest = retest, max.steps = max.steps, tol = 0,
-                estFUN = estFUN, metaFUN = metaFUN, meta.method = meta.method, predFUN = predFUN, perfFUN = perfFUN,
-                genFUN = genFUN, selFUN = selFUN, ...)
+                estFUN = estFUN, metaFUN = metaFUN, meta.method = meta.method, 
+                predFUN = predFUN, perfFUN = perfFUN,
+                genFUN = genFUN, selFUN = selFUN, gen.of.perf = gen.of.perf, ...)
   
   # mp.args <- c(list(formula = formula, data = data, remaining.changes = updates, st.i = strata.i, st.u = strata.u, folds = folds,
   #                   recal.int = recal.int, retest = retest, max.steps = max.steps, tol = 0, 
@@ -279,8 +284,10 @@ metapred <- function(data, strata, formula, estFUN = "glm", scope = NULL, retest
                      formula.changes = getFormulaDiffAsChar(formula.final, formula), 
                      # NOTE: formula.changes is currently unordered!
                      options = list(cv.k = cv.k, meta.method = meta.method, recal.int = recal.int,
-                                    center = center, max.steps = max.steps, retest = retest, two.stage = two.stage), # add: tol
-                     FUN = list(cvFUN = cvFUN, predFUN = predFUN, perfFUN = get.function(perfFUN), metaFUN = metaFUN, genFUN = genFUN, 
+                                    center = center, max.steps = max.steps, retest = retest, 
+                                    two.stage = two.stage, gen.of.perf = gen.of.perf), # add: tol
+                     FUN = list(cvFUN = cvFUN, predFUN = predFUN, perfFUN = get.functions(perfFUN), 
+                                metaFUN = metaFUN, genFUN = genFUN, 
                                 selFUN = selFUN, estFUN = estFUN, estFUN.name = estFUN.name)))
   class(out) <- c("metapred")
   return(out)
@@ -556,7 +563,7 @@ mp.fit <- function(formula, data, remaining.changes, st.i, st.u, folds, recal.in
                    retest = FALSE, max.steps = 3, tol = 0,
                    estFUN = glm, metaFUN = urma, meta.method = "DL", predFUN = NULL, 
                    perfFUN = mse, genFUN = abs.mean, selFUN = which.min,
-                   two.stage = TRUE, ...) {
+                   two.stage = TRUE, gen.of.perf = "first", ...) {
   out <- steps <- list()
   
   ## Step 0
@@ -566,7 +573,8 @@ mp.fit <- function(formula, data, remaining.changes, st.i, st.u, folds, recal.in
                                               st.i = st.i, st.u = st.u, folds = folds, recal.int = recal.int, 
                                               retest = FALSE, two.stage = two.stage,
                                               estFUN = estFUN, metaFUN = metaFUN, meta.method = meta.method, predFUN = predFUN, 
-                                              perfFUN = perfFUN, genFUN = genFUN, selFUN = selFUN, ...)
+                                              perfFUN = perfFUN, genFUN = genFUN, selFUN = selFUN, 
+                                              gen.of.perf = gen.of.perf, ...)
   steps[[getStepName(step.count)]][["step.count"]] <- step.count
   out[["best.step"]] <- getStepName(step.count)
   out[["stop.reason"]] <- "no changes were requested."
@@ -597,7 +605,8 @@ mp.fit <- function(formula, data, remaining.changes, st.i, st.u, folds, recal.in
                                                   st.i = st.i, st.u = st.u, folds = folds, recal.int = recal.int,
                                                   retest = retest, two.stage = two.stage,
                                                   estFUN = estFUN, metaFUN = metaFUN, meta.method = meta.method, predFUN = predFUN,
-                                                  perfFUN = perfFUN, genFUN = genFUN, selFUN = selFUN, ...)
+                                                  perfFUN = perfFUN, genFUN = genFUN, selFUN = selFUN, 
+                                                  gen.of.perf = gen.of.perf, ...)
       steps[[getStepName(step.count)]][["step.count"]] <- step.count
       ## Model selection
       # This step
@@ -699,7 +708,8 @@ mp.step.get.change <- function(step, ...)
 mp.step <- function(formula, data, remaining.changes, st.i, st.u, folds, recal.int = FALSE, 
                     two.stage = TRUE, retest = FALSE,
                     estFUN = glm, metaFUN = urma, meta.method = "DL", predFUN = NULL, 
-                    perfFUN = mse, genFUN = abs.mean, selFUN = which.min, ...) {
+                    perfFUN = mse, genFUN = abs.mean, selFUN = which.min, gen.of.perf = "first", 
+                    ...) {
   cv <- out <- list()
   out[["start.formula"]] <- formula
   
@@ -721,7 +731,8 @@ mp.step <- function(formula, data, remaining.changes, st.i, st.u, folds, recal.i
     cv[[name]] <- mp.cv(formula = new.formula, data = data, st.i = st.i, st.u = st.u,
                         folds = folds, recal.int = recal.int, two.stage = two.stage,
                         estFUN = estFUN, metaFUN = metaFUN, meta.method = meta.method,
-                        predFUN = predFUN, perfFUN = perfFUN, genFUN = genFUN, change = change, ...) 
+                        predFUN = predFUN, perfFUN = perfFUN, genFUN = genFUN, 
+                        change = change, gen.of.perf = gen.of.perf, ...) 
     # Save changes
     cv[[name]][["remaining.changes"]] <- if (retest) remaining.changes else remaining.changes[-fc]
     # cv[[name]][["changed"]] <- change
@@ -855,12 +866,13 @@ summary.mp.global <- function(object, ...) {
 # and a validated on val folds 
 mp.cv <- function(formula, data, st.i, st.u, folds, recal.int = FALSE, two.stage = TRUE,
                   estFUN = glm, metaFUN = urma, meta.method = "DL", predFUN = NULL, 
-                  perfFUN = mse, genFUN = abs.mean, change = NULL, ...) {
+                  perfFUN = mse, genFUN = abs.mean, change = NULL, gen.of.perf = "first", ...) {
   out <- mp.cv.dev(formula = formula, data = data, st.i = st.i, st.u = st.u, folds = folds, two.stage = two.stage,
                    estFUN = estFUN, metaFUN = metaFUN, meta.method = meta.method, change = change, ...)
   
   out <- mp.cv.val(cv.dev = out, data = data, st.i = st.i, folds = folds, recal.int = recal.int, two.stage = two.stage,
-                   estFUN = estFUN, predFUN = predFUN, perfFUN = perfFUN, genFUN = genFUN, ...)
+                   estFUN = estFUN, predFUN = predFUN, perfFUN = perfFUN, genFUN = genFUN, 
+                   gen.of.perf = gen.of.perf, ...)
   
   class(out) <- c("mp.cv", class(out))
   out
@@ -913,7 +925,7 @@ print.mp.cv <- function(x, ...) {
 # Returns object of class mp.cv.val, which is a validated mp.cv.dev
 mp.cv.val <- function(cv.dev, data, st.i, folds, recal.int = FALSE, two.stage = TRUE, 
                       estFUN = glm, predFUN = NULL, perfFUN = mse, 
-                      genFUN = abs.mean, plot = F, ...) {
+                      genFUN = abs.mean, plot = F, gen.of.perf = "first", ...) {
   dots <- list(...)
   pfn <- if (is.character(perfFUN)) perfFUN else "Performance"
   cv.dev[["perf.name"]] <- pfn # To be removed!??!!?
@@ -987,10 +999,15 @@ mp.cv.val <- function(cv.dev, data, st.i, folds, recal.int = FALSE, two.stage = 
   cv.dev[["perf.all"]] <- perf.all   # Future compatibility  
   cv.dev[["perf"]] <- perf.all[[1]]  # Backwards compatibility
   
-  # Generalizibility
+  # Generalizability
   if (!is.list(genFUN)) 
     genFUN <- list(genFUN)
   
+  if (identical(gen.of.perf, "factorial")) {
+    which.perf <- rep(seq_along(perfFUN), each = length(genFUN))
+    genFUN <- rep(genFUN, times = length(perfFUN))
+  }
+
   # Names of generalizability measures
   if (identical(length(names(genFUN)), length(genFUN))) {
     gen.names <- names(genFUN)
@@ -1003,8 +1020,10 @@ mp.cv.val <- function(cv.dev, data, st.i, folds, recal.int = FALSE, two.stage = 
   gen.all <- rep(NA, length(genFUN))
   
   for (fun.id in seq_along(genFUN)) { # Single brackets intended!
+    cv.dev.selection <- if (identical(gen.of.perf, "first")) 1 else 
+      if (identical(gen.of.perf, "factorial")) which.perf[fun.id] else fun.id # add which_perf somehow 
     genfun <- match.fun(genFUN[[fun.id]])
-    args <- c(list(object = cv.dev[["perf"]],
+    args <- c(list(object = cv.dev[["perf.all"]][[cv.dev.selection]],
                    coef = coef(cv.dev[["stratified.fit"]]),
                    title = paste("Model change: ~", cv.dev[["changed"]]),
                    xlab = as.character(pfn)
@@ -1136,7 +1155,7 @@ fitted.mp.cv.dev <- function(object, data, folds, st.i, predFUN = NULL, two.stag
 family.mp.cv.dev <- function(object, ...)
   object$family
 
-# Estimate a one-stage or non-stratified model on the develoment (!) strata.
+# Estimate a one-stage or non-stratified model on the development (!) strata.
 mp.1st.fit <- function(formula, data, st.i, st.u, folds, estFUN, ...) {
   out <- list()
   
@@ -1207,6 +1226,13 @@ coef.mp.cv.meta.fit <- function(object, ...)
   t(as.data.frame(lapply(object, `[[`, "coefficients"), check.names = FALSE))
 
 #' @author Valentijn de Jong
+#' @method coef   mp.1st.fit
+#' @export
+coef.mp.1st.fit <- function(object, ...) {
+  coef.mp.cv.meta.fit(object, ...)
+}
+
+#' @author Valentijn de Jong
 #' @method print   mp.cv.meta.fit
 #' @export
 print.mp.cv.meta.fit <- function(x, ...) {
@@ -1219,6 +1245,7 @@ print.mp.cv.meta.fit <- function(x, ...) {
     print(t(as.data.frame(lapply(x, `[[`, "orig coef"), check.names = FALSE) ))
   }
 }
+
 
 # Make new meta model (i.e. model fitted on multiple clusters) for ?? for metapred
 # stratified.fit mp.stratified.fit
@@ -1536,6 +1563,10 @@ ci.mse <- function(object, conf = .95, ...) {
 #' to \link{subset.metapred} such that the generalizability estimates of other steps/models may be
 #' returned.. 
 #' 
+#' @details
+#' With named values or indices for parameter \code{genFUN} one or more estimates 
+#' of generalizability can be selected. Use \code{genFUN = 0} to select all.
+#' 
 #' @export
 gen <- function(object, ...) 
   UseMethod("gen")
@@ -1548,9 +1579,11 @@ gen.metapred <- function(object, genFUN = 1, ...)
   gen(subset(object, ...), genFUN = genFUN, ...)
 
 #' @export
-gen.mp.cv.val <- function(object, genFUN = 1, ...)
-  object$gen.all[[genFUN]]
-
+gen.mp.cv.val <- function(object, genFUN = 1, ...) {
+  if (is.numeric(genFUN) && genFUN == 0)
+    return(object$gen.all)
+  object$gen.all[genFUN]
+}
 
 #' Performance estimates
 #' 
@@ -1566,7 +1599,7 @@ gen.mp.cv.val <- function(object, genFUN = 1, ...)
 #' @param object A model fit object, either a \link{metapred} or \code{subset(metapred)} object.
 #' @param ... By default, the final model is selected. This parameter allows other arguments to be
 #' passed to \link{subset.metapred} such that the performance estimates of other steps/models may be
-#' returned.. 
+#' returned. Use \code{perfFUN = 0} to select all.
 #' 
 #' @export
 perf <- function(object, ...) 
@@ -1580,5 +1613,10 @@ perf.metapred <- function(object, perfFUN = 1, ...)
   perf(subset(object, ...), perfFUN = perfFUN, ...)
 
 #' @export
-perf.mp.cv.val <- function(object, perfFUN = 1, ...)
-  object[["perf.all"]][[perfFUN]]
+perf.mp.cv.val <- function(object, perfFUN = 1, ...) {
+  if (is.numeric(perfFUN) && perfFUN == 0) 
+    return(object[["perf.all"]])
+    object[["perf.all"]][[perfFUN]]
+}
+
+

@@ -209,10 +209,10 @@ getPredictMethod <- function(fit, two.stage = TRUE, predFUN = NULL, ...) {
 # f formula used for selecting relevant variables from newdata. Overrides object
 # ... For compatibility only.
 # Returns vector of predicted values.
-predictGLM <- function(object, newdata, b = NULL, f = NULL, type = "response", ...) {
+predictGLM <- function(object, newdata, b = NULL, f = NULL, type = "response", X = NULL, ...) {
   if (is.null(b)) b <- coef(object)
   if (is.null(f)) f <- formula(object)
-  X <- model.matrix(f2rhsf(stats::as.formula(f)), data = newdata)
+  if (is.null(X)) X <- model.matrix(f2rhsf(stats::as.formula(f)), data = newdata)
   
   lp <- X %*% b
   
@@ -225,8 +225,12 @@ predictGLM <- function(object, newdata, b = NULL, f = NULL, type = "response", .
     return(lp)
 }
 
-predictglmer <- function(object, newdata, b = NULL, f = NULL, type = "response", ...)
+predictglmer <- function(object, newdata, b = NULL, f = NULL, type = "response", ...) {
+  if (is.null(f)) f <- formula(object)
+
+  f <- lme4::nobars(f)
   predictGLM(object = object, newdata = newdata, b = b, f = f, type = type, ...)
+}
 
 # Prediction function for logistf from the logisf package
 # Args same as those of predictGLM()
@@ -447,6 +451,11 @@ get.function <- function(x, ...) {
     return(x)
   else
     return(get(as.character(x), mode = "function"))
+}
+
+# x list of functions or list of names of functions, or a combination of both
+get.functions <- function(x, ...) {
+  lapply(x, get.function, ...)
 }
 
 # Convert factor to binary

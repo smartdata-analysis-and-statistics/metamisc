@@ -13,7 +13,7 @@ performance(object, ...)
 
 \item{...}{By default, the final model is selected. This parameter allows other arguments to be
 passed to \link{subset.metapred} such that the performance estimates of other steps/models may be
-returned..}
+returned. Use \code{perfFUN = 0} to select all.}
 }
 \description{
 Obtain performance estimates from a model fit.

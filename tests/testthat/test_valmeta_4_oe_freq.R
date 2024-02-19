@@ -152,7 +152,8 @@ test_that("Test storage of results", {
   fit1 <- valmeta(measure = "OE", N=n, O=n.events, E =  e.events,
                  slab=Study, data=EuroSCORE,
                  method     = "ML",
-                 pars       = list(model.oe = "poisson/log"))
+                 pars       = list(model.oe = "poisson/log"),
+                 test       = "t")
   
   expect_true("data.frame" %in% class(fit1$data))
   expect_true(all(c("theta", "theta.se", "theta.cilb", "theta.ciub") %in% colnames(fit1$data)))

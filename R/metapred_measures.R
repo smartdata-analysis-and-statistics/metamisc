@@ -71,17 +71,11 @@ calibration.intercept <- cal.int <- function(p, y, estFUN, family, ...)
 bin.cal.int <- function(p, y, ...)
   pred.recal(p = p, y = y, estFUN = "glm", family = binomial, which = "intercept")
 
-# Slope.only is a trick to make this functin work for metapred.
+# Slope.only is a trick to make this function work for metapred.
 # Slope.only should otherwise always be false! Also: this messes up the variances,
 # making meta-analysis impossible!
 # multiplicative slope!
 calibration.slope <- cal.slope <- function(p, y, estFUN, family, slope.only = TRUE, ...) {
-  # refit <- pred.recal(p = p, y = y, estFUN = estFUN, family = family, which = "slope")
-  # if (slope.only) {
-  #   refit[[1]] <- refit[[1]][[2]]
-  # }
-  # refit
-  
   refit <- pred.recal(p = p, y = y, estFUN = estFUN, family = family, which = "slope")
   if (slope.only) {
     refit$estimate <- refit[[1]] <- refit[[1]][2]
