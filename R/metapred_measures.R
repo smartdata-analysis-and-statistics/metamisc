@@ -421,9 +421,11 @@ plot.mp.cv.val <- function(x, y, ...)
 #' @author Valentijn de Jong
 #'  
 #' @param object A model fit object, such as \link{metapred} object.
-#' @param method Character, method for meta-analysis passed to \link[metamisc]{valmeta} and \link[metamisc]{uvmeta}.
+#' @param method Character, method for meta-analysis passed to 
+#' \link[metamisc]{valmeta} and \link[metamisc]{uvmeta}.
 #' Defaults to "REML".
-#' @param ... Other arguments passed to \link[metamisc]{metapred}, \link[metamisc]{valmeta} and \link[metamisc]{uvmeta}.
+#' @param ... Other arguments passed to \link[metamisc]{metapred}, 
+#' \link[metamisc]{valmeta} and \link[metamisc]{uvmeta}.
 #' 
 #' @details Produces different object types depending on input.
 #' 
@@ -448,7 +450,6 @@ ma.mp.stratified.fit <- function(object, method = "REML", ...) {
   m <- mp.meta.fit(object, meta.method = method, ...)
   with(m, data.frame(coefficients, variances, se, ci.lb, ci.ub, tau2, se.tau2, pi.lb, pi.ub))
 }
-
 
 #' @export
 ma.perf <- function(object, method = "REML", test = "knha", ...) {
@@ -518,7 +519,6 @@ ma.perf <- function(object, method = "REML", test = "knha", ...) {
 forest.metapred <- function(object, perfFUN = 1, step = NULL, method = "REML", model = NULL, ...)
   forest.mp.cv.val(subset(object, step = step, model = model), perfFUN = perfFUN, method = method, ...)
 
-
 #' Forest plot of a validation object.
 #' 
 #' Draw a forest plot of the performance of an internally-externally cross-validated model.
@@ -549,7 +549,6 @@ forest.mp.cv.val <- function(object, perfFUN = 1, method = "REML", xlab = NULL, 
   forest.perf(perf(object, perfFUN = perfFUN, ...), method = method, xlab = xlab, ...)
 }
 
-
 forest.perf <- function(object, method = "REML", ...) {
   if (is.null(theta.slab <- list(...)$theta.slab))
     theta.slab <- as.character(object$val.strata)
@@ -567,7 +566,7 @@ forest.perf <- function(object, method = "REML", ...) {
   plot(fp)
   fp
 }
-# 
+
 # sampleBinary <- function(n = 50, J = 1, b = rep(log(2), J), alpha = NULL, col.names = NULL ) {
 #   J <- length(b)
 #   if (is.null(alpha)) alpha <- -log(sqrt(prod(exp(b))))
