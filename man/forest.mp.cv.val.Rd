@@ -5,10 +5,10 @@
 \alias{forest.perf}
 \title{Forest plot of a validation object.}
 \usage{
-\method{forest}{mp.cv.val}(object, perfFUN = 1, method = "REML", xlab = NULL, ...)
+\method{forest}{mp.cv.val}(x, perfFUN = 1, method = "REML", xlab = NULL, ...)
 }
 \arguments{
-\item{object}{An \code{mp.cv.val} or \code{perf} object.}
+\item{x}{An \code{mp.cv.val} or \code{perf} object.}
 
 \item{perfFUN}{Numeric or character. Which performance statistic should be plotted? Defaults to the first.}
 

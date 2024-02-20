@@ -4,10 +4,10 @@
 \alias{forest.metapred}
 \title{Forest plot of a metapred fit}
 \usage{
-\method{forest}{metapred}(object, perfFUN = 1, step = NULL, method = "REML", model = NULL, ...)
+\method{forest}{metapred}(x, perfFUN = 1, step = NULL, method = "REML", model = NULL, ...)
 }
 \arguments{
-\item{object}{A \code{metapred} fit object.}
+\item{x}{A \code{metapred} fit object}
 
 \item{perfFUN}{Numeric or character. Which performance statistic should be plotted? Defaults to the first.}
 

@@ -338,7 +338,7 @@ squared_diff <- function(x, ...) {
 
 # Mean of largest half of values
 mean_of_large <- function(x, ...) {
-  z <- unlist(s[["estimate"]])
+  z <- unlist(x[["estimate"]])
   mean(z[z >= median(z)])
 }
 
@@ -481,7 +481,7 @@ ma.perf <- function(object, method = "REML", test = "knha", ...) {
 #' 
 #' @author Valentijn de Jong <Valentijn.M.T.de.Jong@gmail.com>
 #' 
-#' @param object A \code{metapred} fit object.
+#' @param x A \code{metapred} fit object
 #' @param step Which step should be plotted? Defaults to the best step. numeric is converted to name of the step: 0 for 
 #' an unchanged model, 1 for the first change...
 #' @param model Which model change should be plotted? NULL (default, best change) or character name of variable or (integer) 
