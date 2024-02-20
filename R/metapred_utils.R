@@ -227,7 +227,7 @@ predictGLM <- function(object, newdata, b = NULL, f = NULL, type = "response", X
 
 predictglmer <- function(object, newdata, b = NULL, f = NULL, type = "response", ...) {
   if (is.null(f)) f <- formula(object)
-
+  
   f <- lme4::nobars(f)
   predictGLM(object = object, newdata = newdata, b = b, f = f, type = type, ...)
 }
@@ -446,16 +446,62 @@ unlist.listofperf <- function(x, ...)
 # For some reason, this function can find functions that match.fun cannot.
 # x function or character name thereof
 # Returns function or error.
-get.function <- function(x, ...) {
+get_function <- function(x, ...) {
   if (is.function(x))
     return(x)
-  else
-    return(get(as.character(x), mode = "function"))
+  
+  if (is.character(x)) {
+    # For backwards compatibility, this finds the right function with a "."
+    if (identical(x, "abs.mean"))
+      x <- "abs_mean"
+    if (identical(x, "rema.beta"))
+      x <- "rema_beta"
+    if (identical(x, "rema.tau"))
+      x <- "rema_tau"
+    if (identical(x, "calibration.slope"))
+      x <- "calibration_slope"
+    if (identical(x, "cal.slope"))
+      x <- "cal_slope"
+    if (identical(x, "calibration.add.slope"))
+      x <- "calibration_add_slope"
+    if (identical(x, "cal.add.slope"))
+      x <- "cal_add_slope"
+    if (identical(x, "mse.with.se"))
+      x <- "mse_with_se"
+    if (identical(x, "calibration.intercept"))
+      x <- "calibration_intercept"
+    if (identical(x, "cal.int"))
+      x <- "cal_int"
+    if (identical(x, "bin.cal.int"))
+      x <- "bin_cal_int"
+    if(identical(x, "coef.var")) 
+      x <- "coefficient_of_variation"
+    if(identical(x, "coef.var.mean")) 
+      x <- "coefficient_of_variation_mean"
+    if (identical(x, "mean.abs"))
+      x <- "mean_abs"
+    if (identical(x, "weighted.abs.mean"))
+      x <- "weighted_abs_mean"
+    if (identical(x, "pooled.var"))
+      x <- "pooled_var"
+    if (identical(x, "squared.diff"))
+      x <- "squared_diff"
+    if (identical(x, "mean.of.large"))
+      x <- "mean_of_large"
+    if (identical(x, "var.e"))
+      x <- "var_e"
+    if (identical(x, "var.e.with.se"))
+      x <- "var_e_with_se"
+    if (identical(x, "var.with.se"))
+      x <- "var_with_se"
+  }
+  
+  return(get(as.character(x), mode = "function"))
 }
 
 # x list of functions or list of names of functions, or a combination of both
-get.functions <- function(x, ...) {
-  lapply(x, get.function, ...)
+get_functions <- function(x, ...) {
+  lapply(x, get_function, ...)
 }
 
 # Convert factor to binary

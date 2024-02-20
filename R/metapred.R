@@ -136,17 +136,20 @@
 #' this is a vector of the indices of the (sorted) data sets. Not used for \code{cvFUN="l1o"}.
 #' @param metaFUN Function for computing the meta-analytic coefficient estimates in two-stage MA. 
 #' By default, \link[metafor]{rma.uni}, from the metafor package is used. Default settings are univariate random effects, 
-#' estimated with "DL". Method can be passed trough the \code{meta.method} argument.
-#' @param meta.method Name of method for meta-analysis. Default is "DL". For more options see \link[metafor]{rma.uni}.
+#' estimated with "REML". Method can be passed trough the \code{meta.method} argument.
+#' @param meta.method Name of method for meta-analysis. Default is "REML". For more options see \link[metafor]{rma.uni}.
 #' @param predFUN Function for predicting new values. Defaults to the predicted probability of the outcome, using the link 
 #' function of \code{glm()} or \code{lm()}.
 #' @param perfFUN Function for computing the performance of the prediction models. Default: mean squared error 
-#' (\code{perfFUN="mse"}).Other options are \code{"var.e"} (variance of prediction error), \code{"auc"} (area under the curve),
-#' \code{"cal.int"} (calibration intercept), and \code{"cal.slope"} (multiplicative calibration slope) and \code{"cal.add.slope"}
-#' (additive calibration slope).
+#' (\code{perfFUN="mse"}, aka Brier score for binomial outcomes).Other options are \code{"var.e"} (variance of prediction error), 
+#' \code{"auc"} (area under the curve),
+#' \code{"cal_int"} (calibration intercept), and \code{"cal_slope"} (multiplicative calibration slope) and \code{"cal_add_slope"}
+#' (additive calibration slope), or a \code{list} of these, where only the first is used for model selection.
 #' @param genFUN Function or \code{list} of named functions for computing generalizability of the performance. 
-#' Default: (absolute) mean (\code{genFUN="abs.mean"}). Choose \code{coef.var} for the coefficient of variation. If a \code{list},
-#' only the first is used for model selection.
+#' Default: \code{rema}, summary statistic of a random effects meta-analysis. Choose \code{"rema_tau"} for heterogeneity 
+#' estimate of a random effects meta-analysis,  \code{genFUN="abs_mean"} for (absolute) mean,  
+#' \code{coefficient_of_variation} for the coefficient of variation. If a \code{list} containing these, only the first is used 
+#' for model selection.
 #' @param selFUN Function for selecting the best method. Default: lowest value for \code{genFUN}. Should be set to
 #' "which.max" if high values for \code{genFUN} indicate a good model.
 #' @param gen.of.perf For which performance measures should generalizability measures be computed? \code{"first"} (default) for 
@@ -241,17 +244,17 @@ metapred <- function(data, strata, formula, estFUN = "glm", scope = NULL, retest
   if (is.null(cvFUN))   cvFUN   <- l1o
   if (is.null(metaFUN)) metaFUN <- urma
   if (is.null(perfFUN)) perfFUN <- "mse"
-  if (is.null(genFUN))  genFUN  <- abs.mean
-  if (is.null(meta.method)) meta.method <- "DL"
+  if (is.null(genFUN))  genFUN  <- rema
+  if (is.null(meta.method)) meta.method <- "REML"
   # Change to "-" when perfFUN <- R2 or some other measure for which greater = better.
   
   estFUN.name <- estFUN
-  estFUN  <- get.function(estFUN)
-  cvFUN   <- get.function(cvFUN)
+  estFUN  <- get_function(estFUN)
+  cvFUN   <- get_function(cvFUN)
   # perfFUN <- get(perfFUN)
   # genFUN  <- get(genFUN) # now happens in mp.cv.val
-  selFUN  <- get.function(selFUN)
-  metaFUN <- get.function(metaFUN)
+  selFUN  <- get_function(selFUN)
+  metaFUN <- get_function(metaFUN)
   
   # genFUN.add <- dots[["genFUN.add"]] 
   # dots[["genFUN.add"]] <- NULL
@@ -286,7 +289,7 @@ metapred <- function(data, strata, formula, estFUN = "glm", scope = NULL, retest
                      options = list(cv.k = cv.k, meta.method = meta.method, recal.int = recal.int,
                                     center = center, max.steps = max.steps, retest = retest, 
                                     two.stage = two.stage, gen.of.perf = gen.of.perf), # add: tol
-                     FUN = list(cvFUN = cvFUN, predFUN = predFUN, perfFUN = get.functions(perfFUN), 
+                     FUN = list(cvFUN = cvFUN, predFUN = predFUN, perfFUN = get_functions(perfFUN), 
                                 metaFUN = metaFUN, genFUN = genFUN, 
                                 selFUN = selFUN, estFUN = estFUN, estFUN.name = estFUN.name)))
   class(out) <- c("metapred")
@@ -562,7 +565,7 @@ subset.metapred <- function(x, select = "cv", step = NULL, model = NULL, stratum
 mp.fit <- function(formula, data, remaining.changes, st.i, st.u, folds, recal.int = FALSE, 
                    retest = FALSE, max.steps = 3, tol = 0,
                    estFUN = glm, metaFUN = urma, meta.method = "DL", predFUN = NULL, 
-                   perfFUN = mse, genFUN = abs.mean, selFUN = which.min,
+                   perfFUN = mse, genFUN = abs_mean, selFUN = which.min,
                    two.stage = TRUE, gen.of.perf = "first", ...) {
   out <- steps <- list()
   
@@ -708,7 +711,7 @@ mp.step.get.change <- function(step, ...)
 mp.step <- function(formula, data, remaining.changes, st.i, st.u, folds, recal.int = FALSE, 
                     two.stage = TRUE, retest = FALSE,
                     estFUN = glm, metaFUN = urma, meta.method = "DL", predFUN = NULL, 
-                    perfFUN = mse, genFUN = abs.mean, selFUN = which.min, gen.of.perf = "first", 
+                    perfFUN = mse, genFUN = abs_mean, selFUN = which.min, gen.of.perf = "first", 
                     ...) {
   cv <- out <- list()
   out[["start.formula"]] <- formula
@@ -866,7 +869,7 @@ summary.mp.global <- function(object, ...) {
 # and a validated on val folds 
 mp.cv <- function(formula, data, st.i, st.u, folds, recal.int = FALSE, two.stage = TRUE,
                   estFUN = glm, metaFUN = urma, meta.method = "DL", predFUN = NULL, 
-                  perfFUN = mse, genFUN = abs.mean, change = NULL, gen.of.perf = "first", ...) {
+                  perfFUN = mse, genFUN = abs_mean, change = NULL, gen.of.perf = "first", ...) {
   out <- mp.cv.dev(formula = formula, data = data, st.i = st.i, st.u = st.u, folds = folds, two.stage = two.stage,
                    estFUN = estFUN, metaFUN = metaFUN, meta.method = meta.method, change = change, ...)
   
@@ -925,7 +928,7 @@ print.mp.cv <- function(x, ...) {
 # Returns object of class mp.cv.val, which is a validated mp.cv.dev
 mp.cv.val <- function(cv.dev, data, st.i, folds, recal.int = FALSE, two.stage = TRUE, 
                       estFUN = glm, predFUN = NULL, perfFUN = mse, 
-                      genFUN = abs.mean, plot = F, gen.of.perf = "first", ...) {
+                      genFUN = abs_mean, plot = F, gen.of.perf = "first", ...) {
   dots <- list(...)
   pfn <- if (is.character(perfFUN)) perfFUN else "Performance"
   cv.dev[["perf.name"]] <- pfn # To be removed!??!!?
@@ -957,7 +960,7 @@ mp.cv.val <- function(cv.dev, data, st.i, folds, recal.int = FALSE, two.stage = 
   
   # Multiple performance measures may be calculated.
   perfcalc <- function(perfFUN, cv.dev, folds, outcome, st.i, data, estFUN, p) {
-    perfFUN <- match.fun(perfFUN)
+    perfFUN <- get_function(perfFUN)
     
     perf.full <- perf.str <- list()
     
@@ -1022,8 +1025,8 @@ mp.cv.val <- function(cv.dev, data, st.i, folds, recal.int = FALSE, two.stage = 
   for (fun.id in seq_along(genFUN)) { # Single brackets intended!
     cv.dev.selection <- if (identical(gen.of.perf, "first")) 1 else 
       if (identical(gen.of.perf, "factorial")) which.perf[fun.id] else fun.id # add which_perf somehow 
-    genfun <- match.fun(genFUN[[fun.id]])
-    args <- c(list(object = cv.dev[["perf.all"]][[cv.dev.selection]],
+    genfun <- get_function(genFUN[[fun.id]])
+    args <- c(list(x = cv.dev[["perf.all"]][[cv.dev.selection]],
                    coef = coef(cv.dev[["stratified.fit"]]),
                    title = paste("Model change: ~", cv.dev[["changed"]]),
                    xlab = as.character(pfn)
