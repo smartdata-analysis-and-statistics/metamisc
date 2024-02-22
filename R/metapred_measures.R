@@ -30,8 +30,8 @@
 #   var(p - y, ...)
 
 # library(moments)
-var.e <- var.e.with.se <- function(p, y, ...) 
-  var.with.se(p - y)
+var_e <- var_e_with_se <- function(p, y, ...) 
+  var_with_se(p - y)
 
 # Necessary for var of var estimation.
 # See https://math.stackexchange.com/questions/72975/variance-of-sample-variance
@@ -44,7 +44,7 @@ sigma4 <- function(x, ...)
 # https://math.stackexchange.com/questions/72975/variance-of-sample-variance
 # x vector
 # Returns variance, and se and variance of variance
-var.with.se <- function(x, ...) {
+var_with_se <- function(x, ...) {
   est <- var(x)
   v <-  2 * sigma4(x) / (length(x) - 1)
   out <- data.frame(estimate = est, se = sqrt(v), variances = v, n = length(x))
@@ -53,8 +53,8 @@ var.with.se <- function(x, ...) {
 }
 # Measure 1: Coefficient of variation of prediction error.
 # abs logical absolute value
-coef.var.pred <- function(p, y, abs = TRUE, ...)
-  coef.var(x = p - y, abs = abs) 
+coefficient_of_variation_of_predictors <- function(p, y, abs = TRUE, ...)
+  coefficient_of_variation(x = p - y, abs = abs) 
 
 #' @importFrom pROC auc
 auc <- AUC <- AUROC <-  function(p, y, ...) {
@@ -65,17 +65,17 @@ auc <- AUC <- AUROC <-  function(p, y, ...) {
   pROC::auc(response = y, predictor = p)
 }
 
-calibration.intercept <- cal.int <- function(p, y, estFUN, family, ...)
+calibration_intercept <- cal_int <- function(p, y, estFUN, family, ...)
   pred.recal(p = p, y = y, estFUN = estFUN, family = family, which = "intercept")
 
-bin.cal.int <- function(p, y, ...)
+bin_cal_int <- function(p, y, ...)
   pred.recal(p = p, y = y, estFUN = "glm", family = binomial, which = "intercept")
 
 # Slope.only is a trick to make this function work for metapred.
 # Slope.only should otherwise always be false! Also: this messes up the variances,
 # making meta-analysis impossible!
 # multiplicative slope!
-calibration.slope <- cal.slope <- function(p, y, estFUN, family, slope.only = TRUE, ...) {
+calibration_slope <- cal_slope <- function(p, y, estFUN, family, slope.only = TRUE, ...) {
   refit <- pred.recal(p = p, y = y, estFUN = estFUN, family = family, which = "slope")
   if (slope.only) {
     refit$estimate <- refit[[1]] <- refit[[1]][2]
@@ -86,7 +86,7 @@ calibration.slope <- cal.slope <- function(p, y, estFUN, family, slope.only = TR
 }
 
 # additive slope!
-calibration.add.slope <- cal.add.slope <- function(p, y, estFUN, family, slope.only = TRUE, ...)  {
+calibration_add_slope <- cal_add_slope <- function(p, y, estFUN, family, slope.only = TRUE, ...)  {
   
   refit <- pred.recal(p = p, y = y, estFUN = estFUN, family = family, which = "add.slope")
   if (slope.only) {
@@ -102,7 +102,7 @@ calibration.add.slope <- cal.add.slope <- function(p, y, estFUN, family, slope.o
 # bs.n integer number of bootstrap samples
 # ... Compatiblility only
 # For asymptotic, see https://journals.ametsoc.org/doi/full/10.1175/2007WAF2007049.1
-mse <- brier <- mse.with.se <- function(p, y, se.method = "asymptotic", bs.n = 10000, ...) {
+mse <- brier <- mse_with_se <- function(p, y, se.method = "asymptotic", bs.n = 10000, ...) {
   er <- p - y
   est <- mean(er^2)
   out <- data.frame(estimate = est, se = NA, variances = NA)
@@ -202,12 +202,8 @@ bin.ll <- function(p, y, na.rm = TRUE)
 ############################## Heterogeneity, generalizability, pooled performance functions ###############################
 # ### By convention, all generalizability measures:
 # # Current required arguments:
-# object  data.frame containing at least a column with 'estimate', and preferably more statistics: 
+# x  data.frame containing at least a column with 'estimate', and preferably more statistics: 
 #             se, var, ci.lb     ci.ub measure  n   class
-# # Required arguments: (OLD)
-# x       list of class "listofperf", list of performance in different strata. 
-#           Note that it has its own unlist method. Practically all (except plot) should call unlist first!
-# ...     for compatibility.
 #
 # # Possible arguments, that are always passed through successfully:
 # coef    data.frame containing coefficients of stratified models. Rows are strata, columns are coefs.
@@ -219,27 +215,21 @@ bin.ll <- function(p, y, na.rm = TRUE)
 ##############################   
 
 # Measure 0: mean
-abs.mean <- function(object, ...)
-  abs(mean(object$estimate)) 
+abs_mean <- function(x, ...)
+  abs(mean(x$estimate)) 
 
 ## also possible the other way around (e.g. for cal slopes and intercepts)
-mean.abs <- function(object, ...) 
-  mean(abs(object$estimate))
+mean_abs <- function(x, ...) 
+  mean(abs(x$estimate))
 
 # Measure 1: Coefficient of variation (=scaled sd)
 # In general sense, abs needs not be TRUE, but for metapred it should,
 # such that higher values are worse performance.
-coef.var <- function(object, abs = TRUE, ...) {
-  object <- unlist(object) 
-  cv <- sd(object)/mean(object)
+coefficient_of_variation <- function(x, abs = TRUE, ...) {
+  x <- unlist(x) 
+  cv <- sd(x)/mean(x)
   if (isTRUE(abs)) abs(cv) else cv
 }
-
-# coef.var <- function(x, abs = TRUE, ...) {
-#   x <- unlist(x) 
-#   cv <- sd(x)/mean(x)
-#   if (isTRUE(abs)) abs(cv) else cv
-# }
 
 # var.x.mean.with.se <- function(x, abs = TRUE, ...) {
 #   x <- unlist(x) 
@@ -249,7 +239,7 @@ coef.var <- function(object, abs = TRUE, ...) {
 #   # s <- sqrt(v$estimate)
 #   
 #   m <- mean(x)
-#   vm <- v$variances / length(x)
+#   vm <- v$variances / length(x)     
 #   
 #   est <- s2 * mean(x)
 #   vest <- vs2 * vm + vs2 * m^2 + vm * s2^2
@@ -258,57 +248,55 @@ coef.var <- function(object, abs = TRUE, ...) {
 #   if (isTRUE(abs)) abs(out) else out
 # }
 
-coef.var.with.se <- function(object, abs = TRUE, ...) 
-  cbind(data.frame(estimate = coef.var(object[["estimate"]])), bootstrap.se(object, coef.var))
+coefficient_of_variation_with_se <- function(x, abs = TRUE, ...) 
+  cbind(data.frame(estimate = coefficient_of_variation(x[["estimate"]])), bootstrap_se(x, coefficient_of_variation))
 
+coefficient_of_variation_mean <- function(x, abs = TRUE, ...)  {
+  z <- unlist(x[["estimate"]])
+  coefficient_of_variation(z, abs = abs) + if (abs) abs(mean(z)) else mean(z)
+}
 
-bootstrap.se <- function(object, fun, k = 2000, ...) {
-  x <- unlist(object[["estimate"]])
+bootstrap_se <- function(x, fun, k = 2000, ...) {
+  estimate <- unlist(x[["estimate"]])
   fun <- match.fun(fun)
   
   est <- rep(NA, k)
   for (i in seq_len(k)) {
-    est[i] <- fun(sample(x, size = length(x), replace = TRUE))
+    est[i] <- fun(sample(estimate, size = length(estimate), replace = TRUE))
   }
   v <- var(est)
-  out <- data.frame(variances = v, se = sqrt(v), n = length(x), k = k)
+  out <- data.frame(variances = v, se = sqrt(v), n = length(estimate), k = k)
   class(out) <- c("mp.perf", class(out))
   out
 }
 
-coef.var.mean <- function(object, abs = TRUE, ...)  {
-  x <- unlist(object[["estimate"]])
-  coef.var(x, abs = abs) + if (abs) abs(mean(x)) else mean(x)
-}
-
-
 # Measure 2 (?): GINI coefficient
 # #' @importFrom Hmisc GiniMd
-GiniMd <- function(object, ...) 
-  GiniMd(object[["estimate"]], na.rm = T)
+GiniMd <- function(x, ...) 
+  GiniMd(x[["estimate"]], na.rm = T)
 
 # Also from Hmisc:
-gmd <- function(object, ...) {
-  x <- object[["estimate"]]
-  n <- length(x)
-  sum(outer(x, x, function(a, b) abs(a - b))) / n / (n - 1)
+gmd <- function(x, ...) {
+  estimate <- x[["estimate"]]
+  n <- length(estimate)
+  sum(outer(estimate, estimate, function(a, b) abs(a - b))) / n / (n - 1)
 }
 
-weighted.abs.mean <- function(object, ...) 
-  abs(mean((object[["estimate"]] * object$n))) / sum(object$n)
+weighted_abs_mean <- function(x, ...) 
+  abs(mean((x[["estimate"]] * x$n))) / sum(x$n)
 
 # Fixed-Effects Meta-Analysis, Inverse Variance Method.
 # NOTE: AUC is on wrong scale!!
-fema <- function(object, ...) {
+fema <- function(x, ...) {
   # if (object$class[[1]] == "auc") {
   #   x <- logit(object$perf)
   #   v <- some other transform (object$var)
   # }
   # return(inv.logit(sum(unlist(x) / unlist(v)) / sum(1/unlist(v)) ))
   # else
-  x <- object[["estimate"]]
-  v <- object$var
-  sum(unlist(x) / unlist(v)) / sum(1/unlist(v))
+  estimate <- x[["estimate"]]
+  v <- x$var
+  sum(unlist(estimate) / unlist(v)) / sum(1/unlist(v))
 }
 
 
@@ -316,20 +304,20 @@ fema <- function(object, ...) {
 # 1 = mean of performance only
 # 0 = heterogeneity only
 # 1/2 = equal portions of both.
-rema <- function(object, method = "REML", lambda = 1, ...) {
+rema <- function(x, method = "REML", lambda = 1, ...) {
   if (!is.numeric(lambda) || lambda < 0 || lambda > 1)
     stop(c("lambda must be a numeric ranging from 0 to 1."),  "\n * lambda was ", paste0(lambda), ".")
-  MA <- ma.perf(object, method = method, ...)
+  MA <- ma.perf(x, method = method, ...)
   lambda * MA$est + (1- lambda) *MA$tau
 }
 
-rema.beta <- rema.mean <- function(object, method = "REML", ...) 
-  ma.perf(object, method = method, ...)$est
+rema_beta <- rema.mean <- function(x, method = "REML", ...) 
+  ma.perf(x, method = method, ...)$est
 
 # valmeta does not produce tau!
 # so rema.tau cannot be used on auc!
-rema.tau <- function(object, method = "REML", ...)
-  ma.perf(object, method = method, ...)$tau # Note: Intentionally selects tau2 if only that one is available.
+rema_tau <- function(x, method = "REML", ...)
+  ma.perf(x, method = method, ...)$tau # Note: Intentionally selects tau2 if only that one is available.
 
 # pooled.var <- function(x, n, ...) {
 #   x <- unlist(x)
@@ -337,21 +325,21 @@ rema.tau <- function(object, method = "REML", ...)
 #   ## TODO: use rubins rules.
 # }
 
-pooled.var <- function(object, ...) {
-  x <- unlist(object[["estimate"]])
-  mean(x) + var(x) * (1 + 1/length(nrow(object)))
+pooled_var <- function(x, ...) {
+  z <- unlist(x[["estimate"]])
+  mean(z) + var(z) * (1 + 1/length(nrow(x)))
 }
 
 # squared.diff #a penalty equal to the mean squared differences 
-squared.diff <- function(object, ...) {
-  x <- unlist(object[["estimate"]])
-  mse(x, mean(x))
+squared_diff <- function(x, ...) {
+  z <- unlist(x[["estimate"]])
+  mse(z, mean(z))
 }
 
 # Mean of largest half of values
-mean.of.large <- function(object, ...) {
-  x <- unlist(object[["estimate"]])
-  mean(x[x >= median(x)])
+mean_of_large <- function(x, ...) {
+  z <- unlist(x[["estimate"]])
+  mean(z[z >= median(z)])
 }
 
 #  Forest plot of list of performance measures: AUC, cal intercept or slope, or mse/brier.
@@ -493,7 +481,7 @@ ma.perf <- function(object, method = "REML", test = "knha", ...) {
 #' 
 #' @author Valentijn de Jong <Valentijn.M.T.de.Jong@gmail.com>
 #' 
-#' @param object A \code{metapred} fit object.
+#' @param x A \code{metapred} fit object
 #' @param step Which step should be plotted? Defaults to the best step. numeric is converted to name of the step: 0 for 
 #' an unchanged model, 1 for the first change...
 #' @param model Which model change should be plotted? NULL (default, best change) or character name of variable or (integer) 
@@ -516,8 +504,8 @@ ma.perf <- function(object, method = "REML", test = "knha", ...) {
 #' forest(fit)
 #' 
 #' @export
-forest.metapred <- function(object, perfFUN = 1, step = NULL, method = "REML", model = NULL, ...)
-  forest.mp.cv.val(subset(object, step = step, model = model), perfFUN = perfFUN, method = method, ...)
+forest.metapred <- function(x, perfFUN = 1, step = NULL, method = "REML", model = NULL, ...)
+  forest.mp.cv.val(subset(x, step = step, model = model), perfFUN = perfFUN, method = method, ...)
 
 #' Forest plot of a validation object.
 #' 
@@ -525,7 +513,7 @@ forest.metapred <- function(object, perfFUN = 1, step = NULL, method = "REML", m
 #' 
 #' @author Valentijn de Jong <Valentijn.M.T.de.Jong@gmail.com>
 #'  
-#' @param object An \code{mp.cv.val} or \code{perf} object.
+#' @param x An \code{mp.cv.val} or \code{perf} object.
 #' @param perfFUN Numeric or character. Which performance statistic should be plotted? Defaults to the first.
 #' @param method character string specifying whether a fixed- or a random-effects model should be used to summarize the
 #' prediction model performance. A fixed-effects model is fitted when using method="FE". Random-effects models are fitted 
@@ -543,19 +531,19 @@ forest.metapred <- function(object, perfFUN = 1, step = NULL, method = "REML", m
 #               xlab = if (is.character(statistic)) statistic else
 #                 object[["perf.names"]][[statistic]], ...)
 
-forest.mp.cv.val <- function(object, perfFUN = 1, method = "REML", xlab = NULL, ...) {
+forest.mp.cv.val <- function(x, perfFUN = 1, method = "REML", xlab = NULL, ...) {
   if (is.null(xlab))
-    xlab <- if (is.character(perfFUN)) perfFUN else  object$perf.names[[perfFUN]]
-  forest.perf(perf(object, perfFUN = perfFUN, ...), method = method, xlab = xlab, ...)
+    xlab <- if (is.character(perfFUN)) perfFUN else  x$perf.names[[perfFUN]]
+  forest.perf(perf(x, perfFUN = perfFUN, ...), method = method, xlab = xlab, ...)
 }
 
-forest.perf <- function(object, method = "REML", ...) {
+forest.perf <- function(x, method = "REML", ...) {
   if (is.null(theta.slab <- list(...)$theta.slab))
-    theta.slab <- as.character(object$val.strata)
-  ma <- ma.perf(object, method = method)
-  fp <- forest(theta       = object[["estimate"]],
-               theta.ci.lb = object$ci.lb,
-               theta.ci.ub = object$ci.ub,
+    theta.slab <- as.character(x$val.strata)
+  ma <- ma.perf(x, method = method)
+  fp <- forest(theta       = x[["estimate"]],
+               theta.ci.lb = x$ci.lb,
+               theta.ci.ub = x$ci.ub,
                theta.slab  = theta.slab,
                theta.summary       = ma$est,
                theta.summary.ci.lb = ma$ci.lb,
@@ -594,20 +582,20 @@ forest.perf <- function(object, method = "REML", ...) {
 # forest(mp, statistic = "mse", title = "Hallo")
 # # metamisc:::forest.perf(perf0)
 
-fat.perf <- function(object, ...)
-  fat(b = object[["estimate"]], b.se = object[["se"]], n.total = sum(object[["n"]]), ...)
+fat.perf <- function(x, ...)
+  fat(b = x[["estimate"]], b.se = x[["se"]], n.total = sum(x[["n"]]), ...)
 
-fat.mp.cv.val <- function(object, ...) 
-  fat(object[["perf"]], ...)
+fat.mp.cv.val <- function(x, ...) 
+  fat(x[["perf"]], ...)
 
-fat.metapred <- function(object, ...)
-  fat.mp.cv.val(subset(object, ...))
+fat.metapred <- function(x, ...)
+  fat.mp.cv.val(subset(x, ...))
 
-funnel.perf <- function(object, ...)
-  plot(fat.perf(object, ...), ...)
+funnel.perf <- function(x, ...)
+  plot(fat.perf(x, ...), ...)
 
-funnel.mp.cv.val <- function(object, ...)
-  plot(fat.mp.cv.val(object))
+funnel.mp.cv.val <- function(x, ...)
+  plot(fat.mp.cv.val(x))
 
-funnel.metapred <- function(object, ...)
-  plot(fat.metapred(object, ...))
+funnel.metapred <- function(x, ...)
+  plot(fat.metapred(x, ...))

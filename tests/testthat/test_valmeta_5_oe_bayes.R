@@ -1,5 +1,6 @@
 context("valmeta 5. bayesian meta-analysis of total O:E ratio")
 skip_on_cran()
+skip_if_not_installed("rjags")
 
 library(lme4)
 library(rjags)
@@ -8,7 +9,6 @@ library(dplyr)
 data(EuroSCORE)
 
 test_that("Bayesian random effect meta-analysis of total O:E ratio", {
-  
   pars <- list(hp.tau.dist = "dhalft",   # Prior for the between-study standard deviation
                hp.tau.sigma = 1.5,       # Standard deviation for 'hp.tau.dist'
                hp.tau.df = 3,            # Degrees of freedom for 'hp.tau.dist'
@@ -39,7 +39,6 @@ test_that("Bayesian random effect meta-analysis of total O:E ratio", {
 })
 
 test_that("Adjusting JAGS sampling parameters works", {
-  
   fit1 <- valmeta(measure = "OE", 
                   O = EuroSCORE$n.events, 
                   E = EuroSCORE$e.events, 

@@ -9,10 +9,12 @@ ma(object, method, ...)
 \arguments{
 \item{object}{A model fit object, such as \link{metapred} object.}
 
-\item{method}{Character, method for meta-analysis passed to \link[metamisc]{valmeta} and \link[metamisc]{uvmeta}.
+\item{method}{Character, method for meta-analysis passed to 
+\link[metamisc]{valmeta} and \link[metamisc]{uvmeta}.
 Defaults to "REML".}
 
-\item{...}{Other arguments passed to \link[metamisc]{metapred}, \link[metamisc]{valmeta} and \link[metamisc]{uvmeta}.}
+\item{...}{Other arguments passed to \link[metamisc]{metapred}, 
+\link[metamisc]{valmeta} and \link[metamisc]{uvmeta}.}
 }
 \description{
 Meta-analysis of the performance or coefficients of a metapred object.

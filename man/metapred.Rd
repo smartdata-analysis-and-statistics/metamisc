@@ -63,21 +63,24 @@ this is a vector of the indices of the (sorted) data sets. Not used for \code{cv
 
 \item{metaFUN}{Function for computing the meta-analytic coefficient estimates in two-stage MA. 
 By default, \link[metafor]{rma.uni}, from the metafor package is used. Default settings are univariate random effects, 
-estimated with "DL". Method can be passed trough the \code{meta.method} argument.}
+estimated with "REML". Method can be passed trough the \code{meta.method} argument.}
 
-\item{meta.method}{Name of method for meta-analysis. Default is "DL". For more options see \link[metafor]{rma.uni}.}
+\item{meta.method}{Name of method for meta-analysis. Default is "REML". For more options see \link[metafor]{rma.uni}.}
 
 \item{predFUN}{Function for predicting new values. Defaults to the predicted probability of the outcome, using the link 
 function of \code{glm()} or \code{lm()}.}
 
 \item{perfFUN}{Function for computing the performance of the prediction models. Default: mean squared error 
-(\code{perfFUN="mse"}).Other options are \code{"var.e"} (variance of prediction error), \code{"auc"} (area under the curve),
-\code{"cal.int"} (calibration intercept), and \code{"cal.slope"} (multiplicative calibration slope) and \code{"cal.add.slope"}
-(additive calibration slope).}
+(\code{perfFUN="mse"}, aka Brier score for binomial outcomes).Other options are \code{"var.e"} (variance of prediction error), 
+\code{"auc"} (area under the curve),
+\code{"cal_int"} (calibration intercept), and \code{"cal_slope"} (multiplicative calibration slope) and \code{"cal_add_slope"}
+(additive calibration slope), or a \code{list} of these, where only the first is used for model selection.}
 
 \item{genFUN}{Function or \code{list} of named functions for computing generalizability of the performance. 
-Default: (absolute) mean (\code{genFUN="abs.mean"}). Choose \code{coef.var} for the coefficient of variation. If a \code{list},
-only the first is used for model selection.}
+Default: \code{rema}, summary statistic of a random effects meta-analysis. Choose \code{"rema_tau"} for heterogeneity 
+estimate of a random effects meta-analysis,  \code{genFUN="abs_mean"} for (absolute) mean,  
+\code{coefficient_of_variation} for the coefficient of variation. If a \code{list} containing these, only the first is used 
+for model selection.}
 
 \item{selFUN}{Function for selecting the best method. Default: lowest value for \code{genFUN}. Should be set to
 "which.max" if high values for \code{genFUN} indicate a good model.}

@@ -35,7 +35,7 @@ test_that("metapred can estimate one-stage random effects models", {
   f_ri <- y ~ x + (1|k)
   
   cal_slope_glmer <- function(p, y, family = binomial, ...) {
-    metamisc:::cal.slope(p, y, estFUN = "glm", family = family)
+    metamisc:::cal_slope(p, y, estFUN = "glm", family = family)
   }
   
   mp_ri <- metapred(d, "k", formula = f_ri, scope = f_ri, family = binomial, estFUN = lme4::glmer, two.stage = F, 

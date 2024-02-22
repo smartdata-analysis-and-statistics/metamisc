@@ -25,7 +25,7 @@ test_that("recalibrate recalibrates", {
   expect_equal(r.int[[1]], 0) # ComputeInt after recalibrate should have no added effect.
 
   ### basically recalibrate.metapred
-  mp <- metamisc:::metapred(d2, strata = "X4", recal.int = FALSE, meta.method = "FE")
+  mp <- metamisc:::metapred(d2, strata = "X4", recal.int = FALSE, meta.method = "FE", genFUN = "abs_mean")
   mp.r <- metamisc:::recalibrate(mp, newdata = d2) # ignores clustering. Hence, intercept changes.
   expect_true(is.list(mp.r))
   expect_true(inherits(mp.r, "metapred"))
@@ -42,12 +42,12 @@ test_that("recalibrate recalibrates", {
 # })
 
 test_that("predict.metapred with recal.int = T works.", {
-  mp.f <- metamisc:::metapred(d, strata = "X4", recal.int = FALSE, meta.method = "FE")
+  mp.f <- metamisc:::metapred(d, strata = "X4", recal.int = FALSE, meta.method = "FE", genFUN = "abs_mean")
   expect_true(is.numeric(p <- predict(object = mp.f, newdata = d2, recal.int = TRUE)))
   expect_true(all(p <= 1))
   expect_true(all(p >= 0))
 
-  mp.f <- metamisc:::metapred(d3, strata = "X4", recal.int = FALSE, meta.method = "FE")
+  mp.f <- metamisc:::metapred(d3, strata = "X4", recal.int = FALSE, meta.method = "FE", genFUN = "abs_mean")
   expect_true(is.numeric(p <- predict(object = mp.f, newdata = d2, recal.int = TRUE)))
   expect_true(all(p <= 1))
   expect_true(all(p >= 0))

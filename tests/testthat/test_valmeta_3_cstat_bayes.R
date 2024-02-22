@@ -1,8 +1,9 @@
 context("valmeta 3. bayesian meta-analysis of c-statistic")
 skip_on_cran()
-
+skip_if_not_installed("rjags")
 
 library(metafor)
+library(rjags)
 library(dplyr)
 data(EuroSCORE)
 
@@ -16,7 +17,6 @@ test_that("Bayesian random effect meta-analysis of concordance statistic", {
 
 
 test_that("Bayesian random effect meta-analysis of concordance statistic using normality/identity model", {
-  
   pars <- list(model.cstat = "normal/identity")
   
   fit <- valmeta(cstat = c.index, cstat.se = se.c.index, cstat.cilb = c.index.95CIl,
