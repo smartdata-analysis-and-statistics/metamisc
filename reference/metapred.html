@@ -148,11 +148,11 @@ this is a vector of the indices of the (sorted) data sets. Not used for <code>cv
 <dt>metaFUN</dt>
 <dd><p>Function for computing the meta-analytic coefficient estimates in two-stage MA. 
 By default, <a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma.uni</a>, from the metafor package is used. Default settings are univariate random effects, 
-estimated with "DL". Method can be passed trough the <code>meta.method</code> argument.</p></dd>
+estimated with "REML". Method can be passed trough the <code>meta.method</code> argument.</p></dd>
 
 
 <dt>meta.method</dt>
-<dd><p>Name of method for meta-analysis. Default is "DL". For more options see <a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma.uni</a>.</p></dd>
+<dd><p>Name of method for meta-analysis. Default is "REML". For more options see <a href="https://wviechtb.github.io/metafor/reference/rma.uni.html" class="external-link">rma.uni</a>.</p></dd>
 
 
 <dt>predFUN</dt>
@@ -162,15 +162,18 @@ function of <code><a href="https://rdrr.io/r/stats/glm.html" class="external-lin
 
 <dt>perfFUN</dt>
 <dd><p>Function for computing the performance of the prediction models. Default: mean squared error 
-(<code>perfFUN="mse"</code>).Other options are <code>"var.e"</code> (variance of prediction error), <code>"auc"</code> (area under the curve),
-<code>"cal.int"</code> (calibration intercept), and <code>"cal.slope"</code> (multiplicative calibration slope) and <code>"cal.add.slope"</code>
-(additive calibration slope).</p></dd>
+(<code>perfFUN="mse"</code>, aka Brier score for binomial outcomes).Other options are <code>"var.e"</code> (variance of prediction error), 
+<code>"auc"</code> (area under the curve),
+<code>"cal_int"</code> (calibration intercept), and <code>"cal_slope"</code> (multiplicative calibration slope) and <code>"cal_add_slope"</code>
+(additive calibration slope), or a <code>list</code> of these, where only the first is used for model selection.</p></dd>
 
 
 <dt>genFUN</dt>
 <dd><p>Function or <code>list</code> of named functions for computing generalizability of the performance. 
-Default: (absolute) mean (<code>genFUN="abs.mean"</code>). Choose <code>coef.var</code> for the coefficient of variation. If a <code>list</code>,
-only the first is used for model selection.</p></dd>
+Default: <code>rema</code>, summary statistic of a random effects meta-analysis. Choose <code>"rema_tau"</code> for heterogeneity 
+estimate of a random effects meta-analysis,  <code>genFUN="abs_mean"</code> for (absolute) mean,  
+<code>coefficient_of_variation</code> for the coefficient of variation. If a <code>list</code> containing these, only the first is used 
+for model selection.</p></dd>
 
 
 <dt>selFUN</dt>
@@ -242,16 +245,16 @@ Hoboken, NJ: Wiley; 2021. ISBN: 978-1-119-33372-2.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Started with model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dvt ~ histdvt + ddimdich + sex + notraum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56452ecaccd0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56485746ff40&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Generalizability:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   unchanged</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1493671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1484983</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cross-validation stopped after 0 steps, as no changes were requested. Final model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Meta-analytic model of prediction models estimated in 4 strata. Coefficients: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)     histdvt    ddimdich         sex     notraum </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -4.1180636   0.6174010   1.4400776   0.9647970   0.3658235 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -4.1180636   0.6174010   1.6962441   0.9647970   0.3761707 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Let's try to simplify model 'f' in order to improve its external validity</span></span></span>
 <span class="r-in"><span><span class="fu">metapred</span><span class="op">(</span><span class="va">DVTipd</span>, strata <span class="op">=</span> <span class="st">"study"</span>, formula <span class="op">=</span> <span class="va">f</span>, family <span class="op">=</span> <span class="va">binomial</span><span class="op">)</span></span></span>
@@ -259,36 +262,36 @@ Hoboken, NJ: Wiley; 2021. ISBN: 978-1-119-33372-2.</p>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Started with model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dvt ~ histdvt + ddimdich + sex + notraum</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56452ecaccd0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56485746ff40&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Generalizability:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   unchanged</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1493671</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1484983</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Generalizability:</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>    ddimdich   histdvt   notraum       sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1407603 0.1450895 0.1363067 0.1496112</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>   ddimdich   histdvt notraum      sex</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.136086 0.1375105 0.12977 0.141173</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Continued with model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dvt ~ histdvt + ddimdich + sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56452ecaccd0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56485746ff40&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Generalizability:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ddimdich   histdvt       sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1415329 0.1342381 0.1374618</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1366828 0.1279623 0.1319755</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Continued with model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> dvt ~ ddimdich + sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56452ecaccd0&gt;</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> &lt;environment: 0x56485746ff40&gt;</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Generalizability:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>    ddimdich       sex</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1402638 0.1357657</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> 1 0.1355548 0.1303254</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Cross-validation stopped after 3 steps, as no improvement was possible. Final model:</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Meta-analytic model of prediction models estimated in 4 strata. Coefficients: </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> (Intercept)    ddimdich         sex </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>  -3.6187987   1.5175573   0.8784071 </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>  -3.6187987   1.7130967   0.8784071 </span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># We can also try to build a generalizable model from scratch</span></span></span>
 <span class="r-in"><span></span></span>
