@@ -46,9 +46,9 @@ A visual interface to the software has been implemented by JASP
 ## Funding
 The development of this R package has been funded by the following organisations:
 
-- The Netherlands Organisation for Health Research and Development (91617050).
+- The Netherlands Organisation for Health Research and Development (grant 91617050).
 - The European Union’s Horizon 2020 research and innovation programme under ReCoDID grant agreement No 825746.
-- Smart Data Analysis and Statistics B.V., a limited company incorporated in the Netherlands (registration number 863595327)
+- Smart Data Analysis and Statistics B.V., a limited company incorporated in the Netherlands and registered at the Dutch Chamber of Commerce under number 863595327.
 
 ## References
 
