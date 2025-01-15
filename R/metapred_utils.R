@@ -128,7 +128,7 @@ fixed <- function(st.u, k = NULL, ...) {
   list(dev = list(st.u[-k]), dev.i = list(indexes[-k]), val = list(st.u[k]), val.i = list(indexes[k]))
 }
 
-ws <- within.sample <- function(st.u, ...) { # Necessary for testing recalibration functions.
+ws <- within_sample <- function(st.u, ...) { # Necessary for testing recalibration functions.
   st.u <- sort(st.u)
   if (length(st.u) < 2)
     stop("Selecting a validation set is impossible for < 2 data sets.")
