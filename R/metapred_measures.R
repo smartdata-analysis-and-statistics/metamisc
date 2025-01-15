@@ -57,17 +57,35 @@ coefficient_of_variation_of_predictors <- function(p, y, abs = TRUE, ...)
   coefficient_of_variation(x = p - y, abs = abs) 
 
 #' @importFrom pROC auc
-auc <- AUC <- AUROC <-  function(p, y, ...) {
+auc <- AUC <- AUROC <-  function(p, y, levels = c(0, 1), direction = "<", ...) {
   if (is.matrix(p))
     p <- p[, 1]
   if (is.matrix(y))
     y <- y[, 1]
-  pROC::auc(response = y, predictor = p)
+  
+  pROC::auc(response = y,
+            predictor = p,
+            levels = levels,
+            direction = direction)
 }
 
-calibration_intercept <- cal_int <- function(p, y, estFUN, family, ...)
-  pred.recal(p = p, y = y, estFUN = estFUN, family = family, which = "intercept")
+calibration_intercept <- cal_int <- function(p, y, estFUN, family, fit = NULL, ...) {
+  if (!is.null(fit)) {
+    if (any(fit$stratum.class %in% c("glmerMod", "lme4", "logistf"))) {
+      dots <- list(...)
+      dots$estFUN <- NULL
+      estFUN <- "glm"
+      
+      if (fit$stratum.class %in% c("logistf")) {
+        family <- "binomial"
+      }
+    }
+  }
+  
+  pred.recal(p = p, y = y, estFUN = estFUN, family = family, which = "intercept", ...)
+}
 
+# bin_cal_int is now unnecessary, as cal_int can figure out that lme4 or logistf has been used!
 bin_cal_int <- function(p, y, ...)
   pred.recal(p = p, y = y, estFUN = "glm", family = binomial, which = "intercept")
 
@@ -75,7 +93,19 @@ bin_cal_int <- function(p, y, ...)
 # Slope.only should otherwise always be false! Also: this messes up the variances,
 # making meta-analysis impossible!
 # multiplicative slope!
-calibration_slope <- cal_slope <- function(p, y, estFUN, family, slope.only = TRUE, ...) {
+calibration_slope <- cal_slope <- function(p, y, estFUN, family, slope.only = TRUE, fit = NULL, ...) {
+  if (!is.null(fit)) {
+    if (any(fit$stratum.class %in% c("glmerMod", "lme4", "logistf"))) {
+      dots <- list(...)
+      dots$estFUN <- NULL
+      estFUN <- "glm"
+      
+      if (fit$stratum.class %in% c("logistf")) {
+        family <- "binomial"
+      }
+    } 
+  }
+  
   refit <- pred.recal(p = p, y = y, estFUN = estFUN, family = family, which = "slope")
   if (slope.only) {
     refit$estimate <- refit[[1]] <- refit[[1]][2]
@@ -86,7 +116,18 @@ calibration_slope <- cal_slope <- function(p, y, estFUN, family, slope.only = TR
 }
 
 # additive slope!
-calibration_add_slope <- cal_add_slope <- function(p, y, estFUN, family, slope.only = TRUE, ...)  {
+calibration_add_slope <- cal_add_slope <- function(p, y, estFUN, family, slope.only = TRUE, fit = NULL, ...)  {
+  if (!is.null(fit)) {
+    if (any(fit$stratum.class %in% c("glmerMod", "lme4", "logistf"))) {
+      dots <- list(...)
+      dots$estFUN <- NULL
+      estFUN <- "glm"
+      
+      if (fit$stratum.class %in% c("logistf")) {
+        family <- "binomial"
+      }
+    }
+  }
   
   refit <- pred.recal(p = p, y = y, estFUN = estFUN, family = family, which = "add.slope")
   if (slope.only) {
@@ -452,7 +493,9 @@ ma.perf <- function(object, method = "REML", test = "knha", ...) {
                       tau2    = ma$tau2,
                       se.tau2 = ma$se.tau2,
                       pi.lb   = ma$pi.lb,
-                      pi.ub   = ma$pi.ub))
+                      pi.ub   = ma$pi.ub,
+                      method = method,
+                      test = test))
   } else if (object$class[[1]] == "auc") {
     # valmeta does not produce tau by default. But can be obtained from ma$fit if "ret.fit=T")
     ma <- valmeta(measure = "cstat", cstat = object[["estimate"]], cstat.se = object[["se"]],
@@ -466,7 +509,9 @@ ma.perf <- function(object, method = "REML", test = "knha", ...) {
                       tau2    = ma$fit$tau2,
                       se.tau2 = ma$fit$se.tau2,
                       pi.lb   = ma$pi.lb,
-                      pi.ub   = ma$pi.ub)) 
+                      pi.ub   = ma$pi.ub,
+                      method = method,
+                      test = test)) 
   }
   
   stop("class not recognized")
@@ -537,6 +582,7 @@ forest.mp.cv.val <- function(x, perfFUN = 1, method = "REML", xlab = NULL, ...) 
   forest.perf(perf(x, perfFUN = perfFUN, ...), method = method, xlab = xlab, ...)
 }
 
+#' @export
 forest.perf <- function(x, method = "REML", ...) {
   if (is.null(theta.slab <- list(...)$theta.slab))
     theta.slab <- as.character(x$val.strata)
