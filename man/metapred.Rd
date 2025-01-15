@@ -124,7 +124,25 @@ fit <- metapred(DVTipd, strata = "study", formula = f, scope = f, family = binom
 fit
 
 # Let's try to simplify model 'f' in order to improve its external validity
-metapred(DVTipd, strata = "study", formula = f, family = binomial)
+# Estimate multiple performance measures and generalizability functions simultaneously.
+# The first performance and generalizabilty functions are used for model selection.
+fit2 <- metapred(DVTipd, strata = "study", formula = f, scope = f, family = binomial, 
+perfFUN = list("mse", "auc", "calibration_intercept", "calibration_slope"),
+genFUN = list("rema", "rema.tau"),
+gen.of.perf = "factorial")
+
+# Use perf() to get performance estimates per stratum. 0 to get all. 
+# Performance measures may also be selected by name.
+perf(fit2, perfFUN = 0) 
+
+# Use gen() to get generalizability estimates. 0 to get all. 
+# Generalizability estimates may also be selected by name.
+gen(fit2, genFUN = 0)
+
+# Use ma() to perform a (new) meta-analysis of performance estimates.
+ma(fit2, perfFUN = "auc")
+ma(fit2, perfFUN = "calibration_intercept")
+ma(fit2, perfFUN = "calibration_slope")
 
 # We can also try to build a generalizable model from scratch
 

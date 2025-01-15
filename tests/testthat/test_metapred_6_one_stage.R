@@ -15,6 +15,22 @@ test_that("metapred can estimate one-stage fixed effect models", {
   expect_is(mp_fe, "metapred")
 })
 
+
+test_that("metapred one-stage can extract fitted values.", {
+  skip_on_cran()
+  
+  f <- y ~ x
+  mp_fe <- metapred(d, "k", formula = f, scope = f, family = binomial, estFUN = glm, two.stage = F)
+  
+  fitted_values_stratified <- fitted(mp_fe)
+  expect_vector(fitted_values_stratified)
+  expect_length(fitted_values_stratified, length(unique(k)))
+  
+  fitted_values_unlisted <- fitted(mp_fe, as.stratified = FALSE)
+  expect_vector(fitted_values_unlisted)
+  expect_length(fitted_values_unlisted, nrow(d))
+})
+
 test_that("calibration of metapred one-stage fixed effect models is ok", { 
   skip_on_cran()
   f <- y ~ x

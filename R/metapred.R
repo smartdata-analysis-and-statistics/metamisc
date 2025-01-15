@@ -183,7 +183,25 @@
 #' fit
 #' 
 #' # Let's try to simplify model 'f' in order to improve its external validity
-#' metapred(DVTipd, strata = "study", formula = f, family = binomial)
+#' # Estimate multiple performance measures and generalizability functions simultaneously.
+#' # The first performance and generalizabilty functions are used for model selection.
+#' fit2 <- metapred(DVTipd, strata = "study", formula = f, scope = f, family = binomial, 
+#' perfFUN = list("mse", "auc", "calibration_intercept", "calibration_slope"),
+#' genFUN = list("rema", "rema.tau"),
+#' gen.of.perf = "factorial")
+#' 
+#' # Use perf() to get performance estimates per stratum. 0 to get all. 
+#' # Performance measures may also be selected by name.
+#' perf(fit2, perfFUN = 0) 
+#' 
+#' # Use gen() to get generalizability estimates. 0 to get all. 
+#' # Generalizability estimates may also be selected by name.
+#' gen(fit2, genFUN = 0)
+#' 
+#' # Use ma() to perform a (new) meta-analysis of performance estimates.
+#' ma(fit2, perfFUN = "auc")
+#' ma(fit2, perfFUN = "calibration_intercept")
+#' ma(fit2, perfFUN = "calibration_slope")
 #' 
 #' # We can also try to build a generalizable model from scratch
 #' 
@@ -335,7 +353,7 @@ predict.metapred <- function(object, newdata = NULL, strata = NULL, type = "resp
 #' Extract Model Fitted Values
 #' 
 #' Extract the fitted values of a \code{metapred} object. By default returns fitted values of the model in the 
-#' cross-validation procedure.
+#' cross-validation procedure, i.e., the predicted values for the validation folds.
 #' 
 #' Function still under development, use with caution.
 #' 
@@ -349,7 +367,7 @@ predict.metapred <- function(object, newdata = NULL, strata = NULL, type = "resp
 #' @param step character or numeric. Name or number of step to select if \code{select} = "cv". Defaults to best step.
 #' @param model character or numeric. Name or number of model to select if \code{select} = "cv". Defaults to
 #' best model.
-#' @param as.stratified logical. \code{select} = "cv" determines whether returned predictions are stratified in a list 
+#' @param as.stratified logical. Determines whether returned predictions are stratified in a list 
 #' (\code{TRUE}, default) or in their original order (\code{FALSE}).
 #' @param type character. Type of fitted value.
 #' @param ... For compatibility only.
@@ -357,7 +375,9 @@ predict.metapred <- function(object, newdata = NULL, strata = NULL, type = "resp
 fitted.metapred <- function(object, select = "cv", step = NULL, model = NULL, 
                             as.stratified = TRUE, type = "response", ...) {
   if (isTRUE(select == "cv")) {
-    ftd <- fitted(subset.metapred(x = object, select = select, step = step, model = model, type = type, ...))
+    ftd <- fitted(subset.metapred(x = object, select = select, step = step, model = model, type = type, ...),
+                  two.stage = object$options$two.stage,
+                  ...)
     if (as.stratified)
       return(ftd)
     ftd.v <- Reduce(rbind, ftd) #as vector

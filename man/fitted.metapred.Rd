@@ -24,7 +24,7 @@
 \item{model}{character or numeric. Name or number of model to select if \code{select} = "cv". Defaults to
 best model.}
 
-\item{as.stratified}{logical. \code{select} = "cv" determines whether returned predictions are stratified in a list 
+\item{as.stratified}{logical. Determines whether returned predictions are stratified in a list 
 (\code{TRUE}, default) or in their original order (\code{FALSE}).}
 
 \item{type}{character. Type of fitted value.}
@@ -33,7 +33,7 @@ best model.}
 }
 \description{
 Extract the fitted values of a \code{metapred} object. By default returns fitted values of the model in the 
-cross-validation procedure.
+cross-validation procedure, i.e., the predicted values for the validation folds.
 }
 \details{
 Function still under development, use with caution.
