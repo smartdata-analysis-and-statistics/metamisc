@@ -375,13 +375,17 @@ predict.metapred <- function(object, newdata = NULL, strata = NULL, type = "resp
 fitted.metapred <- function(object, select = "cv", step = NULL, model = NULL, 
                             as.stratified = TRUE, type = "response", ...) {
   if (isTRUE(select == "cv")) {
-    ftd <- fitted(subset.metapred(x = object, select = select, step = step, model = model, type = type, ...),
-                  two.stage = object$options$two.stage,
-                  ...)
+    ftd <- fitted(metamisc:::subset.metapred(x = object, select = select, step = step, model = model, type = type),
+                  two.stage = object$options$two.stage)
     if (as.stratified)
       return(ftd)
     ftd.v <- Reduce(rbind, ftd) #as vector
-    return(ftd.v[match(rownames(ftd.v), rownames(object[["data"]])) ] ) # return to original ordering.
+    if (is.null(rownames(ftd.v))) 
+      stop("Cannot restore ordering of unstratified predicted values without rownames")
+    
+    new_order <- match(rownames(object[["data"]]), rownames(ftd.v))
+    ftd.o <- ftd.v[new_order, , drop = FALSE]
+    return(ftd.o) # return to original ordering. 
   }
   
   if (isTRUE(select == "global"))

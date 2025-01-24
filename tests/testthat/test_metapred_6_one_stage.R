@@ -29,6 +29,10 @@ test_that("metapred one-stage can extract fitted values.", {
   fitted_values_unlisted <- fitted(mp_fe, as.stratified = FALSE)
   expect_vector(fitted_values_unlisted)
   expect_length(fitted_values_unlisted, nrow(d))
+  
+  obs_ids_predicted <- rownames(fitted_values_unlisted)
+  obs_ids_true <- rownames(d)
+  expect_equal(obs_ids_predicted, obs_ids_true)
 })
 
 test_that("calibration of metapred one-stage fixed effect models is ok", { 
