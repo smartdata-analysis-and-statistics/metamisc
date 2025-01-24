@@ -374,6 +374,9 @@ predict.metapred <- function(object, newdata = NULL, strata = NULL, type = "resp
 #' @export
 fitted.metapred <- function(object, select = "cv", step = NULL, model = NULL, 
                             as.stratified = TRUE, type = "response", ...) {
+  if (is.null(rownames(object[["data"]])))
+    rownames(object[["data"]]) <- seq_len(nrow(object[["data"]]))
+  
   if (isTRUE(select == "cv")) {
     ftd <- fitted(metamisc:::subset.metapred(x = object, select = select, step = step, model = model, type = type),
                   two.stage = object$options$two.stage)
