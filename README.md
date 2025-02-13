@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# metamisc
+# metamisc <img src="man/figures/logo.png" align="right" width="150" alt="" />
 
 <!-- badges: start -->
 
@@ -42,13 +42,6 @@ devtools::install_github("smartdata-analysis-and-statistics/metamisc")
 
 A visual interface to the software has been implemented by JASP
 <https://jasp-stats.org/>
-
-## Funding
-The development of this R package has been funded by the following organisations:
-
-- The Netherlands Organisation for Health Research and Development (grant 91617050).
-- The European Union’s Horizon 2020 research and innovation programme under ReCoDID grant agreement No 825746.
-- Smart Data Analysis and Statistics B.V., a limited liability corporation registered at the Netherlands Chamber of Commerce under number 863595327.
 
 ## References
 

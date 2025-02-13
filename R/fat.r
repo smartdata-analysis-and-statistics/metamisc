@@ -125,13 +125,13 @@
 fat <- function(b, b.se, n.total, d.total, d1, d2, method="E-FIV") 
 {
   if (missing(b)) {
-    stop ("No values given for 'b'")
+    stop("No values given for 'b'")
   }
   
   # Identify studies with complete information
   if (method == "E-UW") {
     if (missing(b.se)) {
-      stop ("No values given for 'b.se'")
+      stop("No values given for 'b.se'")
     }
     if (length(b) != length(b.se)) {
       stop("Incompatible vector sizes for 'b' and 'b.se'!")
@@ -140,9 +140,9 @@ fat <- function(b, b.se, n.total, d.total, d1, d2, method="E-FIV")
     ds <- data.frame("y" = b, 
                      "x" = b.se
                      )
-  } else if (method== "E-FIV") {
+  } else if (method == "E-FIV") {
     if (missing(b.se)) {
-      stop ("No values given for 'b.se'")
+      stop("No values given for 'b.se'")
     }
     if (length(b) != length(b.se)) {
       stop("Incompatible vector sizes for 'b' and 'b.se'!")
@@ -154,10 +154,10 @@ fat <- function(b, b.se, n.total, d.total, d1, d2, method="E-FIV")
                      )
   } else if (method == "M-FIV") {
     if (missing(b.se)) {
-      stop ("No values given for 'b.se'")
+      stop("No values given for 'b.se'")
     }
     if (missing(n.total)) {
-      stop ("No values given for 'n.total'")
+      stop("No values given for 'n.total'")
     }
     if (length(b) != length(b.se)) {
       stop("Incompatible vector sizes for 'b' and 'b.se'!")
@@ -170,12 +170,12 @@ fat <- function(b, b.se, n.total, d.total, d1, d2, method="E-FIV")
                      "x" = n.total, 
                      "w" = (1/(b.se**2))
                      )
-  } else if (method=="M-FPV") {
+  } else if (method == "M-FPV") {
     if (missing(n.total)) {
-      stop ("No values given for 'n.total'")
+      stop("No values given for 'n.total'")
     }
     if (missing(d.total)) {
-      stop ("No values given for 'd.total'")
+      stop("No values given for 'd.total'")
     }
     if (length(b) != length(n.total)) {
       stop("Incompatible vector sizes for 'b' and 'n.total'!")
@@ -187,8 +187,8 @@ fat <- function(b, b.se, n.total, d.total, d1, d2, method="E-FIV")
     
     # Consider continuity corrections
     d.total.cc <- d.total
-    d.total.cc[d.total==0] <- 1 #0.5 event in exposed group and 0.5 event in non-exposed group
-    n.total[d.total==0] <- n.total[d.total==0]+2 #2*0.5 in the events, and 2*0.5 in the non-events
+    d.total.cc[d.total == 0] <- 1 #0.5 event in exposed group and 0.5 event in non-exposed group
+    n.total[d.total == 0] <- n.total[d.total == 0] + 2 #2*0.5 in the events, and 2*0.5 in the non-events
     
     ds <- as.data.frame(cbind(b, n.total, (d.total.cc*(1-d.total.cc/n.total))))
     colnames(ds) <- c("y","x","w")
