@@ -28,5 +28,5 @@ URL: https://github.com/smartdata-analysis-and-statistics/metamisc,
     https://smartdata-analysis-and-statistics.github.io/metamisc/
 RoxygenNote: 7.3.1
 NeedsCompilation: no
-VignetteBuilder: knitr
+VignetteBuilder: quarto
 BugReports: https://github.com/smartdata-analysis-and-statistics/metamisc/issues
