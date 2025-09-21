@@ -10,7 +10,11 @@
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
-<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Meta-analysis of prediction model performance">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="ma-pm_files/libs/quarto-html/popper.min.js"></script><script src="ma-pm_files/libs/quarto-html/tippy.umd.min.js"></script><link href="ma-pm_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="ma-pm_files/libs/quarto-html/light-border.css" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Meta-analysis of prediction model performance">
+<meta property="og:image" content="https://smartdata-analysis-and-statistics.github.io/metamisc/logo.png">
 </head>
 <body>
     <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
@@ -35,7 +39,6 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
 <li><a class="dropdown-item" href="../articles/ma-pf.html">Meta-analysis of prognostic factors</a></li>
     <li><a class="dropdown-item" href="../articles/ma-pm.html">Meta-analysis of prediction model performance</a></li>
-    <li><a class="dropdown-item" href="../articles/mapf.html">Meta-analysis of prognostic factor studies</a></li>
   </ul>
 </li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
@@ -50,289 +53,308 @@
 
 
   </div>
-</nav><div class="container template-article">
-
-
-
-
+</nav><div class="container template-quarto">
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Meta-analysis of prediction model performance</h1>
-                        <h4 data-toc-skip class="author">Thomas
-Debray</h4>
-                        
-      
-      <small class="dont-index">Source: <a href="https://github.com/smartdata-analysis-and-statistics/metamisc/blob/main/vignettes/ma-pm.Rmd" class="external-link"><code>vignettes/ma-pm.Rmd</code></a></small>
-      <div class="d-none name"><code>ma-pm.Rmd</code></div>
+
+      <p class="author">Thomas Debray</p>
+      <p class="date">Last Updated on 21 September, 2025</p>
+
+      <small class="dont-index">Source: <a href="https://github.com/smartdata-analysis-and-statistics/metamisc/blob/main/vignettes/ma-pm.qmd" class="external-link"><code>vignettes/ma-pm.qmd</code></a></small>
+      <div class="d-none name"><code></code></div>
     </div>
 
-    
-    
-<div class="section level2">
-<h2 id="case-study">Case Study<a class="anchor" aria-label="anchor" href="#case-study"></a>
+
+
+
+
+
+    <section class="section level2" data-number="1"><h2 data-number="1" id="case-study">
+<span class="header-section-number">1</span> Case Study<a class="anchor" aria-label="anchor" href="#case-study"></a>
 </h2>
-<p>The <a href="http://www.euroscore.org/calc.html" class="external-link">EuroSCORE II</a> is
-a commonly used scoring rule for estimating the risk of in-hospital
-mortality in patients undergoing major cardiac surgery. It was developed
-using data from 16,828 adult patients from 43 countries. Predictors
-include patient characteristics (e.g. age, gender), cardiac related
-factors (e.g. recent MI) and surgery related factors (e.g. Surgery on
-thoracic aorta). In 2014, a systematic review was undertaken by <span class="citation">Guida et al. (2014)</span> to search articles assessing
-the performance of EuroSCORE II on perioperative mortality in cardiac
-surgery. The systematic review identified 24 eligible validation
-studies, 22 studies were included in the main analysis.</p>
-<p>In this case study, we summarize the results from these 22 studies,
-as well as the results from the split-sample validation contained within
-original development article of EuroSCORE II. We will use the
-<strong>metamisc</strong> package to derive summary estimates for the
-discrimination and calibration performance of EuroSCORE II, to evaluate
-the presence of between-study heterogeneity, and to identify potential
-sources of between-study heterogeneity. A step-by-step tutorial is
-provided by <span class="citation">Debray et al. (2017)</span>.</p>
+<p>The <a href="http://www.euroscore.org/calc.html" class="external-link">EuroSCORE II</a> is a commonly used scoring rule for estimating the risk of in-hospital mortality in patients undergoing major cardiac surgery. It was developed using data from 16,828 adult patients from 43 countries. Predictors include patient characteristics (e.g. age, gender), cardiac related factors (e.g. recent MI) and surgery related factors (e.g. Surgery on thoracic aorta). In 2014, a systematic review was undertaken by <span class="citation" data-cites="guida_performance_2014">(<a href="#ref-guida_performance_2014" role="doc-biblioref"><strong>guida_performance_2014?</strong></a>)</span> to search articles assessing the performance of EuroSCORE II on perioperative mortality in cardiac surgery. The systematic review identified 24 eligible validation studies, 22 studies were included in the main analysis.</p>
+<p>In this case study, we summarize the results from these 22 studies, as well as the results from the split-sample validation contained within original development article of EuroSCORE II. We will use the <strong>metamisc</strong> package to derive summary estimates for the discrimination and calibration performance of EuroSCORE II, to evaluate the presence of between-study heterogeneity, and to identify potential sources of between-study heterogeneity. A step-by-step tutorial is provided by <span class="citation" data-cites="debray_guide_2017">(<a href="#ref-debray_guide_2017" role="doc-biblioref"><strong>debray_guide_2017?</strong></a>)</span>.</p>
 <p>We can load the data from all 23 validation studies as follows:</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartdata-analysis-and-statistics/metamisc" class="external-link">metamisc</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="meta-analysis-of-discrimination-performance">Meta-analysis of discrimination performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-discrimination-performance"></a>
+</section><section class="section level2" data-number="2"><h2 data-number="2" id="meta-analysis-of-discrimination-performance">
+<span class="header-section-number">2</span> Meta-analysis of discrimination performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-discrimination-performance"></a>
 </h2>
-<p>This section summarizes the discrimination performance of the
-EuroSCORE II prediction model when externally validated in patients
-undergoing coronary artery bypass grafting (CABG). The data are based on
-23 validation studies identified in a systematic review, with model
-performance assessed using the concordance index (c-index). These
-studies vary considerably in size and event rates, reflecting diverse
-clinical settings and populations. The table below presents the reported
-c-indices with corresponding confidence intervals (and standard errors
-where available), alongside the number of events and total sample size
-per study.</p>
-<table class="table">
+<p>This section summarizes the discrimination performance of the EuroSCORE II prediction model when externally validated in patients undergoing coronary artery bypass grafting (CABG). The data are based on 23 validation studies identified in a systematic review, with model performance assessed using the concordance index (c-index). These studies vary considerably in size and event rates, reflecting diverse clinical settings and populations. The table below presents the reported c-indices with corresponding confidence intervals (and standard errors where available), alongside the number of events and total sample size per study.</p>
+<div class="cell">
+<div class="cell-output-display">
+<table class="table caption-top">
 <thead><tr class="header">
-<th align="left">Study</th>
-<th align="left">Events / Patients</th>
-<th align="left">C-index (SE, 95% CI)</th>
+<th style="text-align: left;">Study</th>
+<th style="text-align: left;">Events / Patients</th>
+<th style="text-align: left;">C-index (SE, 95% CI)</th>
 </tr></thead>
 <tbody>
 <tr class="odd">
-<td align="left">Nashef</td>
-<td align="left">232 / 5553</td>
-<td align="left">0.809 (95% CI: 0.782; 0.836)</td>
+<td style="text-align: left;">Nashef</td>
+<td style="text-align: left;">232 / 5553</td>
+<td style="text-align: left;">0.809 (95% CI: 0.782; 0.836)</td>
 </tr>
 <tr class="even">
-<td align="left">Biancari</td>
-<td align="left">28 / 1027</td>
-<td align="left">0.867 (95% CI: 0.798; 0.936)</td>
+<td style="text-align: left;">Biancari</td>
+<td style="text-align: left;">28 / 1027</td>
+<td style="text-align: left;">0.867 (95% CI: 0.798; 0.936)</td>
 </tr>
 <tr class="odd">
-<td align="left">Di Dedda</td>
-<td align="left">41 / 1090</td>
-<td align="left">0.810 (95% CI: 0.740; 0.880)</td>
+<td style="text-align: left;">Di Dedda</td>
+<td style="text-align: left;">41 / 1090</td>
+<td style="text-align: left;">0.810 (95% CI: 0.740; 0.880)</td>
 </tr>
 <tr class="even">
-<td align="left">Chalmers</td>
-<td align="left">191 / 5576</td>
-<td align="left">0.790 (SE = 0.010)</td>
+<td style="text-align: left;">Chalmers</td>
+<td style="text-align: left;">191 / 5576</td>
+<td style="text-align: left;">0.790 (SE = 0.010)</td>
 </tr>
 <tr class="odd">
-<td align="left">Grant</td>
-<td align="left">746 / 23740</td>
-<td align="left">0.808 (SE = 0.008)</td>
+<td style="text-align: left;">Grant</td>
+<td style="text-align: left;">746 / 23740</td>
+<td style="text-align: left;">0.808 (SE = 0.008)</td>
 </tr>
 <tr class="even">
-<td align="left">Carneo</td>
-<td align="left">215 / 3798</td>
-<td align="left">0.850 (SE = 0.010)</td>
+<td style="text-align: left;">Carneo</td>
+<td style="text-align: left;">215 / 3798</td>
+<td style="text-align: left;">0.850 (SE = 0.010)</td>
 </tr>
 <tr class="odd">
-<td align="left">Kunt</td>
-<td align="left">34 / 428</td>
-<td align="left">0.720 (SE = 0.051)</td>
+<td style="text-align: left;">Kunt</td>
+<td style="text-align: left;">34 / 428</td>
+<td style="text-align: left;">0.720 (SE = 0.051)</td>
 </tr>
 <tr class="even">
-<td align="left">Kirmani</td>
-<td align="left">547 / 15497</td>
-<td align="left">0.818 (SE = 0.007)</td>
+<td style="text-align: left;">Kirmani</td>
+<td style="text-align: left;">547 / 15497</td>
+<td style="text-align: left;">0.818 (SE = 0.007)</td>
 </tr>
 <tr class="odd">
-<td align="left">Howell</td>
-<td align="left">90 / 933</td>
-<td align="left">0.670</td>
+<td style="text-align: left;">Howell</td>
+<td style="text-align: left;">90 / 933</td>
+<td style="text-align: left;">0.670</td>
 </tr>
 <tr class="even">
-<td align="left">Wang</td>
-<td align="left">226 / 11170</td>
-<td align="left">0.720 (SE = 0.015)</td>
+<td style="text-align: left;">Wang</td>
+<td style="text-align: left;">226 / 11170</td>
+<td style="text-align: left;">0.720 (SE = 0.015)</td>
 </tr>
 <tr class="odd">
-<td align="left">Borde</td>
-<td align="left">8 / 498</td>
-<td align="left">0.720</td>
+<td style="text-align: left;">Borde</td>
+<td style="text-align: left;">8 / 498</td>
+<td style="text-align: left;">0.720</td>
 </tr>
 <tr class="even">
-<td align="left">Qadir</td>
-<td align="left">76 / 2004</td>
-<td align="left">0.840</td>
+<td style="text-align: left;">Qadir</td>
+<td style="text-align: left;">76 / 2004</td>
+<td style="text-align: left;">0.840</td>
 </tr>
 <tr class="odd">
-<td align="left">Spiliopoulos</td>
-<td align="left">14 / 216</td>
-<td align="left">0.770 (SE = 0.067)</td>
+<td style="text-align: left;">Spiliopoulos</td>
+<td style="text-align: left;">14 / 216</td>
+<td style="text-align: left;">0.770 (SE = 0.067)</td>
 </tr>
 <tr class="even">
-<td align="left">Wendt</td>
-<td align="left">45 / 1066</td>
-<td align="left">0.720 (SE = 0.034)</td>
+<td style="text-align: left;">Wendt</td>
+<td style="text-align: left;">45 / 1066</td>
+<td style="text-align: left;">0.720 (SE = 0.034)</td>
 </tr>
 <tr class="odd">
-<td align="left">Laurent</td>
-<td align="left">18 / 314</td>
-<td align="left">0.770 (SE = 0.061)</td>
+<td style="text-align: left;">Laurent</td>
+<td style="text-align: left;">18 / 314</td>
+<td style="text-align: left;">0.770 (SE = 0.061)</td>
 </tr>
 <tr class="even">
-<td align="left">Wang</td>
-<td align="left">13 / 818</td>
-<td align="left">0.642 (SE = 0.071)</td>
+<td style="text-align: left;">Wang</td>
+<td style="text-align: left;">13 / 818</td>
+<td style="text-align: left;">0.642 (SE = 0.071)</td>
 </tr>
 <tr class="odd">
-<td align="left">Nishida</td>
-<td align="left">33 / 461</td>
-<td align="left">0.770</td>
+<td style="text-align: left;">Nishida</td>
+<td style="text-align: left;">33 / 461</td>
+<td style="text-align: left;">0.770</td>
 </tr>
 <tr class="even">
-<td align="left">Barilli</td>
-<td align="left">210 / 12201</td>
-<td align="left">0.800 (SE = 0.015)</td>
+<td style="text-align: left;">Barilli</td>
+<td style="text-align: left;">210 / 12201</td>
+<td style="text-align: left;">0.800 (SE = 0.015)</td>
 </tr>
 <tr class="odd">
-<td align="left">Barilli</td>
-<td align="left">125 / 1670</td>
-<td align="left">0.820 (SE = 0.020)</td>
+<td style="text-align: left;">Barilli</td>
+<td style="text-align: left;">125 / 1670</td>
+<td style="text-align: left;">0.820 (SE = 0.020)</td>
 </tr>
 <tr class="even">
-<td align="left">Paparella</td>
-<td align="left">300 / 6191</td>
-<td align="left">0.830 (SE = 0.012)</td>
+<td style="text-align: left;">Paparella</td>
+<td style="text-align: left;">300 / 6191</td>
+<td style="text-align: left;">0.830 (SE = 0.012)</td>
 </tr>
 <tr class="odd">
-<td align="left">Carosella</td>
-<td align="left">9 / 250</td>
-<td align="left">0.760 (SE = 0.056)</td>
+<td style="text-align: left;">Carosella</td>
+<td style="text-align: left;">9 / 250</td>
+<td style="text-align: left;">0.760 (SE = 0.056)</td>
 </tr>
 <tr class="even">
-<td align="left">Borracci</td>
-<td align="left">21 / 503</td>
-<td align="left">0.856 (SE = 0.033)</td>
+<td style="text-align: left;">Borracci</td>
+<td style="text-align: left;">21 / 503</td>
+<td style="text-align: left;">0.856 (SE = 0.033)</td>
 </tr>
 <tr class="odd">
-<td align="left">Osnabrugge</td>
-<td align="left">1071 / 50588</td>
-<td align="left">0.770 (SE = 0.010)</td>
+<td style="text-align: left;">Osnabrugge</td>
+<td style="text-align: left;">1071 / 50588</td>
+<td style="text-align: left;">0.770 (SE = 0.010)</td>
 </tr>
 </tbody>
 </table>
-<p>To summarize the c-index across external validation studies, we use
-the <a href="https://smartdata-analysis-and-statistics.github.io/metamisc/reference/valmeta.html"><code>valmeta()</code></a>
-function. This function automatically derives the logit-transformed
-c-statistics and their standard errors based on the reported values.
-When the standard error is not directly available, it is reconstructed
-using available study-level information (e.g., number of events and
-non-events).</p>
-<p>The meta-analysis is performed on the logit-c scale, which helps
-stabilize the variance and supports the assumptions of normality. <a href="https://smartdata-analysis-and-statistics.github.io/metamisc/reference/valmeta.html"><code>valmeta()</code></a>
-then applies a random-effects model using restricted maximum likelihood
-(REML) estimation and constructs Hartung-Knapp-Sidik-Jonkman (HKSJ)
-adjusted confidence intervals to account for between-study
-heterogeneity.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+</div>
+</div>
+<p>To summarize the c-index across external validation studies, we use the <a href="https://smartdata-analysis-and-statistics.github.io/metamisc/reference/valmeta.html"><code>valmeta()</code></a> function. This function automatically derives the logit-transformed c-statistics and their standard errors based on the reported values. When the standard error is not directly available, it is reconstructed using available study-level information (e.g., number of events and non-events).</p>
+<p>The meta-analysis is performed on the logit-c scale, which helps stabilize the variance and supports the assumptions of normality. <a href="https://smartdata-analysis-and-statistics.github.io/metamisc/reference/valmeta.html"><code>valmeta()</code></a> then applies a random-effects model using restricted maximum likelihood (REML) estimation and constructs Hartung-Knapp-Sidik-Jonkman (HKSJ) adjusted confidence intervals to account for between-study heterogeneity.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>cstat <span class="op">=</span> <span class="va">c.index</span>, cstat.se <span class="op">=</span> <span class="va">se.c.index</span>, cstat.cilb <span class="op">=</span> <span class="va">c.index.95CIl</span>, cstat.ciub <span class="op">=</span> <span class="va">c.index.95CIu</span>,</span>
 <span>    N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, method <span class="op">=</span> <span class="st">"REML"</span>, test <span class="op">=</span> <span class="st">"knha"</span>, slab <span class="op">=</span> <span class="va">Study</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
-<pre><code><span><span class="co">## Summary c-statistic with 95% confidence and (approximate) 95% prediction interval:</span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">##  Estimate       CIl       CIu       PIl       PIu </span></span>
-<span><span class="co">## 0.7888603 0.7648784 0.8110005 0.6792568 0.8682736 </span></span>
-<span><span class="co">## </span></span>
-<span><span class="co">## Number of studies included:  23</span></span></code></pre>
-<p>The summary estimate of the average logit-C statistic was 1.318 (95%
-CI: 1.180 to 1.457), which corresponds to a summary c-statistic of 1/(1
-+ exp(-1.318)) = 0.79. There was substantial heterogeneity
-(<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>τ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\tau^2</annotation></semantics></math>
-= 0.070 with SE = 0.029, on the logit-C scale), reflected by a 95%
-prediction interval of 0.68 to 0.87 for the true c-statistic in a new
-study, which suggests a wide range of potential discrimination
-performance across settings.</p>
-<p>The figure below provides a forest plot summarizing the estimated
-c-statistics across external validation studies.</p>
-<p><img src="ma-pm_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
-<p>We can also adopt a Bayesian random-effects model to summarize the
-c-statistic. In the example below, we specify a weakly informative prior
-distribution for the between-study heterogeneity, with
-<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\tau \sim \text{Uniform}(0, 2))</annotation></semantics></math>:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary c-statistic with 95% confidence and (approximate) 95% prediction interval:
+
+ Estimate       CIl       CIu       PIl       PIu
+0.7888603 0.7648784 0.8110005 0.6792568 0.8682736
+
+Number of studies included:  23</code></pre>
+</div>
+</div>
+<p>The summary estimate of the average logit-C statistic was 1.318 (95% CI: 1.180 to 1.457), which corresponds to a summary c-statistic of 1/(1 + exp(-1.318)) = 0.79. There was substantial heterogeneity (<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><msup><mi>τ</mi><mn>2</mn></msup><annotation encoding="application/x-tex">\tau^2</annotation></semantics></math> = 0.070 with SE = 0.029, on the logit-C scale), reflected by a 95% prediction interval of 0.68 to 0.87 for the true c-statistic in a new study, which suggests a wide range of potential discrimination performance across settings.</p>
+<p>The figure below provides a forest plot summarizing the estimated c-statistics across external validation studies.</p>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure><p><img src="ma-pm_files/figure-html/unnamed-chunk-7-1.png" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can also adopt a Bayesian random-effects model to summarize the c-statistic. In the example below, we specify a weakly informative prior distribution for the between-study heterogeneity, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\tau \sim \text{Uniform}(0, 2))</annotation></semantics></math>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>cstat <span class="op">=</span> <span class="va">c.index</span>, cstat.se <span class="op">=</span> <span class="va">se.c.index</span>, cstat.cilb <span class="op">=</span> <span class="va">c.index.95CIl</span>, cstat.ciub <span class="op">=</span> <span class="va">c.index.95CIu</span>,</span>
 <span>    N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, method <span class="op">=</span> <span class="st">"BAYES"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hp.tau.dist <span class="op">=</span> <span class="st">"dunif"</span>, hp.tau.min <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>        hp.tau.max <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, slab <span class="op">=</span> <span class="va">Study</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="meta-analysis-of-calibration-performance">Meta-analysis of calibration performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-calibration-performance"></a>
+</section><section class="section level2" data-number="3"><h2 data-number="3" id="meta-analysis-of-calibration-performance">
+<span class="header-section-number">3</span> Meta-analysis of calibration performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-calibration-performance"></a>
 </h2>
-<p>Calibration refers to a model’s accuracy of predicted risk
-probabilities, and indicates the extent to which expected outcomes
-(predicted from the model) and observed outcomes agree. Summarising
-estimates of calibration performance is challenging because calibration
-plots are most often not presented, and because studies tend to report
-different types of summary statistics in calibration. For example, in
-the case study, calibration was assessed using the Hosmer-Lemeshow test,
-calibration plots or by comparing the observed mortality to the
-predicted EuroSCORE II (either overall or for groups of patients).
-Within each validation study, we can compare the total number of
-observed events (O) with the total number of expected (predicted) events
-by deriving their ratio O:E. The total O:E ratio provides a rough
-indication of the overall model calibration (across the entire range of
-predicted risks). It describes whether more (O:E &gt; 1) or fewer (O:E
-&lt; 1) events occurred than expected based on the model. Whilst the O:E
-ratio itself was not explicitly reported in all studies, it can be
-calculated from other reported information:</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>oe <span class="op">=</span> <span class="va">n.events</span><span class="op">/</span><span class="va">e.events</span><span class="op">)</span></span></code></pre></div>
-<p>The O:E ratio can also be derived from the observed and predicted
-mortality risk <code>Po</code> and, respectively, <code>Pe</code>:</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/select.html" class="external-link">select</a></span><span class="op">(</span><span class="va">Po</span>, <span class="va">Pe</span><span class="op">)</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>oe <span class="op">=</span> <span class="va">Po</span><span class="op">/</span><span class="va">Pe</span><span class="op">)</span></span></code></pre></div>
-<p>It is recommended to first transform extracted O:E ratios to the log
-(natural logarithm) scale before applying a meta-analysis.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op"><a href="https://magrittr.tidyverse.org/reference/pipe.html" class="external-link">%&gt;%</a></span></span>
-<span>    <span class="fu"><a href="https://dplyr.tidyverse.org/reference/mutate.html" class="external-link">mutate</a></span><span class="op">(</span>logoe <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">oe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<p>Calibration refers to a model’s accuracy of predicted risk probabilities, and indicates the extent to which expected outcomes (predicted from the model) and observed outcomes agree. Summarising estimates of calibration performance is challenging because calibration plots are most often not presented, and because studies tend to report different types of summary statistics in calibration. For example, in the case study, calibration was assessed using the Hosmer-Lemeshow test, calibration plots or by comparing the observed mortality to the predicted EuroSCORE II (either overall or for groups of patients). Within each validation study, we can compare the total number of observed events (O) with the total number of expected (predicted) events by deriving their ratio O:E. The total O:E ratio provides a rough indication of the overall model calibration (across the entire range of predicted risks). It describes whether more (O:E &gt; 1) or fewer (O:E &lt; 1) events occurred than expected based on the model. Whilst the O:E ratio itself was not explicitly reported in all studies, it can be calculated from other reported information:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">mutate</span><span class="op">(</span>oe <span class="op">=</span> <span class="va">n.events</span><span class="op">/</span><span class="va">e.events</span><span class="op">)</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
+<p>The O:E ratio can also be derived from the observed and predicted mortality risk <code>Po</code> and, respectively, <code>Pe</code>:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">select</span><span class="op">(</span><span class="va">Po</span>, <span class="va">Pe</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">mutate</span><span class="op">(</span>oe <span class="op">=</span> <span class="va">Po</span><span class="op">/</span><span class="va">Pe</span><span class="op">)</span></span></code></pre></div>
+</div>
+<p>It is recommended to first transform extracted O:E ratios to the log (natural logarithm) scale before applying a meta-analysis.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op">%&gt;%</span></span>
+<span>    <span class="fu">mutate</span><span class="op">(</span>logoe <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">oe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+</div>
+</section><section class="section level2" data-number="4"><h2 data-number="4" id="references">
+<span class="header-section-number">4</span> References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
-<div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
-<div id="ref-debray_guide_2017" class="csl-entry">
-Debray, Thomas P A, Johanna A A G Damen, Kym I E Snell, Joie Ensor,
-Lotty Hooft, Johannes B Reitsma, Richard D Riley, and Karel G M Moons.
-2017. <span>“A Guide to Systematic Review and Meta-Analysis of
-Prediction Model Performance.”</span> <em><span>BMJ</span></em>,
-January, i6460. <a href="https://doi.org/10.1136/bmj.i6460" class="external-link">https://doi.org/10.1136/bmj.i6460</a>.
+</section><script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'light-border',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config);
+    }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script></main>
 </div>
-<div id="ref-guida_performance_2014" class="csl-entry">
-Guida, Pietro, Florinda Mastro, Giuseppe Scrascia, Richard Whitlock, and
-Domenico Paparella. 2014. <span>“Performance of the European System for
-Cardiac Operative Risk Evaluation <span>II</span>: A Meta-Analysis of 22
-Studies Involving 145,592 Cardiac Surgery Procedures.”</span> <em>The
-Journal of Thoracic and Cardiovascular Surgery</em> 148 (6):
-3049–3057.e1. <a href="https://doi.org/10.1016/j.jtcvs.2014.07.039" class="external-link">https://doi.org/10.1016/j.jtcvs.2014.07.039</a>.
-</div>
-</div>
-</div>
-  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
-    </nav></aside>
-</div>
-
 
 
     <footer><div class="pkgdown-footer-left">
