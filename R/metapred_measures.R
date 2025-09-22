@@ -637,11 +637,17 @@ fat.mp.cv.val <- function(x, ...)
 fat.metapred <- function(x, ...)
   fat.mp.cv.val(subset(x, ...))
 
+#' @export
+#' @method funnel perf
 funnel.perf <- function(x, ...)
   plot(fat.perf(x, ...), ...)
 
+#' @export
+#' @method funnel mp.cv.val
 funnel.mp.cv.val <- function(x, ...)
   plot(fat.mp.cv.val(x))
 
+#' @export
+#' @method funnel metapred
 funnel.metapred <- function(x, ...)
   plot(fat.metapred(x, ...))

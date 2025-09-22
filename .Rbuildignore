@@ -10,3 +10,6 @@ cran-comments.md
 ^pkgdown$
 ^doc$
 ^Meta$
+^vignettes/.*\.qmd$
+^vignettes/.*_files$
+^inst/doc$

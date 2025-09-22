@@ -464,7 +464,8 @@ predict.riley <- function(object,  ...)
   predint
 }
 
-
+#' @export
+#' @method print summary.riley
 print.summary.riley <- function(x, ...)
 {
   cat("Call:\n")

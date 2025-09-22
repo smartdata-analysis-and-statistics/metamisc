@@ -378,7 +378,7 @@ fitted.metapred <- function(object, select = "cv", step = NULL, model = NULL,
     rownames(object[["data"]]) <- seq_len(nrow(object[["data"]]))
   
   if (isTRUE(select == "cv")) {
-    ftd <- fitted(metamisc:::subset.metapred(x = object, select = select, step = step, model = model, type = type),
+    ftd <- fitted(subset.metapred(x = object, select = select, step = step, model = model, type = type),
                   two.stage = object$options$two.stage)
     if (as.stratified)
       return(ftd)
@@ -478,13 +478,15 @@ summary.metapred <- function(object, ...) {
   summary.mp.fit(object)
 }
 
-# Test whether object is meta.pred
+#' Check if an object is of class 'metapred'
+#'
 #' @author Valentijn de Jong
-#' @importFrom methods is
-#' @method is   metapred
+#' @param object Object to test.
+#' @return Logical. TRUE if object inherits from class 'metapred'.
 #' @export
-is.metapred <- function(object)
+is_metapred <- function(object) {
   inherits(object, "metapred")
+}
 
 # Implementation of the subset method
 # #' @author Valentijn de Jong

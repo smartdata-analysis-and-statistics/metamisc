@@ -109,7 +109,7 @@ plot(fit)
 We can also adopt a Bayesian random-effects model to summarize the c-statistic. In the example below, we specify a weakly informative prior distribution for the between-study heterogeneity, with $\tau \sim \text{Uniform}(0, 2))$:
 
 ```{r}
-#| eval: false
+#| eval: TRUE
 valmeta(cstat = c.index, cstat.se = se.c.index, 
         cstat.cilb = c.index.95CIl, cstat.ciub = c.index.95CIu, 
         N = n, O = n.events, method = "BAYES",
