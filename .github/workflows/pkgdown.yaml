@@ -25,6 +25,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
+      - name: Install JAGS
+        run: sudo apt-get update && sudo apt-get install -y jags
+
       - uses: r-lib/actions/setup-pandoc@v2
 
       - name: Setup Quarto
@@ -39,6 +42,8 @@ jobs:
           extra-packages: |
             any::pkgdown
             any::quarto
+            any::rjags
+            any::runjags
             local::.
           needs: website
 
