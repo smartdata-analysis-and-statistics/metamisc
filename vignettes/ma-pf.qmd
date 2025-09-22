@@ -10,6 +10,8 @@ params:
   dir_r: "R_TD"
 format:
   html:
+    code-overflow: wrap
+    code-fold: false
     toc: true
     number-sections: true
     css: styles.css

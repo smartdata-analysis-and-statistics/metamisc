@@ -7,6 +7,8 @@ date: last-modified
 date-format: "[Last Updated on] DD MMMM, YYYY"
 format:
   html:
+    code-overflow: wrap
+    code-fold: false
     toc: true
     number-sections: true
     css: styles.css
@@ -29,7 +31,8 @@ library(knitr)
 library(dplyr)
 ```
 
-# Case Study
+# Introduction
+
 The [EuroSCORE II](http://www.euroscore.org/calc.html) is a commonly used scoring rule for estimating the risk of in-hospital mortality in  patients undergoing major cardiac surgery. It was developed using data from  16,828 adult patients from 43 countries. Predictors include patient characteristics (e.g. age, gender), cardiac related factors (e.g. recent MI) and surgery related factors (e.g. Surgery on thoracic aorta). In 2014, a systematic review was undertaken by @guida_performance_2014 to search articles assessing the performance of EuroSCORE II on perioperative mortality in cardiac surgery. The systematic review identified 24 eligible validation studies, 22 studies were included in the main analysis. 
 
 In this case study, we summarize the results from these 22 studies, as well as the results from the split-sample validation contained within original development article of EuroSCORE II. We will use the **metamisc** package to derive summary estimates for the discrimination and calibration performance of EuroSCORE II, to evaluate the presence of between-study heterogeneity, and to identify potential sources of between-study heterogeneity. A step-by-step tutorial is provided by @debray_guide_2017. 
@@ -109,7 +112,6 @@ plot(fit)
 We can also adopt a Bayesian random-effects model to summarize the c-statistic. In the example below, we specify a weakly informative prior distribution for the between-study heterogeneity, with $\tau \sim \text{Uniform}(0, 2))$:
 
 ```{r}
-#| eval: TRUE
 valmeta(cstat = c.index, cstat.se = se.c.index, 
         cstat.cilb = c.index.95CIl, cstat.ciub = c.index.95CIu, 
         N = n, O = n.events, method = "BAYES",
