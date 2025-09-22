@@ -244,26 +244,38 @@ Number of studies included:  23</code></pre>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>cstat <span class="op">=</span> <span class="va">c.index</span>, cstat.se <span class="op">=</span> <span class="va">se.c.index</span>, cstat.cilb <span class="op">=</span> <span class="va">c.index.95CIl</span>, cstat.ciub <span class="op">=</span> <span class="va">c.index.95CIu</span>,</span>
 <span>    N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, method <span class="op">=</span> <span class="st">"BAYES"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hp.tau.dist <span class="op">=</span> <span class="st">"dunif"</span>, hp.tau.min <span class="op">=</span> <span class="fl">0</span>,</span>
 <span>        hp.tau.max <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, slab <span class="op">=</span> <span class="va">Study</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Note: Unable to calculate the multivariate psrf
+Finished running the simulation</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Summary c-statistic with 95% credibility and  95% prediction interval:
+
+ Estimate       CIl       CIu       PIl       PIu
+0.7884993 0.7652614 0.8123145 0.6828476 0.8787819
+
+Number of studies included:  23</code></pre>
+</div>
 </div>
 </section><section class="section level2" data-number="3"><h2 data-number="3" id="meta-analysis-of-calibration-performance">
 <span class="header-section-number">3</span> Meta-analysis of calibration performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-calibration-performance"></a>
 </h2>
 <p>Calibration refers to a model’s accuracy of predicted risk probabilities, and indicates the extent to which expected outcomes (predicted from the model) and observed outcomes agree. Summarising estimates of calibration performance is challenging because calibration plots are most often not presented, and because studies tend to report different types of summary statistics in calibration. For example, in the case study, calibration was assessed using the Hosmer-Lemeshow test, calibration plots or by comparing the observed mortality to the predicted EuroSCORE II (either overall or for groups of patients). Within each validation study, we can compare the total number of observed events (O) with the total number of expected (predicted) events by deriving their ratio O:E. The total O:E ratio provides a rough indication of the overall model calibration (across the entire range of predicted risks). It describes whether more (O:E &gt; 1) or fewer (O:E &lt; 1) events occurred than expected based on the model. Whilst the O:E ratio itself was not explicitly reported in all studies, it can be calculated from other reported information:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op">%&gt;%</span></span>
 <span>    <span class="fu">mutate</span><span class="op">(</span>oe <span class="op">=</span> <span class="va">n.events</span><span class="op">/</span><span class="va">e.events</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>The O:E ratio can also be derived from the observed and predicted mortality risk <code>Po</code> and, respectively, <code>Pe</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">%&gt;%</span></span>
 <span>    <span class="fu">select</span><span class="op">(</span><span class="va">Po</span>, <span class="va">Pe</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>    <span class="fu">mutate</span><span class="op">(</span>oe <span class="op">=</span> <span class="va">Po</span><span class="op">/</span><span class="va">Pe</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>It is recommended to first transform extracted O:E ratios to the log (natural logarithm) scale before applying a meta-analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op">%&gt;%</span></span>
 <span>    <span class="fu">mutate</span><span class="op">(</span>logoe <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">oe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
