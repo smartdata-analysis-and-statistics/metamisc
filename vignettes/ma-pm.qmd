@@ -11,7 +11,6 @@ format:
     number-sections: true
     code-overflow: wrap
     code-fold: false
-    css: style.css
     citeproc: true   # Enables citation rendering
 bibliography: references.bib
 ---

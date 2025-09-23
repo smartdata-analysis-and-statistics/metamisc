@@ -2,4 +2,4 @@ url: https://smartdata-analysis-and-statistics.github.io/metamisc/
 template:
   bootstrap: 5
   assets:
-    - vignettes/style.css
+    - pkgdown/assets/style.css
