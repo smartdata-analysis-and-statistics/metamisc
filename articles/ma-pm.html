@@ -12,7 +12,6 @@
 <link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><script src="ma-pm_files/libs/quarto-html/popper.min.js"></script><script src="ma-pm_files/libs/quarto-html/tippy.umd.min.js"></script><link href="ma-pm_files/libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="ma-pm_files/libs/quarto-html/light-border.css" rel="stylesheet">
-<link rel="stylesheet" href="style.css">
 <!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Meta-analysis of prediction model performance">
 <meta property="og:image" content="https://smartdata-analysis-and-statistics.github.io/metamisc/logo.png">
 </head>
@@ -70,8 +69,7 @@
 
 
 
-    <section class="section level2" data-number="1"><h2 data-number="1" id="introduction">
-<span class="header-section-number">1</span> Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
+    <section class="section level2"><h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
 <p>The <a href="http://www.euroscore.org/calc.html" class="external-link">EuroSCORE II</a> is a commonly used scoring rule for estimating the risk of in-hospital mortality in patients undergoing major cardiac surgery. It was developed using data from 16,828 adult patients from 43 countries. Predictors include patient characteristics (e.g. age, gender), cardiac related factors (e.g. recent MI) and surgery related factors (e.g. Surgery on thoracic aorta). In 2014, a systematic review was undertaken by <span class="citation" data-cites="guida_performance_2014">Guida et al. (<a href="#ref-guida_performance_2014" role="doc-biblioref">2014</a>)</span> to search articles assessing the performance of EuroSCORE II on perioperative mortality in cardiac surgery. The systematic review identified 24 eligible validation studies, 22 studies were included in the main analysis.</p>
 <p>In this case study, we summarize the results from these 22 studies, as well as the results from the split-sample validation contained within original development article of EuroSCORE II. We will use the <strong>metamisc</strong> package to derive summary estimates for the discrimination and calibration performance of EuroSCORE II, to evaluate the presence of between-study heterogeneity, and to identify potential sources of between-study heterogeneity. A step-by-step tutorial is provided by <span class="citation" data-cites="debray_guide_2017">Debray et al. (<a href="#ref-debray_guide_2017" role="doc-biblioref">2017</a>)</span>.</p>
@@ -81,8 +79,7 @@
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/smartdata-analysis-and-statistics/metamisc" class="external-link">metamisc</a></span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
 </div>
-</section><section class="section level2" data-number="2"><h2 data-number="2" id="meta-analysis-of-discrimination-performance">
-<span class="header-section-number">2</span> Meta-analysis of discrimination performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-discrimination-performance"></a>
+</section><section class="section level2"><h2 id="meta-analysis-of-discrimination-performance">Meta-analysis of discrimination performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-discrimination-performance"></a>
 </h2>
 <p>This section summarizes the discrimination performance of the EuroSCORE II prediction model when externally validated in patients undergoing coronary artery bypass grafting (CABG). The data are based on 23 validation studies identified in a systematic review, with model performance assessed using the concordance index (c-index). These studies vary considerably in size and event rates, reflecting diverse clinical settings and populations. The table below presents the reported c-indices with corresponding confidence intervals (and standard errors where available), alongside the number of events and total sample size per study.</p>
 <div class="cell">
@@ -238,52 +235,53 @@ Number of studies included:  23</code></pre>
 </div>
 </div>
 </div>
-<p>We can also adopt a Bayesian random-effects model to summarize the c-statistic. In the example below, we specify a weakly informative prior distribution for the between-study heterogeneity, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\tau \sim \text{Uniform}(0, 2))</annotation></semantics></math>. Additionally, we define a minimum clinically meaningful C-statistic, set here at 0.7, and estimate the posterior probability that the C-statistic in a new study exceeds this threshold, using the argument <code>min.cstat = 0.7</code>:</p>
+<p>We can also adopt a Bayesian random-effects model to summarize the c-statistic. In the example below, we specify a weakly informative prior distribution for the between-study heterogeneity, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow></mrow><annotation encoding="application/x-tex">\tau \sim \text{Uniform}(0, 2)</annotation></semantics></math>. Additionally, we define a minimum clinically meaningful C-statistic, set here at 0.7, and estimate the posterior probability that the C-statistic in a new study exceeds this threshold, using the argument <code>min.cstat = 0.7</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>cstat <span class="op">=</span> <span class="va">c.index</span>, cstat.se <span class="op">=</span> <span class="va">se.c.index</span>, cstat.cilb <span class="op">=</span> <span class="va">c.index.95CIl</span>, cstat.ciub <span class="op">=</span> <span class="va">c.index.95CIu</span>,</span>
-<span>    N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, method <span class="op">=</span> <span class="st">"BAYES"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hp.tau.dist <span class="op">=</span> <span class="st">"dunif"</span>, hp.tau.min <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>        hp.tau.max <span class="op">=</span> <span class="fl">2</span>, min.cstat <span class="op">=</span> <span class="fl">0.7</span>  <span class="co"># minimum acceptable value</span></span>
-<span><span class="op">)</span>, slab <span class="op">=</span> <span class="va">Study</span>,</span>
-<span>    data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="va">fit</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>cstat <span class="op">=</span> <span class="va">c.index</span>, cstat.se <span class="op">=</span> <span class="va">se.c.index</span>, cstat.cilb <span class="op">=</span> <span class="va">c.index.95CIl</span>,</span>
+<span>    cstat.ciub <span class="op">=</span> <span class="va">c.index.95CIu</span>, N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, method <span class="op">=</span> <span class="st">"BAYES"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hp.tau.dist <span class="op">=</span> <span class="st">"dunif"</span>,</span>
+<span>        hp.tau.min <span class="op">=</span> <span class="fl">0</span>, hp.tau.max <span class="op">=</span> <span class="fl">2</span>, min.cstat <span class="op">=</span> <span class="fl">0.7</span>  <span class="co"># minimum acceptable value</span></span>
+<span><span class="op">)</span>,</span>
+<span>    slab <span class="op">=</span> <span class="va">Study</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Note: Unable to calculate the multivariate psrf
 Finished running the simulation</code></pre>
 </div>
+<div class="sourceCode cell-code" id="cb6"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">fit</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary c-statistic with 95% credibility and  95% prediction interval:
 
  Estimate       CIl       CIu       PIl       PIu
-0.7884763 0.7636427 0.8112977 0.6832369 0.8802824
+0.7885098 0.7648367 0.8123593 0.6800665 0.8775017
 
-Posterior Pr(c-stat &gt; 0.70): 0.943
+Posterior Pr(c-stat &gt; 0.70): 0.940
 Number of studies included:  23</code></pre>
 </div>
 </div>
-</section><section class="section level2" data-number="3"><h2 data-number="3" id="meta-analysis-of-calibration-performance">
-<span class="header-section-number">3</span> Meta-analysis of calibration performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-calibration-performance"></a>
+<p>The summary c-statistic is again estimated to be 0.79, with a 95% prediction interval ranging from 0.68 to 0.88, reflecting expected variation in a new study. The posterior probability that the c-statistic in a future study exceeds 0.7 is 0.94.</p>
+</section><section class="section level2"><h2 id="meta-analysis-of-calibration-performance">Meta-analysis of calibration performance<a class="anchor" aria-label="anchor" href="#meta-analysis-of-calibration-performance"></a>
 </h2>
 <p>Calibration refers to a model’s accuracy of predicted risk probabilities, and indicates the extent to which expected outcomes (predicted from the model) and observed outcomes agree. Summarising estimates of calibration performance is challenging because calibration plots are most often not presented, and because studies tend to report different types of summary statistics in calibration. For example, in the case study, calibration was assessed using the Hosmer-Lemeshow test, calibration plots or by comparing the observed mortality to the predicted EuroSCORE II (either overall or for groups of patients). Within each validation study, we can compare the total number of observed events (O) with the total number of expected (predicted) events by deriving their ratio O:E. The total O:E ratio provides a rough indication of the overall model calibration (across the entire range of predicted risks). It describes whether more (O:E &gt; 1) or fewer (O:E &lt; 1) events occurred than expected based on the model. Whilst the O:E ratio itself was not explicitly reported in all studies, it can be calculated from other reported information:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op">%&gt;%</span></span>
 <span>    <span class="fu">mutate</span><span class="op">(</span>oe <span class="op">=</span> <span class="va">n.events</span><span class="op">/</span><span class="va">e.events</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>The O:E ratio can also be derived from the observed and predicted mortality risk <code>Po</code> and, respectively, <code>Pe</code>:</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">%&gt;%</span></span>
 <span>    <span class="fu">select</span><span class="op">(</span><span class="va">Po</span>, <span class="va">Pe</span><span class="op">)</span> <span class="op">%&gt;%</span></span>
 <span>    <span class="fu">mutate</span><span class="op">(</span>oe <span class="op">=</span> <span class="va">Po</span><span class="op">/</span><span class="va">Pe</span><span class="op">)</span></span></code></pre></div>
 </div>
 <p>It is recommended to first transform extracted O:E ratios to the log (natural logarithm) scale before applying a meta-analysis.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode cell-code" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">EuroSCORE</span> <span class="op">&lt;-</span> <span class="va">EuroSCORE</span> <span class="op">%&gt;%</span></span>
 <span>    <span class="fu">mutate</span><span class="op">(</span>logoe <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log</a></span><span class="op">(</span><span class="va">oe</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
-</section><section class="section level2" data-number="4"><h2 class="unnumbered" data-number="4" id="references">
-<span class="header-section-number">4</span> References<a class="anchor" aria-label="anchor" href="#references"></a>
+</section><section class="section level2"><h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
 </h2>
 <div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
 <div id="ref-debray_guide_2017" class="csl-entry" role="listitem">
