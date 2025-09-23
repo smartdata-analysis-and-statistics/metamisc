@@ -25,7 +25,7 @@ rjags must be installed."><meta property="og:image" content="https://smartdata-a
 
     <a class="navbar-brand me-2" href="../index.html">metamisc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -239,6 +239,9 @@ Defaults to 3). Other arguments are <code>method.restore.c.se</code> (method for
 of the c-statistic. See <code><a href="ccalc.html">ccalc</a></code> for more information),
 <code>model.cstat</code> (The likelihood/link for modeling the c-statistic; see "Details"),
 <code>model.oe</code> (The likelihood/link for modeling the O:E ratio; see "Details"),
+<code>min.cstat</code> (optional) sets a minimum clinically relevant performance threshold
+for the c-index (e.g., 0.7 for acceptable discrimination). The model calculates the
+posterior probability that the meta-analytic mean c-index exceeds this threshold.
 <code>seed</code> (an integer to indicate the random seed).</p></dd>
 
 

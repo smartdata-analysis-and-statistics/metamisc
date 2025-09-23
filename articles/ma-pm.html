@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">metamisc</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.5.0</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -59,7 +59,7 @@
       <img src="../logo.png" class="logo" alt=""><h1>Meta-analysis of prediction model performance</h1>
 
       <p class="author">Thomas Debray</p>
-      <p class="date">Last Updated on 22 September, 2025</p>
+      <p class="date">Last Updated on 23 September, 2025</p>
 
       <small class="dont-index">Source: <a href="https://github.com/smartdata-analysis-and-statistics/metamisc/blob/main/vignettes/ma-pm.qmd" class="external-link"><code>vignettes/ma-pm.qmd</code></a></small>
       <div class="d-none name"><code></code></div>
@@ -238,12 +238,14 @@ Number of studies included:  23</code></pre>
 </div>
 </div>
 </div>
-<p>We can also adopt a Bayesian random-effects model to summarize the c-statistic. In the example below, we specify a weakly informative prior distribution for the between-study heterogeneity, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\tau \sim \text{Uniform}(0, 2))</annotation></semantics></math>:</p>
+<p>We can also adopt a Bayesian random-effects model to summarize the c-statistic. In the example below, we specify a weakly informative prior distribution for the between-study heterogeneity, with <math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>τ</mi><mo>∼</mo><mtext mathvariant="normal">Uniform</mtext><mrow><mo stretchy="true" form="prefix">(</mo><mn>0</mn><mo>,</mo><mn>2</mn><mo stretchy="true" form="postfix">)</mo></mrow><mo stretchy="false" form="postfix">)</mo></mrow><annotation encoding="application/x-tex">\tau \sim \text{Uniform}(0, 2))</annotation></semantics></math>. Additionally, we define a minimum clinically meaningful C-statistic, set here at 0.7, and estimate the posterior probability that the C-statistic in a new study exceeds this threshold, using the argument <code>min.cstat = 0.7</code>:</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>cstat <span class="op">=</span> <span class="va">c.index</span>, cstat.se <span class="op">=</span> <span class="va">se.c.index</span>, cstat.cilb <span class="op">=</span> <span class="va">c.index.95CIl</span>, cstat.ciub <span class="op">=</span> <span class="va">c.index.95CIu</span>,</span>
 <span>    N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, method <span class="op">=</span> <span class="st">"BAYES"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hp.tau.dist <span class="op">=</span> <span class="st">"dunif"</span>, hp.tau.min <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>        hp.tau.max <span class="op">=</span> <span class="fl">2</span><span class="op">)</span>, slab <span class="op">=</span> <span class="va">Study</span>, data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
+<span>        hp.tau.max <span class="op">=</span> <span class="fl">2</span>, cstat_min <span class="op">=</span> <span class="fl">0.7</span>  <span class="co"># minimum acceptable value</span></span>
+<span><span class="op">)</span>, slab <span class="op">=</span> <span class="va">Study</span>,</span>
+<span>    data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Note: Unable to calculate the multivariate psrf
 Finished running the simulation</code></pre>
@@ -252,7 +254,7 @@ Finished running the simulation</code></pre>
 <pre><code>Summary c-statistic with 95% credibility and  95% prediction interval:
 
  Estimate       CIl       CIu       PIl       PIu
-0.7885373 0.7644120 0.8121764 0.6829219 0.8802885
+0.7882427 0.7641308 0.8118120 0.6827015 0.8820658
 
 Number of studies included:  23</code></pre>
 </div>
