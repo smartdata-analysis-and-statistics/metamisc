@@ -3,3 +3,8 @@ template:
   bootstrap: 5
   assets:
     - pkgdown/assets/style.css
+  params:
+    toc: true  # Enable table of contents for all articles
+    number_sections: true
+    code-overflow: wrap
+    code-fold: false

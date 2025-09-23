@@ -7,10 +7,6 @@ date: last-modified
 date-format: "[Last Updated on] DD MMMM, YYYY"
 format:
   html:
-    toc: true
-    number-sections: true
-    code-overflow: wrap
-    code-fold: false
     citeproc: true   # Enables citation rendering
 bibliography: references.bib
 ---
