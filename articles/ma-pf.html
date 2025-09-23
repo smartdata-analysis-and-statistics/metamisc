@@ -439,7 +439,7 @@ intrcpt 0.7805314</code></pre>
 <span><span class="va">HRsim</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">exp</a></span><span class="op">(</span><span class="va">mu</span> <span class="op">+</span> <span class="fu"><a href="https://rdrr.io/r/stats/TDist.html" class="external-link">rt</a></span><span class="op">(</span><span class="va">Nsim</span>, df<span class="op">=</span><span class="op">(</span><span class="va">resREML</span><span class="op">$</span><span class="va">k</span><span class="op">-</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span><span class="op">*</span><span class="fu"><a href="https://rdrr.io/r/base/MathFun.html" class="external-link">sqrt</a></span><span class="op">(</span><span class="va">tau2</span><span class="op">+</span><span class="va">sigma2</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/sum.html" class="external-link">sum</a></span><span class="op">(</span><span class="va">HRsim</span><span class="op">&gt;</span><span class="fl">1.5</span><span class="op">)</span><span class="op">/</span><span class="va">Nsim</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>[1] 0.780243</code></pre>
+<pre><code>[1] 0.780329</code></pre>
 </div>
 </div>
 <p>The probability is 78% , suggesting that using HER2 will often provide adequate discrimination.</p>

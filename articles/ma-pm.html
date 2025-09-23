@@ -243,19 +243,19 @@ Number of studies included:  23</code></pre>
 <div class="sourceCode cell-code" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/valmeta.html">valmeta</a></span><span class="op">(</span>cstat <span class="op">=</span> <span class="va">c.index</span>, cstat.se <span class="op">=</span> <span class="va">se.c.index</span>, cstat.cilb <span class="op">=</span> <span class="va">c.index.95CIl</span>, cstat.ciub <span class="op">=</span> <span class="va">c.index.95CIu</span>,</span>
 <span>    N <span class="op">=</span> <span class="va">n</span>, O <span class="op">=</span> <span class="va">n.events</span>, method <span class="op">=</span> <span class="st">"BAYES"</span>, pars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>hp.tau.dist <span class="op">=</span> <span class="st">"dunif"</span>, hp.tau.min <span class="op">=</span> <span class="fl">0</span>,</span>
-<span>        hp.tau.max <span class="op">=</span> <span class="fl">2</span>, cstat_min <span class="op">=</span> <span class="fl">0.7</span>  <span class="co"># minimum acceptable value</span></span>
+<span>        hp.tau.max <span class="op">=</span> <span class="fl">2</span>, min.cstat <span class="op">=</span> <span class="fl">0.7</span>  <span class="co"># minimum acceptable value</span></span>
 <span><span class="op">)</span>, slab <span class="op">=</span> <span class="va">Study</span>,</span>
 <span>    data <span class="op">=</span> <span class="va">EuroSCORE</span><span class="op">)</span></span></code></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>Note: Unable to calculate the multivariate psrf
-Finished running the simulation</code></pre>
+<pre><code>Finished running the simulation</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
 <pre><code>Summary c-statistic with 95% credibility and  95% prediction interval:
 
  Estimate       CIl       CIu       PIl       PIu
-0.7882427 0.7641308 0.8118120 0.6827015 0.8820658
+0.7883633 0.7638708 0.8113600 0.6806020 0.8779931
 
+Posterior Pr(c-stat &gt; 0.70): 0.941
 Number of studies included:  23</code></pre>
 </div>
 </div>
