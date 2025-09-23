@@ -65,6 +65,9 @@
 #' of the c-statistic. See \code{\link{ccalc}} for more information), 
 #' \code{model.cstat} (The likelihood/link for modeling the c-statistic; see "Details"), 
 #' \code{model.oe} (The likelihood/link for modeling the O:E ratio; see "Details"),
+#' \code{min.cstat} (optional) sets a minimum clinically relevant performance threshold
+#' for the c-index (e.g., 0.7 for acceptable discrimination). The model calculates the
+#' posterior probability that the meta-analytic mean c-index exceeds this threshold.
 #' \code{seed} (an integer to indicate the random seed).
 #' @param \ldots Additional arguments that are passed to \pkg{rma} or \pkg{runjags} (if \code{method="BAYES"}).
 #' 
@@ -683,6 +686,12 @@ print.valmeta <- function(x, ...) {
   }
   print(results)
   cat("\n")
+  
+  # Optional display of posterior Pr(c > threshold)
+  if (!is.null(x$cstat_min) && !is.null(x$pr_cstat_gt_min)) {
+    cat(sprintf("Posterior Pr(c-stat > %.2f): %.3f\n", x$cstat_min, x$pr_cstat_gt_min))
+  }
+  
   cat(paste("Number of studies included: ", x$numstudies))
 }
 

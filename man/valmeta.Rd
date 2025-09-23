@@ -116,6 +116,9 @@ Defaults to 3). Other arguments are \code{method.restore.c.se} (method for resto
 of the c-statistic. See \code{\link{ccalc}} for more information), 
 \code{model.cstat} (The likelihood/link for modeling the c-statistic; see "Details"), 
 \code{model.oe} (The likelihood/link for modeling the O:E ratio; see "Details"),
+\code{min.cstat} (optional) sets a minimum clinically relevant performance threshold
+for the c-index (e.g., 0.7 for acceptable discrimination). The model calculates the
+posterior probability that the meta-analytic mean c-index exceeds this threshold.
 \code{seed} (an integer to indicate the random seed).}
 
 \item{\ldots}{Additional arguments that are passed to \pkg{rma} or \pkg{runjags} (if \code{method="BAYES"}).}

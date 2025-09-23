@@ -1,3 +1,30 @@
+
+#' Check if pars$min.cstat is set and valid
+#'
+#' @param pars A named list of parameters.
+#' @param check_range Logical. If TRUE (default), also checks that min.cstat is within (0.5, 1).
+#'
+#' @return TRUE if pars$min.cstat is set and valid; FALSE otherwise.
+#'
+is_min_cstat_set <- function(pars, check_range = TRUE) {
+  if (is.null(pars$min.cstat) || is.na(pars$min.cstat)) {
+    return(FALSE)
+  }
+  
+  if (!is.numeric(pars$min.cstat)) {
+    warning("pars$min.cstat is not numeric.")
+    return(FALSE)
+  }
+  
+  if (check_range && (pars$min.cstat <= 0.5 || pars$min.cstat >= 1)) {
+    warning("pars$min.cstat should be in the open interval (0.5, 1).")
+    return(FALSE)
+  }
+  
+  return(TRUE)
+}
+
+
 .generateBugsCstat <- function(pars, 
                                ...) # standard deviation for student T prior
 {
@@ -44,6 +71,7 @@
     out <- paste(out, "  mu.tobs ~ dnorm(", pars$hp.mu.mean, ",", hp.mu.prec, ")\n", sep = "")
     out <- paste(out, "  prior_mu ~ dnorm(", pars$hp.mu.mean, ",", hp.mu.prec, ")\n", sep = "")
     out <- paste(out, "  pred.tobs ~ dnorm(mu.tobs, bsprec)\n", sep = "")
+    out <- paste(out, "  pred.obs <- pred.tobs\n", sep = "")
     
     model.pars <- c(mu = "mu.tobs", # Meta-analysis mean
                    mu_t = "mu.tobs", # Transformed meta-analysis mean
@@ -57,6 +85,14 @@
   } else {
     stop("Specified link function not implemented")
   }
+  
+  
+  if (is_min_cstat_set(pars)) {
+    out <- paste(out, "  mu_gt_thresh <- step(pred.obs - ", pars$min.cstat, ")\n", sep = "")
+    
+    model.pars <- c(model.pars, mu_gt_thresh = "mu_gt_thresh")
+  }
+  
   out <- paste(out, "}", sep = "")
   
   return(list(model.text = out, model.pars = model.pars))

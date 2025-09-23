@@ -136,6 +136,13 @@ run_Bayesian_REMA <- function(call, measure, method, data, pars, n.chains, verbo
     out$measure <- measure
     
     if (measure == "cstat") {
+      
+      if (is_min_cstat_set(pars)) {
+        # Posterior Pr(mu > threshold)
+        out$cstat_min <- pars$min.cstat
+        out$pr_cstat_gt_min <- fit[model$model.pars["mu_gt_thresh"], "Mean"]
+      }
+      
       class(out) <- "valmeta"
     }
   }
