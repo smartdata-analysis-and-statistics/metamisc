@@ -1,0 +1,6 @@
+/* Prevent code block line breaks in pkgdown */
+pre code {
+  white-space: pre;
+  overflow-x: auto;
+  display: block;
+}
