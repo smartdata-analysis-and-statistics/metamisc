@@ -121,7 +121,7 @@ valmeta(cstat = c.index, cstat.se = se.c.index,
           hp.tau.dist = "dunif", 
           hp.tau.min = 0, 
           hp.tau.max = 2,
-          cstat_min = 0.7   # minimum acceptable value
+          min.cstat = 0.7   # minimum acceptable value
         ),
         slab = Study, data = EuroSCORE)
 ```
