@@ -105,22 +105,25 @@ The figure below provides a forest plot summarizing the estimated c-statistics a
 plot(fit)
 ```
 
-We can also adopt a Bayesian random-effects model to summarize the c-statistic. In the example below, we specify a weakly informative prior distribution for the between-study heterogeneity, with $\tau \sim \text{Uniform}(0, 2))$. Additionally, we define a minimum clinically meaningful C-statistic, set here at 0.7, and estimate the posterior probability that the C-statistic in a new study exceeds this threshold, using the argument `min.cstat = 0.7`:
+We can also adopt a Bayesian random-effects model to summarize the c-statistic. In the example below, we specify a weakly informative prior distribution for the between-study heterogeneity, with $\tau \sim \text{Uniform}(0, 2)$. Additionally, we define a minimum clinically meaningful C-statistic, set here at 0.7, and estimate the posterior probability that the C-statistic in a new study exceeds this threshold, using the argument `min.cstat = 0.7`:
 
 ```{r}
 #| message: false
 #| warning: false
-valmeta(cstat = c.index, cstat.se = se.c.index, 
-        cstat.cilb = c.index.95CIl, cstat.ciub = c.index.95CIu, 
-        N = n, O = n.events, method = "BAYES",
-        pars = list(
-          hp.tau.dist = "dunif", 
-          hp.tau.min = 0, 
-          hp.tau.max = 2,
-          min.cstat = 0.7   # minimum acceptable value
-        ),
-        slab = Study, data = EuroSCORE)
+fit <- valmeta(cstat = c.index, cstat.se = se.c.index, 
+               cstat.cilb = c.index.95CIl, cstat.ciub = c.index.95CIu, 
+               N = n, O = n.events, method = "BAYES",
+               pars = list(
+                 hp.tau.dist = "dunif", 
+                 hp.tau.min = 0, 
+                 hp.tau.max = 2,
+                 min.cstat = 0.7   # minimum acceptable value
+                 ),
+               slab = Study, data = EuroSCORE)
+fit
 ```
+
+The summary c-statistic is again estimated to be `r sprintf("%.2f", fit$est)`, with a 95% prediction interval ranging from `r sprintf("%.2f", fit$pi.lb)` to `r sprintf("%.2f", fit$pi.ub)`, reflecting expected variation in a new study. The posterior probability that the c-statistic in a future study exceeds 0.7 is `r sprintf("%.2f", fit$pr_cstat_gt_min)`.
 
 
 # Meta-analysis of calibration performance

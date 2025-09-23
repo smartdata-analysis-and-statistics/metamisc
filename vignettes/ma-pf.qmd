@@ -8,8 +8,6 @@ date-format: "[Last Updated on] DD MMMM, YYYY"
 params:
   dir_data: "data"
   dir_r: "R_TD"
-format:
-  html:
 bibliography: "https://api.citedrive.com/bib/093a08ac-0337-479e-a147-17929fa7f7b0/references.bib?x=eyJpZCI6ICIwOTNhMDhhYy0wMzM3LTQ3OWUtYTE0Ny0xNzkyOWZhN2Y3YjAiLCAidXNlciI6ICI0MDA5IiwgInNpZ25hdHVyZSI6ICIwOWJiZjg2ZDJiNjk1NmQ1ODVhZTMxZmZiODI0OTgyNWYxYTEzNTQ5MzdiZjBiNzJiZjY3MTlhMTE2NGJhNzQ3In0=/bibliography.bib"
 ---
 
